@@ -50,6 +50,6 @@ router.put(
 router.patch("/:id", patchRetreat);
 
 // Delete a retreat by ID
-router.delete("/:id", deleteRetreat);
+router.delete("/delete/:id", deleteRetreat);
 
 module.exports = router;

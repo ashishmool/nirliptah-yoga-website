@@ -10,8 +10,8 @@ const AddRetreat: React.FC = () => {
     const [formData, setFormData] = useState({
         title: "",
         description: "",
-        start_date: date,
-        end_date: date,
+        start_date: "",
+        end_date: "",
         price_per_person: 0,
         max_participants: 0,
         address: "",
@@ -90,8 +90,8 @@ const AddRetreat: React.FC = () => {
         setFormData({
             title: "",
             description: "",
-            start_date: date,
-            end_date: date,
+            start_date: "",
+            end_date: "",
             price_per_person: 0,
             max_participants: 0,
             address: "",
@@ -117,12 +117,13 @@ const AddRetreat: React.FC = () => {
 
             Object.entries(formData).forEach(([key, value]) => {
                 if (Array.isArray(value) && key === "retreat_photo") {
-                    value.forEach((photo) => formPayload.append("retreat_photos", photo));
+                    // This assumes formData.retreat_photo is an array of files
+                    value.forEach((photo) => formPayload.append("retreat_photo", photo));  // Correct key for single retreat photo
                 } else if (Array.isArray(value) && key === "guests") {
                     value.forEach((guest, index) => {
                         formPayload.append(`guests[${index}][name]`, guest.name);
                         if (guest.photo) {
-                            formPayload.append(`guests[${index}][photo]`, guest.photo);
+                            formPayload.append(`guests[${index}][photo]`, guest.photo);  // Ensure the key matches multer's expectation
                         }
                     });
                 } else if (key === "meals_info" || key === "featuring_events") {

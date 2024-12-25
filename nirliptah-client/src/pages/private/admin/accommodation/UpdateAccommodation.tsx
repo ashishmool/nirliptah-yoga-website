@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
 import { toast } from "sonner";
 import { updateAccommodation, fetchAccommodationById } from "../../../../backend/services/accommodationService"; // Import the update function from your service file
 
@@ -34,7 +33,9 @@ const UpdateAccommodation: React.FC = () => {
     useEffect(() => {
         if (id) {
             fetchAccommodationById(id, setFormData, setImagePreview);
+
         }
+        console.log("Fetched Accommodation:::",formData );
     }, [id]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

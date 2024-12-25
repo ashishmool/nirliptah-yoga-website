@@ -122,7 +122,6 @@ const deleteRetreat = async (req, res) => {
         const { id } = req.params;
 
         const deletedRetreat = await Retreat.findByIdAndDelete(id);
-
         if (!deletedRetreat) {
             return res.status(404).json({ message: "Retreat not found" });
         }

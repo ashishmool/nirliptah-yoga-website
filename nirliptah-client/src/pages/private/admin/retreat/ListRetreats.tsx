@@ -163,13 +163,16 @@ const ListRetreats: React.FC = () => {
             )}
 
             {/* Pagination */}
-            <div className="mt-4">
-                <Pagination
-                    currentPage={currentPage}
-                    totalPages={Math.ceil(filteredRetreats.length / ITEMS_PER_PAGE)}
-                    onPageChange={setCurrentPage}
-                />
-            </div>
+            {filteredRetreats.length > 0 && (
+                <div className="mt-4">
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={Math.ceil(filteredRetreats.length / ITEMS_PER_PAGE)}
+                        onPageChange={setCurrentPage}
+                    />
+                </div>
+            )}
+
         </div>
     );
 };

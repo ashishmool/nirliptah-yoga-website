@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import axios from "axios";
 import { createAccommodation } from "../../../../backend/services/accommodationService"; // Import the service
 
 // Define the interface for the form data
@@ -49,10 +48,14 @@ const AddAccommodation: React.FC = () => {
         e.preventDefault();
         setLoading(true);
 
-        // Split amenities into an array if it's not empty
-        const amenitiesArray = formData.amenities.trim()
-            ? formData.amenities.split(',').map((item) => item.trim())
-            : [];
+        // Split amenities into an array if it's not empty, then join them back into a comma-separated string
+        const amenitiesString = formData.amenities.trim()
+            ? formData.amenities
+                .split(',')
+                .map((item) => item.trim())   // Trim leading/trailing spaces for each item
+                .filter((item) => item.length > 0)  // Filter out any empty strings
+                .join(',')  // Join the array back into a comma-separated string
+            : '';
 
         const formDataObj = new FormData();
         formDataObj.append("name", formData.name);
@@ -61,7 +64,7 @@ const AddAccommodation: React.FC = () => {
         formDataObj.append("max_occupancy", formData.max_occupancy.toString());
         formDataObj.append("available_rooms", formData.available_rooms.toString());
         formDataObj.append("location", formData.location); // Ensure location is added
-        formDataObj.append("amenities", JSON.stringify(amenitiesArray));  // Send amenities as a JSON array
+        formDataObj.append("amenities", amenitiesString);  // Send amenities as a comma-separated string
 
         // Change this line to match the backend field name for accommodation photo
         if (formData.photo) {
@@ -80,6 +83,7 @@ const AddAccommodation: React.FC = () => {
             setLoading(false);
         }
     };
+
 
     return (
         <div className="max-w-3xl mx-auto p-6">

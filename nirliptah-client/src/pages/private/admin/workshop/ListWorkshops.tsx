@@ -169,13 +169,16 @@ const ListWorkshops: React.FC = () => {
             )}
 
             {/* Pagination */}
-            <div className="mt-4">
-            <Pagination
-                currentPage={currentPage}
-                totalPages={Math.ceil(filteredWorkshops.length / ITEMS_PER_PAGE)}
-                onPageChange={setCurrentPage}
-            />
-            </div>
+            {filteredWorkshops.length > 0 && (
+                <div className="mt-4">
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={Math.ceil(filteredWorkshops.length / ITEMS_PER_PAGE)}
+                        onPageChange={setCurrentPage}
+                    />
+                </div>
+            )}
+
         </div>
     );
 };

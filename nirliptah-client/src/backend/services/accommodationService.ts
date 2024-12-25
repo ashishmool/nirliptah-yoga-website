@@ -51,9 +51,7 @@ export const deleteAccommodation = async (id) => {
 };
 
 // Fetch a specific accommodation by ID
-// Fetch a specific accommodation by ID
-// Fetch a specific accommodation by ID
-// Fetch a specific accommodation by ID
+
 export const fetchAccommodationById = async (id, setFormData, setImagePreview) => {
     try {
         const response = await axios.get(`${API_BASE_URL}/getById/${id}`);
@@ -72,8 +70,9 @@ export const fetchAccommodationById = async (id, setFormData, setImagePreview) =
             photo: null, // Don't auto-load photo into form data
         });
 
+        // Check if accommodation photo exists and set the image preview URL
         if (accommodation.photo) {
-            setImagePreview(accommodation.photo); // Set existing photo as preview if available
+            setImagePreview(`http://localhost:5000${accommodation.photo}`);
         }
     } catch (error) {
         console.error("Error fetching accommodation:", error);
