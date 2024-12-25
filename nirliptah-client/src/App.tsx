@@ -47,7 +47,7 @@ export default function App() {
             <>
                 <Routing />
                 {/* Conditionally render Navbar or MainNav */}
-                {isAdminRoute ? <Navbar /> : <MainNav />}
+                {!isAdminRoute && <MainNav />}
                 {!isAdminRoute && <Footer />}
             </>
         );

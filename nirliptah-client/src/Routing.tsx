@@ -29,6 +29,7 @@ import ResetPassword from "@/components/reset/ResetPassword.tsx";
 import SingleWorkshop from "@/pages/public/workshop/SingleWorkshop.tsx";
 import InstructorDashboard from "@/pages/private/instructor/InstructorDashboard.tsx";
 import StudentDashboard from "@/pages/private/student/StudentDashboard.tsx";
+import AdminHome from "@/pages/private/admin/AdminHome.tsx";
 
 
 
@@ -94,6 +95,8 @@ export default function Routing() {
             {/* Admin Routes */}
             {isAdmin() ? (
                 <Route path="admin" element={<AdminDashboard />}>
+
+                    <Route path="home" element={<AdminHome />} />
                     {/* Retreat Routes */}
                     <Route path="retreats" element={<ListRetreats />} />
                     <Route path="retreats/add" element={<AddRetreat />} />

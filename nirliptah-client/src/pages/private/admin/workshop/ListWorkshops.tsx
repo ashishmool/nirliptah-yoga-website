@@ -2,15 +2,15 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import Pagination from "../../../components/Pagination"; // Adjust the import path as needed
 
 const ListWorkshops: React.FC = () => {
     const [workshops, setWorkshops] = useState<any[]>([]);
     const [filteredWorkshops, setFilteredWorkshops] = useState<any[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
 
-    const ITEMS_PER_PAGE = 4; // Fixed number of items per page
+    const ITEMS_PER_PAGE = 4;
 
     useEffect(() => {
         const fetchWorkshops = async () => {
@@ -19,38 +19,26 @@ const ListWorkshops: React.FC = () => {
                 const data = response.data || [];
                 setWorkshops(data);
                 setFilteredWorkshops(data);
-                setTotalPages(Math.ceil(data.length / ITEMS_PER_PAGE)); // Recalculate total pages based on 4 items per page
             } catch (error) {
                 console.error("Error fetching workshops:", error);
             }
         };
-
         fetchWorkshops();
-    }, []); // Fetch only once on mount
+    }, []);
 
     useEffect(() => {
-        // Recalculate total pages when filteredWorkshops changes
-        setTotalPages(Math.ceil(filteredWorkshops.length / ITEMS_PER_PAGE));
-    }, [filteredWorkshops]);
-
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const query = e.target.value;
-        setSearchQuery(query);
-
         const filtered = workshops.filter((workshop) =>
             Object.values(workshop)
                 .join(" ")
                 .toLowerCase()
-                .includes(query.toLowerCase())
+                .includes(searchQuery.toLowerCase())
         );
         setFilteredWorkshops(filtered);
-        setCurrentPage(1); // Reset to page 1 on search
-    };
+        setCurrentPage(1);
+    }, [searchQuery, workshops]);
 
-    const getPaginatedWorkshops = () => {
-        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-        const endIndex = startIndex + ITEMS_PER_PAGE;
-        return filteredWorkshops.slice(startIndex, endIndex);
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery(e.target.value);
     };
 
     const handleDelete = async (id: string) => {
@@ -58,8 +46,9 @@ const ListWorkshops: React.FC = () => {
             try {
                 await axios.delete(`http://localhost:5000/api/workshops/delete/${id}`);
                 setWorkshops((prev) => prev.filter((workshop) => workshop._id !== id));
-                setFilteredWorkshops((prev) => prev.filter((workshop) => workshop._id !== id));
-                setTotalPages(Math.ceil(filteredWorkshops.length / ITEMS_PER_PAGE)); // Recalculate total pages
+                setFilteredWorkshops((prev) =>
+                    prev.filter((workshop) => workshop._id !== id)
+                );
                 toast.success("Workshop deleted successfully!");
             } catch (error) {
                 console.error("Error deleting workshop:", error);
@@ -67,15 +56,16 @@ const ListWorkshops: React.FC = () => {
         }
     };
 
-    const handlePageChange = (page: number) => {
-        setCurrentPage(page);
-    };
+    const paginatedWorkshops = filteredWorkshops.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+    );
 
     return (
-        <div className="max-w-7xl mx-auto p-6">
+        <div className="max-w-7xl mx-auto p-6 flex flex-col h-full">
             <h1 className="text-3xl font-semibold text-center mb-6">Workshops</h1>
 
-            <div className="flex justify-between mb-4">
+            <div className="flex justify-between items-center mb-4">
                 <Link
                     to="/admin/workshops/add"
                     className="inline-flex items-center py-2 px-4 bg-[#9B6763] text-white rounded-md hover:bg-[#B8998C]"
@@ -101,78 +91,90 @@ const ListWorkshops: React.FC = () => {
                     placeholder="Search workshops"
                     value={searchQuery}
                     onChange={handleSearchChange}
-                    className="p-2 w-full max-w-xs border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="p-2 w-full max-w-xs border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500"
                 />
             </div>
 
-            <table className="min-w-full bg-white border border-gray-300">
-                <thead>
-                <tr>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Image</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Title</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Instructor</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Price</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Discounted Price</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {getPaginatedWorkshops().map((workshop) => (
-                    <tr key={workshop._id} className="border-b border-gray-200 hover:bg-gray-50">
-                        <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                            <img
-                                src={`http://localhost:5000${workshop.photo}`}
-                                alt={workshop.title}
-                                className="w-16 h-16 object-cover rounded"
-                            />
-                        </td>
-                        <td className="px-6 py-4 text-sm font-medium text-gray-900">{workshop.title}</td>
-                        <td className="px-6 py-4 text-sm text-gray-500">{workshop.instructor_id?.name || 'No Instructor'}</td>
-                        <td className="px-6 py-4 text-sm text-gray-500">{workshop.price}</td>
-                        <td className="px-6 py-4 text-sm text-gray-500">
-                            {workshop.discount_price && workshop.discount_price !== 0 ? (
-                                workshop.discount_price
-                            ) : (
-                                "No Discount"
-                            )}
-                        </td>
-
-                        <td className="px-6 py-4 text-sm text-gray-500">
-                            <Link
-                                to={`/admin/workshops/update/${workshop._id}`}
-                                className="text-[#9B6763] hover:text-[#B8998C] mr-4"
-                            >
-                                Edit
-                            </Link>
-                            <button
-                                onClick={() => handleDelete(workshop._id)}
-                                className="text-[#B8978C] hover:text-[#A38F85]"
-                            >
-                                Delete
-                            </button>
-                        </td>
+            {workshops.length > 0 ? (
+                <table className="flex-1 flex flex-col min-w-full bg-white border border-gray-300">
+                    <thead className="bg-gray-100">
+                    <tr className="flex w-full">
+                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
+                            Image
+                        </th>
+                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
+                            Title
+                        </th>
+                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
+                            Instructor
+                        </th>
+                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
+                            Price
+                        </th>
+                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
+                            Discounted Price
+                        </th>
+                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
+                            Actions
+                        </th>
                     </tr>
-                ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody className="flex flex-col">
+                    {paginatedWorkshops.map((workshop) => (
+                        <tr
+                            key={workshop._id}
+                            className="flex w-full border-b border-gray-200 items-center hover:bg-gray-50"
+                        >
+                            <td className="flex-1 px-4 py-2 text-sm font-medium text-gray-900">
+                                <img
+                                    src={`http://localhost:5000${workshop.photo}`}
+                                    alt={workshop.title}
+                                    className="w-16 h-16 object-cover rounded"
+                                />
+                            </td>
+                            <td className="flex-1 px-4 py-2 text-sm font-medium text-gray-900">
+                                {workshop.title}
+                            </td>
+                            <td className="flex-1 px-4 py-2 text-sm text-gray-500">
+                                {workshop.instructor_id?.name || "No Instructor"}
+                            </td>
+                            <td className="flex-1 px-4 py-2 text-sm text-gray-500">
+                                {workshop.price}
+                            </td>
+                            <td className="flex-1 px-4 py-2 text-sm text-gray-500">
+                                {workshop.discount_price && workshop.discount_price !== 0
+                                    ? workshop.discount_price
+                                    : "No Discount"}
+                            </td>
+                            <td className="flex-1 px-4 py-2 text-sm text-gray-500 flex space-x-2">
+                                <Link
+                                    to={`/admin/workshops/update/${workshop._id}`}
+                                    className="text-[#9B6763] hover:text-[#B8998C]"
+                                >
+                                    Edit
+                                </Link>
+                                <button
+                                    onClick={() => handleDelete(workshop._id)}
+                                    className="text-[#B8978C] hover:text-[#A38F85]"
+                                >
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            ) : (
+                <p className="text-gray-500">No workshops found.</p>
+            )}
 
             {/* Pagination */}
-            <div className="mt-6 flex justify-center">
-                <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    className="py-2 px-4 bg-gray-300 text-gray-700 rounded-md mr-2 disabled:opacity-50"
-                >
-                    Prev
-                </button>
-                <span className="text-lg">{`Page ${currentPage} of ${totalPages}`}</span>
-                <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                    className="py-2 px-4 bg-gray-300 text-gray-700 rounded-md ml-2 disabled:opacity-50"
-                >
-                    Next
-                </button>
+            <div className="mt-4">
+            <Pagination
+                currentPage={currentPage}
+                totalPages={Math.ceil(filteredWorkshops.length / ITEMS_PER_PAGE)}
+                onPageChange={setCurrentPage}
+            />
             </div>
         </div>
     );

@@ -23,7 +23,7 @@ const storage = multer.diskStorage({
 
         // Determine folder based on the field name
         switch (file.fieldname) {
-            case "retreat_photos":
+            case "retreat_photo":
                 folder = "retreat_photos";
                 break;
             case "guests[0][photo]":
@@ -76,12 +76,13 @@ const upload = multer({
     // Uncomment and adjust the following line if file size limits are needed
     // limits: { fileSize: 10 * 1024 * 1024 }, // Limit to 10MB
 }).fields([
-    { name: "retreat_photos", maxCount: 5 }, // Up to 5 retreat photos
+    { name: "retreat_photo", maxCount: 1 },
     { name: "guests[0][photo]", maxCount: 1 }, // First guest photo
     { name: "guests[1][photo]", maxCount: 1 }, // Second guest photo (if any)
     { name: "workshop_photo", maxCount: 1 }, // Workshop photo
     { name: "accommodation_photo", maxCount: 1 }, // Accommodation photo
     { name: "profile_picture", maxCount: 1 }, // Profile photo
 ]);
+
 
 module.exports = upload;

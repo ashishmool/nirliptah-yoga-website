@@ -3,7 +3,7 @@ import { FaChalkboardTeacher, FaHammer, FaHome, FaSuitcase, FaUsers, FaSignOutAl
 import { FaPeopleGroup, FaPersonPraying } from "react-icons/fa6";
 
 const sidelinks = [
-    { title: "Dashboard", href: "/admin", icon: <FaHome /> },
+    { title: "Dashboard", href: "/admin/home", icon: <FaHome /> },
     { title: "Instructors", href: "/admin/instructors", icon: <FaChalkboardTeacher /> },
     { title: "Workshops", href: "/admin/workshops", icon: <FaHammer /> },
     { title: "Accommodations", href: "/admin/accommodations", icon: <FaHome /> },
@@ -85,18 +85,6 @@ const AdminSidebar: React.FC<SidebarProps> = ({
 
             {/* Profile Settings Section */}
             <div>
-                <Link
-                    to="/profile"
-                    className={`bg-gray-700 hover:bg-gray-600 p-3 text-white flex items-center justify-center rounded m-4 ${
-                        isCollapsed ? "justify-center" : "justify-start"
-                    }`}
-                >
-                    <span className="text-xl">
-                        <FaUsers />
-                    </span>
-                    {!isCollapsed && <span className="ml-3">My Profile</span>}
-                </Link>
-
                 <button
                     onClick={onLogout}
                     className="bg-gray-700 hover:bg-gray-600 p-3 text-white flex items-center justify-center rounded m-4"

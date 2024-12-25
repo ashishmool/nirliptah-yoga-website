@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { fetchInstructors, deleteInstructor } from "@/backend/services/instructorService.ts";
+import { fetchInstructors, deleteInstructor } from "@/backend/services/instructorService";
 import Pagination from "../../../components/Pagination"; // Adjust the import path as needed
 
 const ListInstructors: React.FC = () => {
@@ -8,63 +8,41 @@ const ListInstructors: React.FC = () => {
     const [filteredInstructors, setFilteredInstructors] = useState<any[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
-
-    const ITEMS_PER_PAGE = 4;  // Fixed number of items per page
+    const ITEMS_PER_PAGE = 10;
 
     useEffect(() => {
-        // Fetch instructors on component mount
         fetchInstructors(setInstructors);
-        fetchInstructors(setFilteredInstructors);
-        // Assuming you might need to set the total pages as well
-        setTotalPages(Math.ceil(instructors.length / ITEMS_PER_PAGE));
     }, []);
 
     useEffect(() => {
-        // Recalculate total pages when filteredInstructors changes
-        setTotalPages(Math.ceil(filteredInstructors.length / ITEMS_PER_PAGE));
-    }, [filteredInstructors]);
-
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const query = e.target.value;
-        setSearchQuery(query);
-
         const filtered = instructors.filter((instructor) =>
-            instructor.name.toLowerCase().includes(query.toLowerCase())
+            instructor.name.toLowerCase().includes(searchQuery.toLowerCase())
         );
         setFilteredInstructors(filtered);
-        setCurrentPage(1); // Reset to page 1 on search
-    };
+    }, [instructors, searchQuery]);
 
-    const getPaginatedInstructors = () => {
-        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-        const endIndex = startIndex + ITEMS_PER_PAGE;
-        return filteredInstructors.slice(startIndex, endIndex);
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery(e.target.value);
+        setCurrentPage(1); // Reset to page 1 on search
     };
 
     const handleDelete = async (id: string) => {
         if (window.confirm("Are you sure you want to delete this instructor?")) {
-            try {
-                await deleteInstructor(id); // Use the service to delete the instructor
-                // Update the state based on the delete action
-                setInstructors((prev) => prev.filter((instructor) => instructor._id !== id));
-                setFilteredInstructors((prev) => prev.filter((instructor) => instructor._id !== id));
-                setTotalPages(Math.ceil(filteredInstructors.length / ITEMS_PER_PAGE)); // Recalculate total pages
-            } catch (error) {
-                console.error("Error deleting instructor:", error);
-            }
+            await deleteInstructor(id);
+            setInstructors((prev) => prev.filter((instructor) => instructor._id !== id));
         }
     };
 
-    const handlePageChange = (page: number) => {
-        setCurrentPage(page);
-    };
+    const paginatedInstructors = filteredInstructors.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+    );
 
     return (
-        <div className="max-w-7xl mx-auto p-6">
+        <div className="max-w-7xl mx-auto p-6 flex flex-col h-full">
             <h1 className="text-3xl font-semibold text-center mb-6">Instructors</h1>
 
-            <div className="flex justify-between mb-4">
+            <div className="flex justify-between items-center mb-4">
                 <Link
                     to="/admin/instructors/add"
                     className="inline-flex items-center py-2 px-4 bg-[#9B6763] text-white rounded-md hover:bg-[#B8998C]"
@@ -90,32 +68,36 @@ const ListInstructors: React.FC = () => {
                     placeholder="Search instructors"
                     value={searchQuery}
                     onChange={handleSearchChange}
-                    className="p-2 w-full max-w-xs border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="p-2 w-full max-w-xs border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500"
                 />
             </div>
 
+
             {instructors.length > 0 ? (
-                <table className="min-w-full bg-white border border-gray-300">
-                    <thead>
-                    <tr>
-                        <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Name</th>
-                        <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Specialization</th>
-                        <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Rating</th>
-                        <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Actions</th>
+                <table className="flex-1 flex flex-col min-w-full bg-white border border-gray-300">
+                    <thead className="bg-gray-100">
+                    <tr className="flex w-full">
+                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">Name</th>
+                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">Specialization</th>
+                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">Rating</th>
+                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">Actions</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    {getPaginatedInstructors().map((instructor) => (
-                        <tr key={instructor._id} className="border-b border-gray-200">
-                            <td className="px-6 py-4 text-sm font-medium text-gray-900">{instructor.name}</td>
-                            <td className="px-6 py-4 text-sm text-gray-500">
+                    <tbody className="flex flex-col">
+                    {paginatedInstructors.map((instructor) => (
+                        <tr
+                            key={instructor._id}
+                            className="flex w-full border-b border-gray-200 items-center hover:bg-gray-50"
+                        >
+                            <td className="flex-1 px-4 py-2 text-sm font-medium text-gray-900">{instructor.name}</td>
+                            <td className="flex-1 px-4 py-2 text-sm text-gray-500">
                                 {instructor.specialization?.join(", ") || "No Specialization"}
                             </td>
-                            <td className="px-6 py-4 text-sm text-gray-500">{instructor.rating}</td>
-                            <td className="px-6 py-4 text-sm text-gray-500">
+                            <td className="flex-1 px-4 py-2 text-sm text-gray-500">{instructor.rating}</td>
+                            <td className="flex-1 px-4 py-2 text-sm text-gray-500 flex space-x-2">
                                 <Link
                                     to={`/admin/instructors/update/${instructor._id}`}
-                                    className="text-[#9B6763] hover:text-[#B8998C] mr-4"
+                                    className="text-[#9B6763] hover:text-[#B8998C]"
                                 >
                                     Edit
                                 </Link>
@@ -130,16 +112,19 @@ const ListInstructors: React.FC = () => {
                     ))}
                     </tbody>
                 </table>
+
             ) : (
-                <p>No instructors found.</p>
+                <p className="text-gray-500">No instructors found.</p>
             )}
 
             {/* Pagination */}
+            <div className="mt-4">
             <Pagination
                 currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={handlePageChange}
+                totalPages={Math.ceil(filteredInstructors.length / ITEMS_PER_PAGE)}
+                onPageChange={setCurrentPage}
             />
+            </div>
         </div>
     );
 };

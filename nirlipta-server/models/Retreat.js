@@ -47,7 +47,7 @@ const retreatSchema = new mongoose.Schema(
         guests: [
             {
                 name: { type: String, required: false }, // Guest name
-                photo: { type: String, required: false }, // Photo URL (nullable)
+                guest_photo: { type: String, required: false }, // Photo URL (Tes Purpose)
             },
         ],
         featuring_events: {
@@ -63,8 +63,8 @@ const retreatSchema = new mongoose.Schema(
             ref: "Instructor",
             required: false, // Nullable for testing purpose
         },
-        photos: {
-            type: [String], // Array of retreat photos (e.g., images of retreat)
+        retreat_photo: {
+            type: String,
             required: false,
         },
     },

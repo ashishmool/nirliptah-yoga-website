@@ -66,7 +66,7 @@ export default function Login({ onClose, onLoginSuccess }: LoginRegisterModalPro
                 //
                 // Redirect based on role
                 const roleRedirects: Record<string, string> = {
-                    admin: "/admin",
+                    admin: "/admin/home",
                     instructor: "/instructor",
                     student: "/student",
                 };

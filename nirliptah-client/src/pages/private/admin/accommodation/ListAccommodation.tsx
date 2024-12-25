@@ -1,76 +1,71 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
-import { fetchAccommodations, deleteAccommodation } from "@/backend/services/accommodationService.ts";
-import Pagination from "../../../components/Pagination";
+import Pagination from "../../../components/Pagination"; // Adjust the import path as needed
 
 const ListAccommodation: React.FC = () => {
     const [accommodations, setAccommodations] = useState<any[]>([]);
     const [filteredAccommodations, setFilteredAccommodations] = useState<any[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
 
-    const ITEMS_PER_PAGE = 3;  // Fixed number of items per page
+    const ITEMS_PER_PAGE = 2;
 
     useEffect(() => {
-        // Fetch accommodations on component mount
-        fetchAccommodations(setAccommodations);
-        fetchAccommodations(setFilteredAccommodations);
-        // Assuming you might need to set the total pages as well
-        setTotalPages(Math.ceil(accommodations.length / ITEMS_PER_PAGE));
+        const fetchAccommodations = async () => {
+            try {
+                const response = await axios.get("http://localhost:5000/api/accommodations");
+                const data = response.data || [];
+                setAccommodations(data);
+                setFilteredAccommodations(data);
+            } catch (error) {
+                console.error("Error fetching accommodations:", error);
+            }
+        };
+        fetchAccommodations();
     }, []);
 
     useEffect(() => {
-        // Recalculate total pages when filteredAccommodations changes
-        setTotalPages(Math.ceil(filteredAccommodations.length / ITEMS_PER_PAGE));
-    }, [filteredAccommodations]);
-
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const query = e.target.value;
-        setSearchQuery(query);
-
-        const filtered = accommodations.filter((acc) =>
-            Object.values(acc)
+        const filtered = accommodations.filter((accommodation) =>
+            Object.values(accommodation)
                 .join(" ")
                 .toLowerCase()
-                .includes(query.toLowerCase())
+                .includes(searchQuery.toLowerCase())
         );
         setFilteredAccommodations(filtered);
-        setCurrentPage(1); // Reset to page 1 on search
-    };
+        setCurrentPage(1);
+    }, [searchQuery, accommodations]);
 
-    const getPaginatedAccommodations = () => {
-        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-        const endIndex = startIndex + ITEMS_PER_PAGE;
-        return filteredAccommodations.slice(startIndex, endIndex);
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery(e.target.value);
     };
 
     const handleDelete = async (id: string) => {
         if (window.confirm("Are you sure you want to delete this accommodation?")) {
             try {
-                await deleteAccommodation(id); // Use the service to delete the accommodation
-                toast.success("Accommodation Deleted Successfully!")
-                // Update the state based on the delete action
+                await axios.delete(`http://localhost:5000/api/accommodations/delete/${id}`);
                 setAccommodations((prev) => prev.filter((acc) => acc._id !== id));
-                setFilteredAccommodations((prev) => prev.filter((acc) => acc._id !== id));
-                setTotalPages(Math.ceil(filteredAccommodations.length / ITEMS_PER_PAGE)); // Recalculate total pages
+                setFilteredAccommodations((prev) =>
+                    prev.filter((acc) => acc._id !== id)
+                );
+                toast.success("Accommodation deleted successfully!");
             } catch (error) {
-                toast.error("Accommodation Delete Failed!")
                 console.error("Error deleting accommodation:", error);
             }
         }
     };
 
-    const handlePageChange = (page: number) => {
-        setCurrentPage(page);
-    };
+    const paginatedAccommodations = filteredAccommodations.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+    );
 
     return (
-        <div className="max-w-7xl mx-auto p-6">
+        <div className="max-w-7xl mx-auto p-6 flex flex-col h-full">
             <h1 className="text-3xl font-semibold text-center mb-6">Accommodations</h1>
 
-            <div className="flex justify-between mb-4">
+            <div className="flex justify-between items-center mb-4">
                 <Link
                     to="/admin/accommodations/add"
                     className="inline-flex items-center py-2 px-4 bg-[#9B6763] text-white rounded-md hover:bg-[#B8998C]"
@@ -96,60 +91,89 @@ const ListAccommodation: React.FC = () => {
                     placeholder="Search accommodations"
                     value={searchQuery}
                     onChange={handleSearchChange}
-                    className="p-2 w-full max-w-xs border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="p-2 w-full max-w-xs border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500"
                 />
             </div>
 
-            <table className="min-w-full bg-white border border-gray-300">
-                <thead>
-                <tr>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Image</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Name</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Location</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Price</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Available Rooms</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {getPaginatedAccommodations().map((acc) => (
-                    <tr key={acc._id} className="border-b border-gray-200 hover:bg-gray-50">
-                        <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                            <img
-                                src={`http://localhost:5000${acc.photo}`}  // Adjust the path to match where the images are served
-                                alt={acc.name}
-                                className="w-16 h-16 object-cover rounded"  // Thumbnail styling
-                            />
-                        </td>
-                        <td className="px-6 py-4 text-sm font-medium text-gray-900">{acc.name}</td>
-                        <td className="px-6 py-4 text-sm text-gray-500">{acc.location}</td>
-                        <td className="px-6 py-4 text-sm text-gray-500">{acc.price_per_night}</td>
-                        <td className="px-6 py-4 text-sm text-gray-500">{acc.available_rooms}</td>
-                        <td className="px-6 py-4 text-sm text-gray-500">
-                            <Link
-                                to={`/admin/accommodations/update/${acc._id}`}
-                                className="text-[#9B6763] hover:text-[#B8998C] mr-4"
-                            >
-                                Edit
-                            </Link>
-                            <button
-                                onClick={() => handleDelete(acc._id)}
-                                className="text-[#B8978C] hover:text-[#A38F85]"
-                            >
-                                Delete
-                            </button>
-                        </td>
+            {accommodations.length > 0 ? (
+                <table className="flex-1 flex flex-col min-w-full bg-white border border-gray-300">
+                    <thead className="bg-gray-100">
+                    <tr className="flex w-full">
+                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
+                            Image
+                        </th>
+                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
+                            Name
+                        </th>
+                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
+                            Location
+                        </th>
+                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
+                            Price
+                        </th>
+                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
+                            Rooms
+                        </th>
+                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
+                            Actions
+                        </th>
                     </tr>
-                ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody className="flex flex-col">
+                    {paginatedAccommodations.map((acc) => (
+                        <tr
+                            key={acc._id}
+                            className="flex w-full border-b border-gray-200 items-center hover:bg-gray-50"
+                        >
+                            <td className="flex-1 px-4 py-2 text-sm font-medium text-gray-900">
+                                <img
+                                    src={`http://localhost:5000${acc.photo}`}
+                                    alt={acc.name}
+                                    className="w-16 h-16 object-cover rounded"
+                                />
+                            </td>
+                            <td className="flex-1 px-4 py-2 text-sm font-medium text-gray-900">
+                                {acc.name}
+                            </td>
+                            <td className="flex-1 px-4 py-2 text-sm text-gray-500">
+                                {acc.location}
+                            </td>
+                            <td className="flex-1 px-4 py-2 text-sm text-gray-500">
+                                {acc.price_per_night}
+                            </td>
+                            <td className="flex-1 px-4 py-2 text-sm text-gray-500">
+                                {acc.available_rooms}
+                            </td>
+                            <td className="flex-1 px-4 py-2 text-sm text-gray-500 flex space-x-2">
+                                <Link
+                                    to={`/admin/accommodations/update/${acc._id}`}
+                                    className="text-[#9B6763] hover:text-[#B8998C]"
+                                >
+                                    Edit
+                                </Link>
+                                <button
+                                    onClick={() => handleDelete(acc._id)}
+                                    className="text-[#B8978C] hover:text-[#A38F85]"
+                                >
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            ) : (
+                <p className="text-gray-500">No accommodations found.</p>
+            )}
 
             {/* Pagination */}
-            <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={handlePageChange}
-            />
+            <div className="mt-4">
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={Math.ceil(filteredAccommodations.length / ITEMS_PER_PAGE)}
+                    onPageChange={setCurrentPage}
+                />
+            </div>
         </div>
     );
 };

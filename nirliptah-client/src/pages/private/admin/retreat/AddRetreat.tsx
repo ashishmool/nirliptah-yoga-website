@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import {toast} from "sonner";
+import { toast } from "sonner";
+import {date} from "yup";
 
 const AddRetreat: React.FC = () => {
     const navigate = useNavigate();
@@ -9,8 +10,8 @@ const AddRetreat: React.FC = () => {
     const [formData, setFormData] = useState({
         title: "",
         description: "",
-        start_date: "",
-        end_date: "",
+        start_date: date,
+        end_date: date,
         price_per_person: 0,
         max_participants: 0,
         address: "",
@@ -21,7 +22,7 @@ const AddRetreat: React.FC = () => {
         accommodation_id: null,
         instructor_id: null,
         guests: [] as { name: string; photo: File | null }[],
-        retreatPhotos: [] as File[],
+        retreat_photo: [] as File[],
     });
 
     const [loading, setLoading] = useState(false);
@@ -30,43 +31,31 @@ const AddRetreat: React.FC = () => {
 
     // Fetch accommodations and instructors on component mount
     useEffect(() => {
-        const fetchAccommodations = async () => {
+        const fetchData = async () => {
             try {
-                const response = await axios.get("http://localhost:5000/api/accommodations");
-                setAccommodations(response.data || []);
+                const [accommodationRes, instructorRes] = await Promise.all([
+                    axios.get("http://localhost:5000/api/accommodations"),
+                    axios.get("http://localhost:5000/api/instructors"),
+                ]);
+                setAccommodations(accommodationRes.data || []);
+                setInstructors(instructorRes.data || []);
             } catch (error) {
-                console.error("Error fetching accommodations:", error);
+                console.error("Error fetching data:", error);
+                toast.error("Failed to fetch initial data.");
             }
         };
-
-        const fetchInstructors = async () => {
-            try {
-                const response = await axios.get("http://localhost:5000/api/instructors");
-                setInstructors(response.data || []);
-            } catch (error) {
-                console.error("Error fetching instructors:", error);
-            }
-        };
-
-        fetchAccommodations();
-        fetchInstructors();
+        fetchData();
     }, []);
 
-    const handleRetreatPhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const files = e.target.files ? Array.from(e.target.files) : [];
-        setFormData({ ...formData, retreatPhotos: files });
-    };
-
+    // Handlers
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleGuestImageChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files ? e.target.files[0] : null;
-        const newGuests = [...formData.guests];
-        newGuests[index] = { ...newGuests[index], photo: file };
-        setFormData({ ...formData, guests: newGuests });
+    const handleRetreatPhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files ? Array.from(e.target.files) : [];
+        setFormData({ ...formData, retreat_photo: files });
     };
 
     const handleGuestChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,12 +65,17 @@ const AddRetreat: React.FC = () => {
         setFormData({ ...formData, guests: newGuests });
     };
 
+    const handleGuestImageChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files ? e.target.files[0] : null;
+        const newGuests = [...formData.guests];
+        newGuests[index] = { ...newGuests[index], photo: file };
+        setFormData({ ...formData, guests: newGuests });
+    };
 
     const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value || null });
     };
-
 
     const addGuest = () => {
         setFormData({ ...formData, guests: [...formData.guests, { name: "", photo: null }] });
@@ -96,8 +90,8 @@ const AddRetreat: React.FC = () => {
         setFormData({
             title: "",
             description: "",
-            start_date: "",
-            end_date: "",
+            start_date: date,
+            end_date: date,
             price_per_person: 0,
             max_participants: 0,
             address: "",
@@ -108,7 +102,7 @@ const AddRetreat: React.FC = () => {
             accommodation_id: null,
             instructor_id: null,
             guests: [],
-            retreatPhotos: [],
+            retreat_photo: [],
         });
     };
 
@@ -116,83 +110,41 @@ const AddRetreat: React.FC = () => {
         e.preventDefault();
         setLoading(true);
 
+        console.log("Form Data::::::::", formData);
+
         try {
-            // Create FormData for sending data to the server
             const formPayload = new FormData();
-            formPayload.append("title", formData.title);
-            formPayload.append("description", formData.description);
-            formPayload.append("start_date", formData.start_date);
-            formPayload.append("end_date", formData.end_date);
-            formPayload.append("price_per_person", formData.price_per_person.toString());
-            formPayload.append("max_participants", formData.max_participants.toString());
 
-            // Adding the address and map_location
-            formPayload.append("address", formData.address);
-            formPayload.append("map_location", formData.map_location);
-
-            // Convert meals and events into JSON strings
-            formPayload.append("meals_info", JSON.stringify(formData.meals_info.split(",").map((meal) => meal.trim())));
-            formPayload.append("featuring_events", JSON.stringify(formData.featuring_events.split(",").map((event) => event.trim())));
-
-            formPayload.append("organizer", formData.organizer);
-
-            // Optional fields
-            if (formData.accommodation_id) {
-                formPayload.append("accommodation_id", formData.accommodation_id);
-            }
-            if (formData.instructor_id) {
-                formPayload.append("instructor_id", formData.instructor_id);
-            }
-
-            // Add retreat photos
-            formData.retreatPhotos.forEach((photo) => {
-                formPayload.append("retreat_photos", photo);  // Ensure the key matches the backend configuration
-            });
-
-            // Add guest details (names and optional photos)
-            formData.guests.forEach((guest, index) => {
-                formPayload.append(`guests[${index}][name]`, guest.name);
-                if (guest.photo) {
-                    formPayload.append(`guests[${index}][photo]`, guest.photo);
+            Object.entries(formData).forEach(([key, value]) => {
+                if (Array.isArray(value) && key === "retreat_photo") {
+                    value.forEach((photo) => formPayload.append("retreat_photos", photo));
+                } else if (Array.isArray(value) && key === "guests") {
+                    value.forEach((guest, index) => {
+                        formPayload.append(`guests[${index}][name]`, guest.name);
+                        if (guest.photo) {
+                            formPayload.append(`guests[${index}][photo]`, guest.photo);
+                        }
+                    });
+                } else if (key === "meals_info" || key === "featuring_events") {
+                    formPayload.append(key, JSON.stringify(value.split(",").map((item) => item.trim())));
+                } else if (value !== null) {
+                    formPayload.append(key, value.toString());
                 }
             });
 
-            console.log("Payload:::", formData);
-
-            formPayload.forEach((value, key) => {
-                console.log(key, value);
+            await axios.post("http://localhost:5000/api/retreats/save", formPayload, {
+                headers: { "Content-Type": "multipart/form-data" },
             });
 
-            console.log("Guest Data:", formData.guests);
-
-
-            // Send the request to the API
-            const response = await axios.post(
-                "http://localhost:5000/api/retreats/save",
-                formPayload,
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                }
-            );
-
-            console.log("Retreat added successfully:", response.data);
             toast.success("Retreat added successfully!");
             resetForm();
             navigate("/admin/retreats");
         } catch (error) {
             console.error("Error adding retreat:", error);
-            alert("Failed to add retreat: " + error.message);
+            toast.error("Failed to add retreat. Please try again.");
         } finally {
             setLoading(false);
         }
-    };
-
-
-    // Go Back to the retreats list page
-    const handleGoBack = () => {
-        navigate("/admin/retreats");
     };
 
     return (
@@ -366,8 +318,9 @@ const AddRetreat: React.FC = () => {
                         type="file"
                         onChange={handleRetreatPhotoChange}
                         multiple
-                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm"
                     />
+
                 </div>
 
 
@@ -409,18 +362,17 @@ const AddRetreat: React.FC = () => {
                     </button>
                 </div>
 
-                {/* Submit Button */}
                 <div className="flex justify-between mt-6">
                     <button
                         type="button"
-                        onClick={handleGoBack}
+                        onClick={() => navigate("/admin/retreats")}
                         className="text-gray-500 hover:text-gray-700"
                     >
                         Cancel
                     </button>
                     <button
                         type="submit"
-                        className="px-6 py-3 bg-indigo-500 text-white rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="px-6 py-3 bg-indigo-500 text-white rounded-md shadow-sm"
                         disabled={loading}
                     >
                         {loading ? "Adding..." : "Add Retreat"}

@@ -1,50 +1,44 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { toast } from "sonner";
+import Pagination from "../../../components/Pagination"; // Adjust the import path as needed
 
 const ListRetreats: React.FC = () => {
     const [retreats, setRetreats] = useState<any[]>([]);
     const [filteredRetreats, setFilteredRetreats] = useState<any[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
 
-    const navigate = useNavigate();
+    const ITEMS_PER_PAGE = 2;
 
     useEffect(() => {
         const fetchRetreats = async () => {
             try {
                 const response = await axios.get("http://localhost:5000/api/retreats");
-                setRetreats(response.data || []);
-                setFilteredRetreats(response.data || []);
-                setTotalPages(Math.ceil((response.data.length || 1) / 5));
+                const data = response.data || [];
+                setRetreats(data);
+                setFilteredRetreats(data);
             } catch (error) {
                 console.error("Error fetching retreats:", error);
             }
         };
-
         fetchRetreats();
     }, []);
 
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const query = e.target.value;
-        setSearchQuery(query);
-
+    useEffect(() => {
         const filtered = retreats.filter((retreat) =>
             Object.values(retreat)
                 .join(" ")
                 .toLowerCase()
-                .includes(query.toLowerCase())
+                .includes(searchQuery.toLowerCase())
         );
         setFilteredRetreats(filtered);
         setCurrentPage(1);
-        setTotalPages(Math.ceil(filtered.length / 5));
-    };
+    }, [searchQuery, retreats]);
 
-    const getPaginatedRetreats = () => {
-        const startIndex = (currentPage - 1) * 5;
-        const endIndex = startIndex + 5;
-        return filteredRetreats.slice(startIndex, endIndex);
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery(e.target.value);
     };
 
     const handleDelete = async (id: string) => {
@@ -52,23 +46,27 @@ const ListRetreats: React.FC = () => {
             try {
                 await axios.delete(`http://localhost:5000/api/retreats/delete/${id}`);
                 setRetreats((prev) => prev.filter((retreat) => retreat._id !== id));
-                setFilteredRetreats((prev) => prev.filter((retreat) => retreat._id !== id));
-                setTotalPages(Math.ceil(filteredRetreats.length / 5));
+                setFilteredRetreats((prev) =>
+                    prev.filter((retreat) => retreat._id !== id)
+                );
+                toast.success("Retreat deleted successfully!");
             } catch (error) {
                 console.error("Error deleting retreat:", error);
+                toast.error("Failed to delete retreat.");
             }
         }
     };
 
-    const handlePageChange = (page: number) => {
-        setCurrentPage(page);
-    };
+    const paginatedRetreats = filteredRetreats.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+    );
 
     return (
-        <div className="max-w-7xl mx-auto p-6">
+        <div className="max-w-7xl mx-auto p-6 flex flex-col h-full">
             <h1 className="text-3xl font-semibold text-center mb-6">Retreats</h1>
 
-            <div className="flex justify-between mb-4">
+            <div className="flex justify-between items-center mb-4">
                 <Link
                     to="/admin/retreats/add"
                     className="inline-flex items-center py-2 px-4 bg-[#9B6763] text-white rounded-md hover:bg-[#B8998C]"
@@ -94,66 +92,83 @@ const ListRetreats: React.FC = () => {
                     placeholder="Search retreats"
                     value={searchQuery}
                     onChange={handleSearchChange}
-                    className="p-2 w-full max-w-xs border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="p-2 w-full max-w-xs border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500"
                 />
             </div>
 
-            <table className="min-w-full bg-white border border-gray-300">
-                <thead>
-                <tr>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Title</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Description</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Start Date</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">End Date</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Price</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Max Participants</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {getPaginatedRetreats().map((retreat) => (
-                    <tr key={retreat._id} className="border-b border-gray-200 hover:bg-gray-50">
-                        <td className="px-6 py-4 text-sm font-medium text-gray-900">{retreat.title}</td>
-                        <td className="px-6 py-4 text-sm text-gray-500">{retreat.description}</td>
-                        <td className="px-6 py-4 text-sm text-gray-500">{retreat.start_date}</td>
-                        <td className="px-6 py-4 text-sm text-gray-500">{retreat.end_date}</td>
-                        <td className="px-6 py-4 text-sm text-gray-500">{retreat.price_per_person}</td>
-                        <td className="px-6 py-4 text-sm text-gray-500">{retreat.max_participants}</td>
-                        <td className="px-6 py-4 text-sm text-gray-500">
-                            <Link
-                                to={`/admin/retreats/update/${retreat._id}`}
-                                className="text-[#9B6763] hover:text-[#B8998C] mr-4"
-                            >
-                                Edit
-                            </Link>
-                            <button
-                                onClick={() => handleDelete(retreat._id)}
-                                className="text-[#B8978C] hover:text-[#A38F85]"
-                            >
-                                Delete
-                            </button>
-                        </td>
+            {retreats.length > 0 ? (
+                <table className="flex-1 flex flex-col min-w-full bg-white border border-gray-300">
+                    <thead className="bg-gray-100">
+                    <tr className="flex w-full">
+                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
+                            Image
+                        </th>
+                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
+                            Title
+                        </th>
+                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
+                            Dates
+                        </th>
+                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
+                            Price
+                        </th>
+                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
+                            Actions
+                        </th>
                     </tr>
-                ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody className="flex flex-col">
+                    {paginatedRetreats.map((retreat) => (
+                        <tr
+                            key={retreat._id}
+                            className="flex w-full border-b border-gray-200 items-center hover:bg-gray-50"
+                        >
+                            <td className="flex-1 px-4 py-2 text-sm font-medium text-gray-900">
+                                <img
+                                    src={`http://localhost:5000${retreat.retreat_photo}`}
+                                    alt={retreat.title}
+                                    className="w-16 h-16 object-cover rounded"
+                                />
+                            </td>
+                            <td className="flex-1 px-4 py-2 text-sm font-medium text-gray-900">
+                                {retreat.title}
+                            </td>
+                            <td className="flex-1 px-4 py-2 text-sm text-gray-500">
+                                {new Date(retreat.start_date).toLocaleDateString()} -{" "}
+                                {new Date(retreat.end_date).toLocaleDateString()}
+                            </td>
+                            <td className="flex-1 px-4 py-2 text-sm text-gray-500">
+                                {retreat.price_per_person}
+                            </td>
+                            <td className="flex-1 px-4 py-2 text-sm text-gray-500 flex space-x-2">
+                                <Link
+                                    to={`/admin/retreats/update/${retreat._id}`}
+                                    className="text-[#9B6763] hover:text-[#B8998C]"
+                                >
+                                    Edit
+                                </Link>
+                                <button
+                                    onClick={() => handleDelete(retreat._id)}
+                                    className="text-[#B8978C] hover:text-[#A38F85]"
+                                >
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            ) : (
+                <p className="text-gray-500">No retreats found.</p>
+            )}
 
-            <div className="mt-6 flex justify-center">
-                <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    className="py-2 px-4 bg-gray-300 text-gray-700 rounded-md mr-2 disabled:opacity-50"
-                >
-                    Prev
-                </button>
-                <span className="text-lg">{`Page ${currentPage} of ${totalPages}`}</span>
-                <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                    className="py-2 px-4 bg-gray-300 text-gray-700 rounded-md ml-2 disabled:opacity-50"
-                >
-                    Next
-                </button>
+            {/* Pagination */}
+            <div className="mt-4">
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={Math.ceil(filteredRetreats.length / ITEMS_PER_PAGE)}
+                    onPageChange={setCurrentPage}
+                />
             </div>
         </div>
     );

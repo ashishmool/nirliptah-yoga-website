@@ -1,81 +1,143 @@
-const Retreat = require("../models/Retreat"); // Assuming Retreat model is in models folder
-
-const createRetreat = (req, res) => {
-    const retreatData = req.body;
-
-    // Handle uploaded photos (if any)
-    let filePaths = [];
-    if (req.files && req.files["retreat_photos"]) {
-        filePaths = req.files["retreat_photos"].map(file => file.path); // Store the file paths
-    }
-
-    // Add file paths to the retreat data
-    retreatData.photos = filePaths;
-
-    // Save the retreat document to the database
-    Retreat.create(retreatData)
-        .then(retreat => res.status(201).json(retreat))
-        .catch(err => res.status(500).json({ error: err.message }));
-};
-
-
-// Update retreat by ID (with image upload)
-const updateRetreat = (req, res) => {
-    const retreatId = req.params.id;
-    const updateData = req.body;
-
-    // Handle uploaded photos (if any)
-    let updatedPhotos = [];
-    if (req.files && req.files["retreat_photos"]) {
-        updatedPhotos = req.files["retreat_photos"].map(file => file.path); // Update the photos field
-        updateData.photos = updatedPhotos;
-    }
-
-    // Update retreat document in the database
-    Retreat.findByIdAndUpdate(retreatId, updateData, { new: true })
-        .then(updatedRetreat => res.status(200).json(updatedRetreat))
-        .catch(err => res.status(500).json({ error: err.message }));
-};
+const Retreat = require("../models/Retreat");
+const upload = require("../config/multerConfig");
 
 // Get all retreats
-const getAllRetreats = (req, res) => {
-    Retreat.find()
-        .then(retreats => res.status(200).json(retreats))
-        .catch(err => res.status(500).json({ error: err.message }));
+const getRetreats = async (req, res) => {
+    try {
+        const retreats = await Retreat.find().populate("accommodation_id instructor_id");
+        res.json(retreats);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching retreats", error });
+    }
 };
 
-// Get retreat by ID
-const getRetreatById = (req, res) => {
-    const retreatId = req.params.id;
-
-    Retreat.findById(retreatId)
-        .then(retreat => {
-            if (!retreat) {
-                return res.status(404).json({ message: "Retreat not found" });
-            }
-            res.status(200).json(retreat);
-        })
-        .catch(err => res.status(500).json({ error: err.message }));
+// Get a retreat by ID
+const getRetreatById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const retreat = await Retreat.findById(id).populate("accommodation_id instructor_id");
+        if (!retreat) {
+            return res.status(404).json({ message: "Retreat not found" });
+        }
+        res.json(retreat);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching retreat", error });
+    }
 };
 
-// Delete retreat by ID
-const deleteRetreat = (req, res) => {
-    const retreatId = req.params.id;
+// Create a new retreat
+const createRetreat = async (req, res) => {
+    // Check if the retreat photo is uploaded
+    if (!req.files || !req.files.retreat_photo || req.files.retreat_photo.length === 0) {
+        return res.status(400).json({ message: "Retreat photo is required" });
+    }
 
-    Retreat.findByIdAndDelete(retreatId)
-        .then(deletedRetreat => {
-            if (!deletedRetreat) {
-                return res.status(404).json({ message: "Retreat not found" });
-            }
-            res.status(200).json({ message: "Retreat deleted successfully" });
-        })
-        .catch(err => res.status(500).json({ error: err.message }));
+    try {
+        const {
+            title,
+            description,
+            start_date,
+            end_date,
+            price_per_person,
+            max_participants,
+            address,
+            map_location,
+            meals_info,
+            organizer,
+            guests,
+            featuring_events,
+            accommodation_id,
+            instructor_id,
+        } = req.body;
+
+        const retreatPhotoPath = `/uploads/retreat_photos/${req.files.retreat_photo[0].filename}`;
+
+        const newRetreat = new Retreat({
+            title,
+            description,
+            start_date,
+            end_date,
+            price_per_person,
+            max_participants,
+            address,
+            map_location,
+            meals_info,
+            organizer,
+            guests,
+            featuring_events,
+            accommodation_id,
+            instructor_id,
+            retreat_photo: retreatPhotoPath,
+        });
+
+        const savedRetreat = await newRetreat.save();
+        res.status(201).json(savedRetreat);
+    } catch (error) {
+        console.error("Error creating retreat:", error);
+        res.status(500).json({ message: "Error creating retreat", error });
+    }
+};
+
+// Update a retreat by ID (PUT)
+const updateRetreat = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        if (req.files && req.files.retreat_photo && req.files.retreat_photo.length > 0) {
+            req.body.retreat_photo = `/uploads/retreat_photos/${req.files.retreat_photo[0].filename}`;
+        }
+
+        const updatedRetreat = await Retreat.findByIdAndUpdate(id, req.body, { new: true });
+
+        if (!updatedRetreat) {
+            return res.status(404).json({ message: "Retreat not found" });
+        }
+
+        res.json(updatedRetreat);
+    } catch (error) {
+        res.status(500).json({ message: "Error updating retreat", error });
+    }
+};
+
+// Partially update a retreat by ID (PATCH)
+const patchRetreat = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const updatedRetreat = await Retreat.findByIdAndUpdate(id, req.body, { new: true });
+
+        if (!updatedRetreat) {
+            return res.status(404).json({ message: "Retreat not found" });
+        }
+
+        res.json(updatedRetreat);
+    } catch (error) {
+        res.status(500).json({ message: "Error partially updating retreat", error });
+    }
+};
+
+// Delete a retreat by ID
+const deleteRetreat = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const deletedRetreat = await Retreat.findByIdAndDelete(id);
+
+        if (!deletedRetreat) {
+            return res.status(404).json({ message: "Retreat not found" });
+        }
+
+        res.json({ message: "Retreat deleted" });
+    } catch (error) {
+        res.status(500).json({ message: "Error deleting retreat", error });
+    }
 };
 
 module.exports = {
+    getRetreats,
+    getRetreatById,
     createRetreat,
     updateRetreat,
-    getAllRetreats,
-    getRetreatById,
+    patchRetreat,
     deleteRetreat,
 };
