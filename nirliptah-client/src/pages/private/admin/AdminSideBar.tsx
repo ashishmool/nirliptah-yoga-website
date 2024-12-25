@@ -28,7 +28,6 @@ const AdminSidebar: React.FC<SidebarProps> = ({
                                                   profilePicture,
                                                   email,
                                               }) => {
-    console.log("Profile Picture::: ",profilePicture);
     return (
         <aside
             className={`${

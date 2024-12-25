@@ -42,7 +42,7 @@ const UpdateAccommodation: React.FC = () => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
             setFormData({ ...formData, photo: file });
-            setImagePreview(URL.createObjectURL(file)); // Set the preview URL
+            setImagePreview(URL.createObjectURL(file));
         }
     };
 

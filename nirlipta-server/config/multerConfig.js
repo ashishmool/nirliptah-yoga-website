@@ -16,10 +16,23 @@ const createDirectoryIfNotExists = (dirPath) => {
 // Ensure the base upload directory exists
 createDirectoryIfNotExists(uploadDirectory);
 
+// Allowed MIME types for specific fields
+const allowedMimeTypes = {
+    "retreat_photo": /image\/(jpeg|jpg|png)/,
+    "guests[0][photo]": /image\/(jpeg|jpg|png)/,
+    "guests[1][photo]": /image\/(jpeg|jpg|png)/,
+    "workshop_photo": /image\/(jpeg|jpg|png)/,
+    "accommodation_photo": /image\/(jpeg|jpg|png)/,
+    "profile_picture": /image\/(jpeg|jpg|png)/,
+    "pose_photo": /image\/(jpeg|jpg|png)/,
+    "file": /application\/pdf/, // Single PDF upload
+    "files": /(application\/pdf|image\/(jpeg|jpg|png))/, // Multiple PDFs and images
+};
+
 // Multer storage configuration
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        let folder = "uploads"; // Default folder
+        let folder = "misc"; // Default folder
 
         // Determine folder based on the field name
         switch (file.fieldname) {
@@ -27,8 +40,6 @@ const storage = multer.diskStorage({
                 folder = "retreat_photos";
                 break;
             case "guests[0][photo]":
-                folder = "guest_photos";
-                break;
             case "guests[1][photo]":
                 folder = "guest_photos";
                 break;
@@ -44,8 +55,9 @@ const storage = multer.diskStorage({
             case "pose_photo":
                 folder = "pose_photos";
                 break;
-            default:
-                folder = "misc";
+            case "file":
+                folder = "pdf_files";
+                break;
         }
 
         const uploadPath = path.join(uploadDirectory, folder);
@@ -54,39 +66,57 @@ const storage = multer.diskStorage({
     },
     filename: (req, file, cb) => {
         const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
-        const ext = path.extname(file.originalname); // Extract file extension
+        const ext = path.extname(file.originalname).toLowerCase(); // Extract file extension
         cb(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
     },
 });
 
 // File filter to validate file types
 const fileFilter = (req, file, cb) => {
-    const allowedExtensions = /jpeg|jpg|png/;
-    const extname = allowedExtensions.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = allowedExtensions.test(file.mimetype);
+    const allowedMimeType = allowedMimeTypes[file.fieldname];
 
-    if (extname && mimetype) {
+    console.log('File fieldname:', file.fieldname);
+    console.log('File MIME type:', file.mimetype);
+
+    if (!allowedMimeType) {
+        return cb(new Error(`Unsupported field: ${file.fieldname}`));
+    }
+
+    if (allowedMimeType.test(file.mimetype)) {
         cb(null, true); // File is valid
     } else {
-        cb(new Error("Unsupported file type! Only JPEG, JPG, and PNG are allowed."));
+        cb(new Error(`Unsupported file type for ${file.fieldname}.`));
     }
 };
 
-// Multer upload configuration
+
+
+// Create Multer configurations for various upload scenarios
 const upload = multer({
     storage,
     fileFilter,
-    // Uncomment and adjust the following line if file size limits are needed
-    // limits: { fileSize: 10 * 1024 * 1024 }, // Limit to 10MB
 }).fields([
     { name: "retreat_photo", maxCount: 1 },
-    { name: "guests[0][photo]", maxCount: 1 }, // First guest photo
-    { name: "guests[1][photo]", maxCount: 1 }, // Second guest photo (if any)
-    { name: "workshop_photo", maxCount: 1 }, // Workshop photo
-    { name: "accommodation_photo", maxCount: 1 }, // Accommodation photo
-    { name: "profile_picture", maxCount: 1 }, // Profile photo
-    { name: "pose_photo", maxCount: 1 }, // Add pose photo field
+    { name: "guests[0][photo]", maxCount: 1 },
+    { name: "guests[1][photo]", maxCount: 1 },
+    { name: "workshop_photo", maxCount: 1 },
+    { name: "accommodation_photo", maxCount: 1 },
+    { name: "profile_picture", maxCount: 1 },
+    { name: "pose_photo", maxCount: 1 },
+    { name: "file", maxCount: 1 }, // Single PDF upload
 ]);
 
+const uploadSingle = multer({
+    storage,
+    fileFilter,
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+}).single("file"); // For single file uploads
 
-module.exports = upload;
+const uploadArray = multer({
+    storage,
+    fileFilter,
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit per file
+}).array("files", 10); // Allows up to 10 files (PDFs or images)
+
+// Export configurations
+module.exports = { upload, uploadSingle, uploadArray };

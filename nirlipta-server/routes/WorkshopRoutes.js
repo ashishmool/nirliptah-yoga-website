@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const upload = require("../config/multerConfig"); // Import multer middleware
+const { upload } = require("../config/multerConfig");
 const {
     getAllWorkshops,
     getWorkshopById,
@@ -12,17 +12,15 @@ const {
 // Get all workshops
 router.get("/", getAllWorkshops);
 
-// Create a new workshop
+// Create a new workshop with file uploads
 router.post(
     "/save",
+    upload,
     (req, res, next) => {
-        upload(req, res, function (err) {
-            if (err) {
-                console.error("Multer Error:", err.message);
-                return res.status(400).json({ message: err.message });
-            }
-            next(); // Proceed to the next middleware if upload succeeds
-        });
+        if (req.files && req.files.workshop_photo) {
+            console.log("Workshop photo uploaded:", req.files.workshop_photo);
+        }
+        next();
     },
     createWorkshop
 );
@@ -30,22 +28,20 @@ router.post(
 // Get a workshop by ID
 router.get("/:id", getWorkshopById);
 
-// Update workshop by ID
+// Update an existing workshop with file uploads
 router.put(
     "/update/:id",
+    upload,
     (req, res, next) => {
-        upload(req, res, function (err) {
-            if (err) {
-                console.error("Multer Error:", err.message);
-                return res.status(400).json({ message: err.message });
-            }
-            next(); // Proceed to the next middleware if upload succeeds
-        });
+        if (req.files && req.files.workshop_photo) {
+            console.log("Workshop photo uploaded:", req.files.workshop_photo);
+        }
+        next();
     },
     updateWorkshop
 );
 
-// Delete workshop by ID
+// Delete a workshop by ID
 router.delete("/delete/:id", deleteWorkshop);
 
 module.exports = router;

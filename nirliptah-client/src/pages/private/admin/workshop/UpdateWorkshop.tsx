@@ -37,8 +37,8 @@ const UpdateWorkshop: React.FC = () => {
         address: "",
         map_location: "",
         photo: null,
-        instructor_id: "",
-        category: "",
+        instructor_id: "", // Initialize as an empty object with an _id and name
+        category: "", // Same for category
         modules: [],
     });
     const [loading, setLoading] = useState(false);
@@ -100,13 +100,14 @@ const UpdateWorkshop: React.FC = () => {
                     address: workshop.address || "",
                     map_location: workshop.map_location || "",
                     photo: null, // Don't auto-load photo into form data
-                    instructor_id: workshop.instructor_id || "",
-                    category: workshop.category || "",
+                    instructor_id: workshop.instructor_id._id || "",
+                    category: workshop.category._id || "",
                     modules: workshop.modules || [],
+
                 });
 
                 if (workshop.photo) {
-                    setImagePreview(workshop.photo); // Set existing photo as preview if available
+                    setImagePreview(`http://localhost:5000${workshop.photo}`);
                 }
             } catch (error) {
                 console.error("Error fetching workshop data:", error);
@@ -134,10 +135,15 @@ const UpdateWorkshop: React.FC = () => {
         setFormData({ ...formData, [name]: value });
     };
 
+    const handleInstructorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedInstructorId = e.target.value;
+        setFormData({ ...formData, instructor_id: selectedInstructorId });
+    };
+
     const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedCategory = e.target.value;
-        setFormData({ ...formData, category: selectedCategory });
-        setIsNewCategory(selectedCategory === "create-new"); // Show input field if "Create New Category" is selected
+        const selectedCategoryId = e.target.value;
+        setFormData({ ...formData, category: selectedCategoryId });
+        setIsNewCategory(selectedCategoryId === "create-new"); // Show input field if "Create New Category" is selected
     };
 
     const handleModuleChange = (index: number, field: keyof Module, value: string | number) => {
@@ -172,7 +178,8 @@ const UpdateWorkshop: React.FC = () => {
         formDataObj.append("address", formData.address);
         formDataObj.append("map_location", formData.map_location);
         formDataObj.append("instructor_id", formData.instructor_id);
-        formDataObj.append("category", formData.category); // Add selected category
+        formDataObj.append("category", formData.category);
+
         formDataObj.append("modules", JSON.stringify(formData.modules)); // Send modules as JSON string
         if (formData.photo) {
             formDataObj.append("photo", formData.photo);
@@ -182,6 +189,7 @@ const UpdateWorkshop: React.FC = () => {
         }
 
         try {
+            console.log("Prepare Data Payload::::", formData);
             await axios.put(`http://localhost:5000/api/workshops/update/${id}`, formDataObj, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
@@ -258,7 +266,6 @@ const UpdateWorkshop: React.FC = () => {
                         name="description"
                         value={formData.description}
                         onChange={handleChange}
-                        rows={4}
                         className="mt-1 block w-full p-3 border border-gray-300 rounded-md"
                         required
                     />
@@ -271,86 +278,43 @@ const UpdateWorkshop: React.FC = () => {
                         id="instructor_id"
                         name="instructor_id"
                         value={formData.instructor_id}
-                        onChange={handleChange}
+                        onChange={handleInstructorChange}
                         className="mt-1 block w-full p-3 border border-gray-300 rounded-md"
-                        required
                     >
-                        <option value="">Select Instructor</option>
+                        <option value="">Select an instructor</option>
                         {instructors.map((instructor) => (
                             <option key={instructor._id} value={instructor._id}>
                                 {instructor.name}
                             </option>
                         ))}
                     </select>
-                </div>
 
-                {/* Price */}
-                <div>
-                    <label htmlFor="price" className="block text-sm font-medium text-gray-700">Price</label>
-                    <input
-                        id="price"
-                        name="price"
-                        type="number"
-                        value={formData.price}
-                        onChange={handleChange}
-                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md"
-                        required
-                    />
-                </div>
 
-                {/* Discounted Price */}
-                <div>
-                    <label htmlFor="discount_price" className="block text-sm font-medium text-gray-700">Discount Price</label>
-                    <input
-                        id="discount_price"
-                        name="discount_price"
-                        type="number"
-                        value={formData.discount_price}
-                        onChange={handleChange}
-                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md"
-                    />
-                </div>
-
-                {/* Photo */}
-                <div>
-                    <label htmlFor="photo" className="block text-sm font-medium text-gray-700">Photo</label>
-                    <input
-                        id="photo"
-                        name="photo"
-                        type="file"
-                        onChange={handleFileChange}
-                        className="mt-1 block w-full text-sm text-gray-700"
-                    />
-                    {imagePreview && (
-                        <div className="mt-2">
-                            <img src={imagePreview} alt="Photo preview" className="w-32 h-32 object-cover rounded-md" />
-                        </div>
-                    )}
                 </div>
 
                 {/* Modules */}
                 <div>
-                    <h2 className="text-lg font-semibold text-gray-700">Modules</h2>
+                    <label className="block text-sm font-medium text-gray-700">Modules</label>
                     {formData.modules.map((module, index) => (
-                        <div key={index} className="flex space-x-4 mb-4">
+                        <div key={index} className="flex items-center space-x-4">
                             <input
                                 type="text"
                                 value={module.name}
                                 onChange={(e) => handleModuleChange(index, "name", e.target.value)}
-                                placeholder="Module Name"
-                                className="block w-full p-3 border border-gray-300 rounded-md"
+                                placeholder="Module name"
+                                className="mt-1 block w-full p-3 border border-gray-300 rounded-md"
                             />
                             <input
                                 type="number"
                                 value={module.duration}
-                                onChange={(e) => handleModuleChange(index, "duration", +e.target.value)}
-                                placeholder="Duration (min)"
-                                className="block w-full p-3 border border-gray-300 rounded-md"
+                                onChange={(e) => handleModuleChange(index, "duration", Number(e.target.value))}
+                                placeholder="Duration (minutes)"
+                                className="mt-1 block w-full p-3 border border-gray-300 rounded-md"
                             />
                             <button
                                 type="button"
                                 onClick={() => removeModule(index)}
-                                className="text-red-500 hover:text-[#B8978C]"
+                                className="text-red-500"
                             >
                                 Remove
                             </button>
@@ -359,16 +323,34 @@ const UpdateWorkshop: React.FC = () => {
                     <button
                         type="button"
                         onClick={addModule}
-                        className="text-[#9B6763] hover:text-[#B8998C]"
+                        className="text-blue-500"
                     >
                         Add Module
                     </button>
                 </div>
 
+                {/* Image Upload */}
+                <div>
+                    <label className="block text-sm font-medium text-gray-700">Upload Image</label>
+                    <input
+                        type="file"
+                        onChange={handleFileChange}
+                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md"
+                    />
+                    {imagePreview && (
+                        <img
+                            src={imagePreview}
+                            alt="Workshop Preview"
+                            className="mt-2 w-32 h-32 object-cover rounded-md"
+                        />
+                    )}
+                </div>
+
+                {/* Submit Button */}
                 <button
                     type="submit"
+                    className="w-full py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                     disabled={loading}
-                    className="w-full p-3 bg-[#9B6763] text-white rounded-md disabled:bg-indigo-300"
                 >
                     {loading ? "Updating..." : "Update Workshop"}
                 </button>
