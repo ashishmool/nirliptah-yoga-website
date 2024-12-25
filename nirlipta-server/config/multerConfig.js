@@ -41,6 +41,9 @@ const storage = multer.diskStorage({
             case "profile_picture":
                 folder = "profile_pictures";
                 break;
+            case "pose_photo":
+                folder = "pose_photos";
+                break;
             default:
                 folder = "misc";
         }
@@ -82,6 +85,7 @@ const upload = multer({
     { name: "workshop_photo", maxCount: 1 }, // Workshop photo
     { name: "accommodation_photo", maxCount: 1 }, // Accommodation photo
     { name: "profile_picture", maxCount: 1 }, // Profile photo
+    { name: "pose_photo", maxCount: 1 }, // Add pose photo field
 ]);
 
 

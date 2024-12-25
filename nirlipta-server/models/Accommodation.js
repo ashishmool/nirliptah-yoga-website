@@ -35,14 +35,6 @@ const accommodationSchema = new mongoose.Schema(
             type: String, // URL or file path for accommodation image
             default: null,
         },
-        created_at: {
-            type: Date,
-            default: Date.now,
-        },
-        updated_at: {
-            type: Date,
-            default: Date.now,
-        },
     },
     {
         timestamps: true, // Automatically adds `createdAt` and `updatedAt` fields

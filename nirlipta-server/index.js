@@ -22,6 +22,7 @@ const scheduleRoutes = require("./routes/ScheduleRoutes");
 const subscriptionRoutes = require("./routes/SubscriptionRoutes");
 const authRoutes = require("./routes/AuthRoutes");
 const fileRoutes = require("./routes/FileRoutes");
+const poseRoutes = require("./routes/PoseRoutes");
 
 // Connect to the database
 connectDB();
@@ -48,6 +49,7 @@ app.use("/api/schedules", scheduleRoutes);
 app.use("/api/subscriptions", subscriptionRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/file", fileRoutes);
+app.use("/api/poses", poseRoutes);
 
 
 // Default route (optional)

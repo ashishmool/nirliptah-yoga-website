@@ -27,10 +27,8 @@ const ListInstructors: React.FC = () => {
     };
 
     const handleDelete = async (id: string) => {
-        if (window.confirm("Are you sure you want to delete this instructor?")) {
             await deleteInstructor(id);
             setInstructors((prev) => prev.filter((instructor) => instructor._id !== id));
-        }
     };
 
     const paginatedInstructors = filteredInstructors.slice(
@@ -118,13 +116,15 @@ const ListInstructors: React.FC = () => {
             )}
 
             {/* Pagination */}
-            <div className="mt-4">
-            <Pagination
-                currentPage={currentPage}
-                totalPages={Math.ceil(filteredInstructors.length / ITEMS_PER_PAGE)}
-                onPageChange={setCurrentPage}
-            />
-            </div>
+            {filteredInstructors.length > 0 && (
+                <div className="mt-4">
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={Math.ceil(filteredInstructors.length / ITEMS_PER_PAGE)}
+                        onPageChange={setCurrentPage}
+                    />
+                </div>
+            )}
         </div>
     );
 };
