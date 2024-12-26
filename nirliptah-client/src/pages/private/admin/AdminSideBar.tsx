@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FaChalkboardTeacher, FaHammer, FaHome, FaSuitcase, FaUsers, FaSignOutAlt } from "react-icons/fa";
+import { FaChalkboardTeacher, FaHammer, FaHome, FaSuitcase, FaUsers } from "react-icons/fa";
 import { FaPeopleGroup, FaPersonPraying } from "react-icons/fa6";
 
 const sidelinks = [
@@ -16,17 +16,11 @@ const sidelinks = [
 interface SidebarProps {
     isCollapsed: boolean;
     setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
-    onLogout: () => void;
-    profilePicture: string;
-    email: string;
 }
 
 const AdminSidebar: React.FC<SidebarProps> = ({
                                                   isCollapsed,
                                                   setIsCollapsed,
-                                                  onLogout,
-                                                  profilePicture,
-                                                  email,
                                               }) => {
     return (
         <aside
@@ -47,21 +41,6 @@ const AdminSidebar: React.FC<SidebarProps> = ({
                     )}
                 </button>
 
-                {/* Profile Section */}
-                <div className="mb-4 text-center">
-                    {!isCollapsed && (
-                        <>
-                            <img
-                                src={profilePicture || "default-profile-pic.jpg"} // Use a default image if profilePicture is missing
-                                alt="Profile"
-                                className={`rounded-full mx-auto ${
-                                    isCollapsed ? "w-10 h-10" : "w-20 h-20"
-                                }`}
-                            />
-                            <p className="mt-2 text-sm font-medium">{email}</p>
-                        </>
-                    )}
-                </div>
 
                 {/* Navigation Links */}
                 <nav>
@@ -82,18 +61,6 @@ const AdminSidebar: React.FC<SidebarProps> = ({
                 </nav>
             </div>
 
-            {/* Profile Settings Section */}
-            <div>
-                <button
-                    onClick={onLogout}
-                    className="bg-gray-700 hover:bg-gray-600 p-3 text-white flex items-center justify-center rounded m-4"
-                >
-                    <span className="text-xl">
-                        <FaSignOutAlt />
-                    </span>
-                    {!isCollapsed && <span className="ml-3">Logout</span>}
-                </button>
-            </div>
         </aside>
     );
 };

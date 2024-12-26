@@ -81,10 +81,7 @@ export default function MainNav() {
 
                     </div>
 
-                    {/* Logo */}
-                    <Link to="/" className="mr-3 w-1/8">
-                        <img src={Logo} className="w-32 h-auto ml-32" alt="Nirlipta Yoga" />
-                    </Link>
+
 
                 </div>
             </nav>

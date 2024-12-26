@@ -150,7 +150,15 @@ const AddRetreat: React.FC = () => {
 
     return (
         <div className="max-w-3xl mx-auto p-6">
-            <h1 className="text-3xl font-semibold text-center mb-6">Add New Retreat</h1>
+            <div className="flex justify-between items-center mb-6">
+                <button
+                    onClick={() => navigate(-1)}
+                    className="text-[#9B6763] hover:text-[#B8998C]"
+                >
+                    &#8592; Back
+                </button>
+                <h1 className="text-3xl font-semibold">Add New Retreat</h1>
+            </div>
             <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Title */}
                 <div>

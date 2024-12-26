@@ -9,7 +9,7 @@ const AddInstructor: React.FC = () => {
         name: "",
         bio: "",
         specialization: "",
-        rating: 0,
+        experience: 0,
         availability: "",
     });
 
@@ -36,7 +36,7 @@ const AddInstructor: React.FC = () => {
                 name: "",
                 bio: "",
                 specialization: "",
-                rating: 0,
+                experience: 0,
                 availability: "",
             });
             navigate("/admin/instructors"); // navigate to instructors page after successful addition
@@ -87,16 +87,16 @@ const AddInstructor: React.FC = () => {
                         />
                     </div>
                     <div>
-                        <label htmlFor="rating" className="block text-sm font-medium text-gray-700">Rating (0-5)</label>
+                        <label htmlFor="experience" className="block text-sm font-medium text-gray-700">Experience in Years (0-30)</label>
                         <input
-                            id="rating"
-                            name="rating"
+                            id="experience"
+                            name="experience"
                             type="number"
-                            value={formData.rating}
+                            value={formData.experience}
                             onChange={handleChange}
                             className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                             min="0"
-                            max="5"
+                            max="30"
                             required
                         />
                     </div>

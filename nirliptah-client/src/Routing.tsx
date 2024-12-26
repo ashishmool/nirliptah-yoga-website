@@ -31,44 +31,6 @@ import InstructorDashboard from "@/pages/private/instructor/InstructorDashboard.
 import StudentDashboard from "@/pages/private/student/StudentDashboard.tsx";
 import AdminHome from "@/pages/private/admin/AdminHome.tsx";
 
-
-
-// Lazy Loading
-// import {lazy} from "react";
-// import {Suspense} from "react";
-
-
-// const Home = lazy(()=> import("./core/public/Home"))
-// const Login = lazy(()=> import("./core/public/Login"))
-
-//Wrap with Suspense for Every Lazy Loading
-//<Route index element={<Suspense> <Home /> </Suspense>} />
-
-//errorElement
-
-// const privateRoutes = [
-//     {
-//         path:"/admin",
-//         element:
-//             <Suspense>
-//                 <AdminDashboard />
-//             </Suspense>,
-//         errorElement:<>Error</>,
-//         children:[
-//             {path: "/admin/retreats",
-//             element:
-//                 <Suspense>
-//                     <ListRetreats />
-//                 </Suspense>,
-//                 errorElement:<>Error</>,
-//              }
-//         ]
-//     }
-// ]
-
-// Instructor and Student Pages
-
-
 // Helper functions for role-based access
 const isAdmin = () => localStorage.getItem("role") === "admin";
 const isInstructor = () => localStorage.getItem("role") === "instructor";

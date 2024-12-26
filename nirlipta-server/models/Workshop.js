@@ -13,7 +13,6 @@ const workshopSchema = new mongoose.Schema(
         },
         description: {
             type: String,
-            required: false,
         },
         difficulty_level: {
             type: String,
@@ -28,25 +27,24 @@ const workshopSchema = new mongoose.Schema(
             type: Number,
         },
         classroom_info: {
-            type: String, // Details of classroom
+            type: String,
         },
         address: {
             type: String,
         },
         map_location: {
-            type: String, // URL or coordinates
+            type: String,
         },
         photo: {
-            type: String, // URL or file path
+            type: String,
         },
         instructor_id: {
-            type: mongoose.Schema.Types.ObjectId, // Foreign Key
+            type: mongoose.Schema.Types.ObjectId,
             ref: "Instructor",
-            required: false,
         },
         category: {
-            type: mongoose.Schema.Types.ObjectId, // Foreign Key
-            ref: "WorkshopCategory", // Reference to WorkshopCategory model
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "WorkshopCategory",
             required: true,
         },
         modules: [
@@ -59,7 +57,7 @@ const workshopSchema = new mongoose.Schema(
                 duration: {
                     type: Number,
                     required: true,
-                    min: 1, // Minimum 1
+                    min: 1,
                     validate: {
                         validator: Number.isInteger,
                         message: "Module duration must be an integer.",

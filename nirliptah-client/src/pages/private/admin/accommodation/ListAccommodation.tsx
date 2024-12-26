@@ -10,7 +10,7 @@ const ListAccommodation: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
 
-    const ITEMS_PER_PAGE = 2;
+    const ITEMS_PER_PAGE = 4;
 
     useEffect(() => {
         const fetchAccommodations = async () => {

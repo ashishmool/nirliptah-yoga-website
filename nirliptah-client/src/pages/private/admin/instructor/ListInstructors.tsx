@@ -77,7 +77,7 @@ const ListInstructors: React.FC = () => {
                     <tr className="flex w-full">
                         <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">Name</th>
                         <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">Specialization</th>
-                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">Rating</th>
+                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">Experience</th>
                         <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">Actions</th>
                     </tr>
                     </thead>
@@ -91,7 +91,7 @@ const ListInstructors: React.FC = () => {
                             <td className="flex-1 px-4 py-2 text-sm text-gray-500">
                                 {instructor.specialization?.join(", ") || "No Specialization"}
                             </td>
-                            <td className="flex-1 px-4 py-2 text-sm text-gray-500">{instructor.rating}</td>
+                            <td className="flex-1 px-4 py-2 text-sm text-gray-500">{instructor.experience}</td>
                             <td className="flex-1 px-4 py-2 text-sm text-gray-500 flex space-x-2">
                                 <Link
                                     to={`/admin/instructors/update/${instructor._id}`}

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "sonner";
 import { updateAccommodation, fetchAccommodationById } from "../../../../backend/services/accommodationService"; // Import the update function from your service file
 
 interface AccommodationFormData {
@@ -58,12 +57,27 @@ const UpdateAccommodation: React.FC = () => {
         // Ensure amenities are stored as a string
         const amenitiesString = formData.amenities.trim().replace(/,\s+/g, ',');
 
+        // Create a new FormData object for file upload and other data
+        const formDataObj = new FormData();
+
+        // Append each field to the FormData object
+        formDataObj.append("name", formData.name);
+        formDataObj.append("location", formData.location);
+        formDataObj.append("description", formData.description);
+        formDataObj.append("price_per_night", formData.price_per_night.toString());
+        formDataObj.append("max_occupancy", formData.max_occupancy.toString());
+        formDataObj.append("available_rooms", formData.available_rooms.toString());
+        formDataObj.append("amenities", amenitiesString);
+
+        // Append the photo if it's provided
+        if (formData.photo) {
+            formDataObj.append("accommodation_photo", formData.photo);
+        }
+
         try {
-            await updateAccommodation(id, {
-                ...formData,
-                amenities: amenitiesString,
-            }, navigate);
-            toast.success("Accommodation updated successfully!");
+            console.log("Payload prepared:::::: ",formData);
+            // Call the updateAccommodation service function with the FormData
+            await updateAccommodation(id, formDataObj, navigate);
         } catch (error) {
             console.error("Error updating accommodation:", error);
             alert("Failed to update accommodation.");
@@ -71,6 +85,7 @@ const UpdateAccommodation: React.FC = () => {
             setLoading(false);
         }
     };
+
 
     return (
         <div className="max-w-3xl mx-auto p-6">
@@ -173,13 +188,14 @@ const UpdateAccommodation: React.FC = () => {
                     <div>
                         <label htmlFor="photo" className="block text-sm font-medium text-gray-700">Photo</label>
                         <input
-                            id="photo"
-                            name="photo"
+                            id="accommodation_photo"
+                            name="accommodation_photo" // Make sure this matches the backend field name
                             type="file"
                             accept="image/*"
                             onChange={handleFileChange}
                             className="mt-1 block w-full text-sm text-gray-500"
                         />
+
                         {imagePreview && (
                             <img
                                 src={imagePreview}

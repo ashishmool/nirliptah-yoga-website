@@ -45,19 +45,20 @@ const createUser = async (req, res) => {
     try {
         validateEnv();
 
-        if (req.files?.profile_picture) {
-            req.body.profile_picture = getFilePath(req.files.profile_picture[0]);
+        if (req.files && req.files.user_photo) {
+            req.body.photo = `/uploads/user_photos/${req.files.user_photo[0].filename}`;
         }
 
         const user = new User(req.body);
         await user.save();
 
+        // Send welcome email
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: user.email,
             subject: "Welcome to Our Platform",
             text: `Hello ${user.username}, welcome to our platform! Your user ID is ${user._id}.`,
-            html: `<p>Hello <strong>${user.username}</strong>, welcome to our platform! Your user ID is <strong>${user._id}</strong>.</p>`
+            html: `<p>Hello <strong>${user.username}</strong>, welcome to our platform! Your user ID is <strong>${user._id}</strong>.</p>`,
         };
 
         try {
@@ -79,8 +80,8 @@ const updateUser = async (req, res) => {
     try {
         const { id } = req.params;
 
-        if (req.files?.profile_picture) {
-            req.body.profile_picture = getFilePath(req.files.profile_picture[0]);
+        if (req.files && req.files.user_photo) {
+            req.body.photo = `/uploads/user_photos/${req.files.user_photo[0].filename}`;
         }
 
         const updatedUser = await User.findByIdAndUpdate(id, req.body, {
@@ -104,8 +105,8 @@ const patchUser = async (req, res) => {
     try {
         const { id } = req.params;
 
-        if (req.files?.profile_picture) {
-            req.body.profile_picture = getFilePath(req.files.profile_picture[0]);
+        if (req.files && req.files.user_photo) {
+            req.body.photo = `/uploads/user_photos/${req.files.user_photo[0].filename}`;
         }
 
         const patchedUser = await User.findByIdAndUpdate(id, req.body, {

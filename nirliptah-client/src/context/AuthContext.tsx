@@ -1,5 +1,5 @@
 // AuthContext.tsx
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState } from "react";
 
 interface AuthInfo {
     email: string;
@@ -7,7 +7,7 @@ interface AuthInfo {
 }
 
 export const AuthContext = createContext({
-    info: { email: "", role: "" },
+    info: { email: "", role: "", id:"" },
     setInfo: (_info: AuthInfo) => {},
 });
 
@@ -16,7 +16,8 @@ export const AuthProvider = ({ children }) => {
         // Initialize with values from localStorage if they exist
         const email = localStorage.getItem("email") || "";
         const role = localStorage.getItem("role") || "";
-        return { email, role };
+        const id = localStorage.getItem("user_id") || "";
+        return { email, role, id };
     });
 
     return (

@@ -12,6 +12,7 @@ const UpdateUser: React.FC = () => {
         dob: "",
         gender: "",
         medical_conditions: "",
+        photo:null,
     });
 
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -30,6 +31,7 @@ const UpdateUser: React.FC = () => {
                     dob: formattedDob,
                     gender: response.data.gender || "",
                     medical_conditions: response.data.medical_conditions?.join(", ") || "",
+                    photo: response.data.photo || null,
                 });
             } catch (error) {
                 console.error("Error fetching user data:", error);
@@ -66,7 +68,7 @@ const UpdateUser: React.FC = () => {
             formDataPayload.append("medical_conditions", formData.medical_conditions);
 
             if (selectedImage) {
-                formDataPayload.append("profile_picture", selectedImage);
+                formDataPayload.append("user_photo", selectedImage);
             }
 
             await axios.put(`http://localhost:5000/api/users/update/${id}`, formDataPayload);
@@ -97,6 +99,13 @@ const UpdateUser: React.FC = () => {
                 <p>Loading user data...</p>
             ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
+
+                    <img
+                        src={`http://localhost:5000${formData.photo}`}
+                        alt={formData.name}
+                        className="w-16 h-16 object-cover rounded"
+                    />
+
                     <div>
                         <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
                         <input

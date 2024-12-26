@@ -28,6 +28,7 @@ export const createAccommodation = async (data: FormData) => {
 // Update an existing accommodation
 export const updateAccommodation = async (id, formDataObj, navigate) => {
     try {
+        // Perform the PUT request with FormData (including photo and other fields)
         await axios.put(`${API_BASE_URL}/update/${id}`, formDataObj, {
             headers: { "Content-Type": "multipart/form-data" },
         });
@@ -35,6 +36,7 @@ export const updateAccommodation = async (id, formDataObj, navigate) => {
         navigate("/admin/accommodations");
     } catch (error) {
         console.error("Error updating accommodation:", error);
+        toast.error("Failed to update accommodation.");
     }
 };
 
@@ -54,7 +56,7 @@ export const deleteAccommodation = async (id) => {
 
 export const fetchAccommodationById = async (id, setFormData, setImagePreview) => {
     try {
-        const response = await axios.get(`${API_BASE_URL}/getById/${id}`);
+        const response = await axios.get(`${API_BASE_URL}/${id}`);
         const accommodation = response.data;
 
         setFormData({

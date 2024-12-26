@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 const AddUser: React.FC = () => {
     const [formData, setFormData] = useState({
@@ -14,6 +15,8 @@ const AddUser: React.FC = () => {
         gender: "prefer not to say",
         medical_conditions: "",
     });
+
+    const navigate = useNavigate();
 
     const [loading, setLoading] = useState(false);
 
@@ -57,13 +60,20 @@ const AddUser: React.FC = () => {
 
     return (
         <div className="max-w-3xl mx-auto p-6">
-            <h1 className="text-3xl font-semibold text-center mb-6">Add New User</h1>
+            <div className="flex justify-between items-center mb-6">
+                <button
+                    onClick={() => navigate(-1)}
+                    className="text-[#9B6763] hover:text-[#B8998C]"
+                >
+                    &#8592; Back
+                </button>
+                <h1 className="text-3xl font-semibold">Add New User</h1>
+            </div>
             <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Form Inputs */}
                 {[
                     { label: "Name", name: "name", type: "text" },
                     { label: "Email", name: "email", type: "email" },
-                    { label: "Password", name: "password", type: "password" },
                     { label: "Profile Picture (URL)", name: "profile_picture", type: "text" },
                     { label: "Age", name: "age", type: "number" },
                     { label: "Height (cm)", name: "height", type: "number" },
@@ -75,7 +85,7 @@ const AddUser: React.FC = () => {
                             id={name}
                             name={name}
                             type={type}
-                            value={formData[name]}
+                            value={formData.name}
                             onChange={handleChange}
                             className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                             required

@@ -1,6 +1,5 @@
 const Workshop = require("../models/Workshop");
 const Category = require("../models/WorkshopCategory");
-const Instructor = require("../models/Instructor");
 
 // Get all workshops
 const getAllWorkshops = async (req, res) => {
@@ -52,15 +51,10 @@ const createWorkshop = async (req, res) => {
             modules,
         } = req.body;
 
-        // Parse and validate modules as before
-        let parsedModules = [];
-        if (typeof modules === "string") {
-            parsedModules = JSON.parse(modules);
-        } else if (Array.isArray(modules)) {
-            parsedModules = modules;
-        }
+        // Handle modules
+        const parsedModules = typeof modules === "string" ? JSON.parse(modules) : modules;
 
-        // Handle category creation if needed
+        // Handle category creation
         let selectedCategory = category;
         if (category === "create-new" && newCategory) {
             const existingCategory = await Category.findOne({ name: newCategory });
@@ -85,17 +79,15 @@ const createWorkshop = async (req, res) => {
             instructor_id,
             category: selectedCategory,
             modules: parsedModules,
-            photo: `/uploads/workshop_photos/${req.files.workshop_photo[0].filename}`, // Correctly reference the uploaded workshop photo
+            photo: `/uploads/workshop_photos/${req.files.workshop_photo[0].filename}`,
         });
 
         const savedWorkshop = await newWorkshop.save();
         res.status(201).json(savedWorkshop);
     } catch (error) {
-        console.error("Error creating workshop:", error);
         res.status(500).json({ message: "Error creating workshop", error });
     }
 };
-
 
 // Update workshop by ID
 const updateWorkshop = async (req, res) => {
@@ -103,15 +95,8 @@ const updateWorkshop = async (req, res) => {
         const { id } = req.params;
         let { category, newCategory, modules } = req.body;
 
-        // Parse and validate modules as before
-        let parsedModules = [];
-        if (typeof modules === "string") {
-            parsedModules = JSON.parse(modules);
-        } else if (Array.isArray(modules)) {
-            parsedModules = modules;
-        }
+        const parsedModules = typeof modules === "string" ? JSON.parse(modules) : modules;
 
-        // Handle category creation if needed
         if (category === "create-new" && newCategory) {
             const existingCategory = await Category.findOne({ name: newCategory });
             if (existingCategory) {
@@ -122,22 +107,15 @@ const updateWorkshop = async (req, res) => {
             category = newCategoryDoc._id;
         }
 
-        // Handle photo upload if new photo is provided
         if (req.files && req.files.workshop_photo) {
             req.body.photo = `/uploads/workshop_photos/${req.files.workshop_photo[0].filename}`;
         }
 
-        // Update workshop data
-        const updatedWorkshopData = {
-            ...req.body,
-            modules: parsedModules, // Update modules
-            category, // Update category
-        };
-
-        const updatedWorkshop = await Workshop.findByIdAndUpdate(id, updatedWorkshopData, {
-            new: true,
-            runValidators: true,
-        });
+        const updatedWorkshop = await Workshop.findByIdAndUpdate(
+            id,
+            { ...req.body, modules: parsedModules, category },
+            { new: true, runValidators: true }
+        );
 
         if (!updatedWorkshop) {
             return res.status(404).json({ message: "Workshop not found" });
@@ -145,7 +123,6 @@ const updateWorkshop = async (req, res) => {
 
         res.json(updatedWorkshop);
     } catch (error) {
-        console.error("Error updating workshop:", error);
         res.status(500).json({ message: "Error updating workshop", error });
     }
 };

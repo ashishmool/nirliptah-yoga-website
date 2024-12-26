@@ -1,4 +1,3 @@
-import React from "react";
 import {
     BarChart,
     Bar,
@@ -7,9 +6,6 @@ import {
     CartesianGrid,
     Tooltip,
     Legend,
-    PieChart,
-    Pie,
-    Cell,
     LineChart,
     Line,
 } from "recharts";
@@ -22,12 +18,6 @@ const AdminHome = () => {
         { name: "Accommodations", count: 8 },
     ];
 
-    const pieData = [
-        { name: "Bookings", value: 400 },
-        { name: "Registrations", value: 300 },
-        { name: "Cancellations", value: 100 },
-    ];
-
     const lineData = [
         { month: "Jan", users: 100, workshops: 20 },
         { month: "Feb", users: 200, workshops: 25 },
@@ -35,8 +25,6 @@ const AdminHome = () => {
         { month: "Apr", users: 250, workshops: 35 },
         { month: "May", users: 300, workshops: 40 },
     ];
-
-    const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
     return (
         <div className="max-w-7xl mx-auto p-6">
@@ -47,7 +35,7 @@ const AdminHome = () => {
                 <div className="bg-white shadow-md rounded-md p-4">
                     <h3 className="text-lg font-semibold mb-4">Overview</h3>
                     <BarChart
-                        width={400}
+                        width={350}
                         height={300}
                         data={barData}
                         margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
@@ -61,33 +49,11 @@ const AdminHome = () => {
                     </BarChart>
                 </div>
 
-                {/* Pie Chart */}
-                <div className="bg-white shadow-md rounded-md p-4">
-                    <h3 className="text-lg font-semibold mb-4">Activities</h3>
-                    <PieChart width={300} height={300}>
-                        <Pie
-                            data={pieData}
-                            dataKey="value"
-                            nameKey="name"
-                            cx="50%"
-                            cy="50%"
-                            outerRadius={80}
-                            fill="#8884d8"
-                            label
-                        >
-                            {pieData.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                            ))}
-                        </Pie>
-                        <Tooltip />
-                    </PieChart>
-                </div>
-
                 {/* Line Chart */}
                 <div className="bg-white shadow-md rounded-md p-4">
                     <h3 className="text-lg font-semibold mb-4">Monthly Growth</h3>
                     <LineChart
-                        width={400}
+                        width={350}
                         height={300}
                         data={lineData}
                         margin={{ top: 5, right: 30, left: 20, bottom: 5 }}

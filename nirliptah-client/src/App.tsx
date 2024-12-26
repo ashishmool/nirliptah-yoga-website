@@ -8,17 +8,17 @@ import BackgroundSvg from "@/assets/bg.svg";
 import { checkSession } from "@/backend/services/auth/checkSession";
 
 // CONTEXT
-import { UserInfoProvider } from "@/context/UserInfoContext";
+import { AuthProvider } from "@/context/AuthContext.tsx";
+
 
 // UI
-import { Footer, Navbar } from "@/components";
+import { Footer } from "@/components";
 import { LoadingScreen } from "@/components/ui/loading";
 import { Toaster } from "sonner";
 
 // Components
 import MainNav from "@/components/common/MainNav";
 import Routing from "./Routing";
-import { AuthProvider } from "@/context/AuthContext.tsx";
 
 export default function App() {
     const [activeLoadingScreen, setActiveLoadingScreen] = useState<boolean>(true);

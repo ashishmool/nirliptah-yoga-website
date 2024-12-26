@@ -99,7 +99,7 @@ const UpdateWorkshop: React.FC = () => {
                     classroom_info: workshop.classroom_info || "",
                     address: workshop.address || "",
                     map_location: workshop.map_location || "",
-                    photo: null, // Don't auto-load photo into form data
+                    photo: null,
                     instructor_id: workshop.instructor_id._id || "",
                     category: workshop.category._id || "",
                     modules: workshop.modules || [],
@@ -181,9 +181,13 @@ const UpdateWorkshop: React.FC = () => {
         formDataObj.append("category", formData.category);
 
         formDataObj.append("modules", JSON.stringify(formData.modules)); // Send modules as JSON string
+
         if (formData.photo) {
-            formDataObj.append("photo", formData.photo);
+            formDataObj.append("workshop_photo", formData.photo); // Ensure it matches the multer field name
         }
+
+
+
         if (isNewCategory && formData.newCategory) {
             formDataObj.append("newCategory", formData.newCategory); // Add new category if applicable
         }

@@ -22,10 +22,10 @@ const instructorSchema = new mongoose.Schema(
             type: [String], // Array of specializations
             default: [],
         },
-        rating: {
-            type: Number, // Average rating
+        experience: {
+            type: Number,
             min: 0,
-            max: 5,
+            max: 30,
         },
         availability: {
             type: String, // E.g., "Mon-Fri: 9AM-5PM"
