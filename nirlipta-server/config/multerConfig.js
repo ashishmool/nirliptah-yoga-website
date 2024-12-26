@@ -19,8 +19,7 @@ createDirectoryIfNotExists(uploadDirectory);
 // Folder mapping for field names
 const folderMapping = {
     "retreat_photo": "retreat_photos",
-    "guests[0][photo]": "guest_photos",
-    "guests[1][photo]": "guest_photos",
+    "guest_photo": "guest_photos",
     "workshop_photo": "workshop_photos",
     "accommodation_photo": "accommodation_photos",
     "user_photo": "user_photos",
@@ -47,6 +46,7 @@ const storage = multer.diskStorage({
 const fileFilter = (req, file, cb) => {
     const allowedMimeTypes = {
         "retreat_photo": /image\/(jpeg|jpg|png)/,
+        "guest_photo": /image\/(jpeg|jpg|png)/,
         "workshop_photo": /image\/(jpeg|jpg|png)/,
         "accommodation_photo": /image\/(jpeg|jpg|png)/,
         "user_photo": /image\/(jpeg|jpg|png)/,
@@ -71,6 +71,7 @@ const upload = multer({ storage, fileFilter }).fields([
     { name: "user_photo", maxCount: 1 },
     { name: "pose_photo", maxCount: 1 },
     { name: "file", maxCount: 1 },
+    { name: "guests[photo]", maxCount: 10 },
 ]);
 
 const uploadSingle = multer({

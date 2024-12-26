@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import {date} from "yup";
 
 const AddRetreat: React.FC = () => {
     const navigate = useNavigate();
@@ -21,8 +20,8 @@ const AddRetreat: React.FC = () => {
         featuring_events: "",
         accommodation_id: null,
         instructor_id: null,
-        guests: [] as { name: string; photo: File | null }[],
-        retreat_photo: [] as File[],
+        guests: [] as { name: string; guest_photo: File | null }[],
+        photo: [] as File[],
     });
 
     const [loading, setLoading] = useState(false);
@@ -55,7 +54,7 @@ const AddRetreat: React.FC = () => {
 
     const handleRetreatPhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files ? Array.from(e.target.files) : [];
-        setFormData({ ...formData, retreat_photo: files });
+        setFormData({ ...formData, photo: files });
     };
 
     const handleGuestChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,7 +67,7 @@ const AddRetreat: React.FC = () => {
     const handleGuestImageChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files ? e.target.files[0] : null;
         const newGuests = [...formData.guests];
-        newGuests[index] = { ...newGuests[index], photo: file };
+        newGuests[index] = { ...newGuests[index], guest_photo: file };
         setFormData({ ...formData, guests: newGuests });
     };
 
@@ -78,7 +77,7 @@ const AddRetreat: React.FC = () => {
     };
 
     const addGuest = () => {
-        setFormData({ ...formData, guests: [...formData.guests, { name: "", photo: null }] });
+        setFormData({ ...formData, guests: [...formData.guests, { name: "", guest_photo: null }] });
     };
 
     const removeGuest = (index: number) => {
@@ -102,7 +101,7 @@ const AddRetreat: React.FC = () => {
             accommodation_id: null,
             instructor_id: null,
             guests: [],
-            retreat_photo: [],
+            photo: [],
         });
     };
 
@@ -115,20 +114,23 @@ const AddRetreat: React.FC = () => {
         try {
             const formPayload = new FormData();
 
+            // Handling retreat photo
+            if (formData.photo.length > 0) {
+                formData.photo.forEach((file) => formPayload.append("retreat_photo", file));  // Retreat photo (single or multiple)
+            }
+
+            // Handling other form fields
             Object.entries(formData).forEach(([key, value]) => {
-                if (Array.isArray(value) && key === "retreat_photo") {
-                    // This assumes formData.retreat_photo is an array of files
-                    value.forEach((photo) => formPayload.append("retreat_photo", photo));  // Correct key for single retreat photo
-                } else if (Array.isArray(value) && key === "guests") {
+                if (Array.isArray(value) && key === "guests") {
                     value.forEach((guest, index) => {
                         formPayload.append(`guests[${index}][name]`, guest.name);
                         if (guest.photo) {
-                            formPayload.append(`guests[${index}][photo]`, guest.photo);  // Ensure the key matches multer's expectation
+                            formPayload.append(`guests[${index}][photo]`, guest.photo); // Correct file handling for guests
                         }
                     });
                 } else if (key === "meals_info" || key === "featuring_events") {
                     formPayload.append(key, JSON.stringify(value.split(",").map((item) => item.trim())));
-                } else if (value !== null) {
+                } else if (value !== null && value !== undefined) {
                     formPayload.append(key, value.toString());
                 }
             });
@@ -147,6 +149,7 @@ const AddRetreat: React.FC = () => {
             setLoading(false);
         }
     };
+
 
     return (
         <div className="max-w-3xl mx-auto p-6">
@@ -226,7 +229,7 @@ const AddRetreat: React.FC = () => {
                             type="number"
                             value={formData.price_per_person}
                             onChange={handleChange}
-                            className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm"
                             required
                         />
                     </div>
@@ -238,7 +241,7 @@ const AddRetreat: React.FC = () => {
                             type="number"
                             value={formData.max_participants}
                             onChange={handleChange}
-                            className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm"
                             required
                         />
                     </div>
@@ -253,7 +256,7 @@ const AddRetreat: React.FC = () => {
                         value={formData.meals_info}
                         onChange={handleChange}
                         placeholder="Comma separated list of meal options (e.g., Vegetarian, Vegan)"
-                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm"
                     />
                 </div>
 
@@ -266,7 +269,7 @@ const AddRetreat: React.FC = () => {
                         type="text"
                         value={formData.organizer}
                         onChange={handleChange}
-                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm"
                         required
                     />
                 </div>
@@ -279,8 +282,8 @@ const AddRetreat: React.FC = () => {
                         name="featuring_events"
                         value={formData.featuring_events}
                         onChange={handleChange}
-                        placeholder="Comma separated list of events (e.g., Kirtan Night, Yoga Classes)"
-                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        placeholder="Comma separated list of events (e.g., Kirtan Night, Nature Walk Meditation)"
+                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm"
                     />
                 </div>
 
@@ -292,7 +295,7 @@ const AddRetreat: React.FC = () => {
                         name="accommodation_id"
                         value={formData.accommodation_id || ""}
                         onChange={handleSelectChange}
-                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm"
                     >
                         <option value="">Select Accommodation</option>
                         {accommodations.map((acc: any) => (
@@ -309,7 +312,7 @@ const AddRetreat: React.FC = () => {
                         name="instructor_id"
                         value={formData.instructor_id || ""}
                         onChange={handleSelectChange}
-                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm"
                     >
                         <option value="">Select Instructor</option>
                         {instructors.map((inst: any) => (
@@ -320,18 +323,16 @@ const AddRetreat: React.FC = () => {
 
                 {/* Retreat Photos */}
                 <div>
-                    <label htmlFor="retreat_photos" className="block text-sm font-medium text-gray-700">Retreat Photos</label>
+                    <label htmlFor="photo" className="block text-sm font-medium text-gray-700">Retreat Photos</label>
                     <input
-                        id="retreat_photos"
-                        name="retreat_photos"
+                        id="photo"
+                        name="photo"
                         type="file"
                         onChange={handleRetreatPhotoChange}
                         multiple
                         className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm"
                     />
-
                 </div>
-
 
                 {/* Guest Details */}
                 <div>
@@ -345,7 +346,7 @@ const AddRetreat: React.FC = () => {
                                     value={guest.name}
                                     onChange={(e) => handleGuestChange(index, e)}
                                     placeholder="Guest Name"
-                                    className="mt-1 block w-3/4 p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                    className="mt-1 block w-3/4 p-3 border border-gray-300 rounded-md shadow-sm"
                                 />
                                 <input
                                     type="file"
@@ -381,10 +382,10 @@ const AddRetreat: React.FC = () => {
                     </button>
                     <button
                         type="submit"
-                        className="px-6 py-3 bg-indigo-500 text-white rounded-md shadow-sm"
                         disabled={loading}
+                        className="px-6 py-3 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700"
                     >
-                        {loading ? "Adding..." : "Add Retreat"}
+                        {loading ? "Saving..." : "Save Retreat"}
                     </button>
                 </div>
             </form>

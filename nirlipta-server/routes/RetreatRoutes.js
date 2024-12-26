@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const upload = require("../config/multerConfig");
+const { upload } = require("../config/multerConfig"); // Import multer middleware
 const {
     getRetreats,
     getRetreatById,
@@ -13,41 +13,17 @@ const {
 // Get all retreats
 router.get("/", getRetreats);
 
-// Get a retreat by ID
+// Get retreat by ID
 router.get("/:id", getRetreatById);
 
 // Create a new retreat
-router.post(
-    "/save",
-    (req, res, next) => {
-        upload(req, res, function (err) {
-            if (err) {
-                console.error("Multer Error:", err.message);
-                return res.status(400).json({ message: err.message });
-            }
-            next();
-        });
-    },
-    createRetreat
-);
+router.post("/save", upload, createRetreat);
 
 // Update a retreat by ID (PUT)
-router.put(
-    "/update/:id",
-    (req, res, next) => {
-        upload(req, res, function (err) {
-            if (err) {
-                console.error("Multer Error:", err.message);
-                return res.status(400).json({ message: err.message });
-            }
-            next();
-        });
-    },
-    updateRetreat
-);
+router.put("/update/:id", upload, updateRetreat);
 
 // Partially update a retreat by ID (PATCH)
-router.patch("/:id", patchRetreat);
+router.patch("/patch/:id", patchRetreat);
 
 // Delete a retreat by ID
 router.delete("/delete/:id", deleteRetreat);

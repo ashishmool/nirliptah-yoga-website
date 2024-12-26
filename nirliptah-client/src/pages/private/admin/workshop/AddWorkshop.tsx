@@ -355,16 +355,16 @@ const AddWorkshop: React.FC = () => {
                     <button
                         type="button"
                         onClick={addModule}
-                        className="bg-blue-600 text-white p-2 rounded-md"
+                        className="bg-[#A38F85] text-white p-2 rounded-md"
                     >
-                        Add Module
+                        + Add Module
                     </button>
                 </div>
 
                 <div className="mt-6">
                     <button
                         type="submit"
-                        className={`w-full bg-green-600 text-white p-3 rounded-md ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+                        className={`w-full bg-[#9B6763] text-white p-3 rounded-md ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
                         disabled={loading}
                     >
                         {loading ? "Adding..." : "Add Workshop"}

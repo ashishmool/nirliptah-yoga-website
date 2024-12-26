@@ -62,6 +62,7 @@ export default function Routing() {
                     <Route path="retreats/add" element={<AddRetreat />} />
                     <Route path="retreats/update/:id" element={<UpdateRetreat />} />
 
+
                     {/* Accommodation Routes */}
                     <Route path="accommodations" element={<ListAccommodation />} />
                     <Route path="accommodations/add" element={<AddAccommodation />} />

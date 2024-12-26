@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FaChalkboardTeacher, FaHammer, FaHome, FaSuitcase, FaUsers } from "react-icons/fa";
-import { FaPeopleGroup, FaPersonPraying } from "react-icons/fa6";
+import {FaBookBookmark, FaPeopleGroup, FaPersonPraying} from "react-icons/fa6";
 
 const sidelinks = [
     { title: "Dashboard", href: "/admin/home", icon: <FaHome /> },
@@ -13,7 +13,7 @@ const sidelinks = [
         ]
     },
     { title: "Yoga Poses", href: "/admin", icon: <FaPersonPraying /> },
-    { title: "Partners", href: "/admin", icon: <FaPeopleGroup /> },
+    { title: "Bookings", href: "/admin/bookings", icon: <FaBookBookmark /> },
     { title: "Users", href: "/admin/users", icon: <FaUsers /> },
 ];
 

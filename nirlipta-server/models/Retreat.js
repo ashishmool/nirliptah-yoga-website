@@ -63,7 +63,7 @@ const retreatSchema = new mongoose.Schema(
             ref: "Instructor",
             required: false, // Nullable for testing purpose
         },
-        retreat_photo: {
+        photo: {
             type: String,
             required: false,
         },

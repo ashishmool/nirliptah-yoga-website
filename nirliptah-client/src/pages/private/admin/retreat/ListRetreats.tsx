@@ -10,7 +10,7 @@ const ListRetreats: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
 
-    const ITEMS_PER_PAGE = 2;
+    const ITEMS_PER_PAGE = 4;
 
     useEffect(() => {
         const fetchRetreats = async () => {
@@ -46,13 +46,10 @@ const ListRetreats: React.FC = () => {
             try {
                 await axios.delete(`http://localhost:5000/api/retreats/delete/${id}`);
                 setRetreats((prev) => prev.filter((retreat) => retreat._id !== id));
-                setFilteredRetreats((prev) =>
-                    prev.filter((retreat) => retreat._id !== id)
-                );
+                setFilteredRetreats((prev) => prev.filter((retreat) => retreat._id !== id));
                 toast.success("Retreat deleted successfully!");
             } catch (error) {
                 console.error("Error deleting retreat:", error);
-                toast.error("Failed to delete retreat.");
             }
         }
     };
@@ -100,19 +97,28 @@ const ListRetreats: React.FC = () => {
                 <table className="flex-1 flex flex-col min-w-full bg-white border border-gray-300">
                     <thead className="bg-gray-100">
                     <tr className="flex w-full">
-                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
+                        <th className="flex-1 px-4 py-2 text-center text-sm font-medium text-gray-500">
                             Image
                         </th>
-                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
+                        <th className="flex-1 px-4 py-2 text-center text-sm font-medium text-gray-500">
                             Title
                         </th>
-                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
-                            Dates
+                        <th className="flex-1 px-4 py-2 text-center text-sm font-medium text-gray-500">
+                            Start Date
                         </th>
-                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
-                            Price
+                        <th className="flex-1 px-4 py-2 text-center text-sm font-medium text-gray-500">
+                            End Date
                         </th>
-                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
+                        <th className="flex-1 px-4 py-2 text-center text-sm font-medium text-gray-500">
+                            Price Per Person
+                        </th>
+                        <th className="flex-1 px-4 py-2 text-center text-sm font-medium text-gray-500">
+                            Max Participants
+                        </th>
+                        <th className="flex-1 px-4 py-2 text-center text-sm font-medium text-gray-500">
+                            Organizer
+                        </th>
+                        <th className="flex-1 px-4 py-2 text-center text-sm font-medium text-gray-500">
                             Actions
                         </th>
                     </tr>
@@ -123,24 +129,32 @@ const ListRetreats: React.FC = () => {
                             key={retreat._id}
                             className="flex w-full border-b border-gray-200 items-center hover:bg-gray-50"
                         >
-                            <td className="flex-1 px-4 py-2 text-sm font-medium text-gray-900">
+                            <td className="flex-1 px-4 py-2 text-center">
                                 <img
-                                    src={`http://localhost:5000${retreat.retreat_photo}`}
+                                    src={`http://localhost:5000${retreat.photo}`}
                                     alt={retreat.title}
-                                    className="w-16 h-16 object-cover rounded"
+                                    className="w-16 h-16 object-cover rounded mx-auto"
                                 />
                             </td>
-                            <td className="flex-1 px-4 py-2 text-sm font-medium text-gray-900">
+                            <td className="flex-1 px-4 py-2 text-sm font-medium text-gray-900 text-center">
                                 {retreat.title}
                             </td>
-                            <td className="flex-1 px-4 py-2 text-sm text-gray-500">
-                                {new Date(retreat.start_date).toLocaleDateString()} -{" "}
+                            <td className="flex-1 px-4 py-2 text-sm text-gray-500 text-center">
+                                {new Date(retreat.start_date).toLocaleDateString()}
+                            </td>
+                            <td className="flex-1 px-4 py-2 text-sm text-gray-500 text-center">
                                 {new Date(retreat.end_date).toLocaleDateString()}
                             </td>
-                            <td className="flex-1 px-4 py-2 text-sm text-gray-500">
-                                {retreat.price_per_person}
+                            <td className="flex-1 px-4 py-2 text-sm text-gray-500 text-center">
+                                ${retreat.price_per_person}
                             </td>
-                            <td className="flex-1 px-4 py-2 text-sm text-gray-500 flex space-x-2">
+                            <td className="flex-1 px-4 py-2 text-sm text-gray-500 text-center">
+                                {retreat.max_participants || "N/A"}
+                            </td>
+                            <td className="flex-1 px-4 py-2 text-sm text-gray-500 text-center">
+                                {retreat.organizer}
+                            </td>
+                            <td className="flex-1 px-4 py-2 text-sm text-gray-500 text-center flex justify-center space-x-2">
                                 <Link
                                     to={`/admin/retreats/update/${retreat._id}`}
                                     className="text-[#9B6763] hover:text-[#B8998C]"
@@ -172,7 +186,6 @@ const ListRetreats: React.FC = () => {
                     />
                 </div>
             )}
-
         </div>
     );
 };

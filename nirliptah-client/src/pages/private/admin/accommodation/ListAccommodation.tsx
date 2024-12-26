@@ -99,22 +99,28 @@ const ListAccommodation: React.FC = () => {
                 <table className="flex-1 flex flex-col min-w-full bg-white border border-gray-300">
                     <thead className="bg-gray-100">
                     <tr className="flex w-full">
-                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
+                        <th className="flex-1 px-4 py-2 text-center text-sm font-medium text-gray-500">
                             Image
                         </th>
-                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
+                        <th className="flex-1 px-4 py-2 text-center text-sm font-medium text-gray-500">
                             Name
                         </th>
-                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
+                        <th className="flex-1 px-4 py-2 text-center text-sm font-medium text-gray-500">
                             Location
                         </th>
-                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
-                            Price
+                        <th className="flex-1 px-4 py-2 text-center text-sm font-medium text-gray-500">
+                            Price per Night
                         </th>
-                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
+                        <th className="flex-1 px-4 py-2 text-center text-sm font-medium text-gray-500">
                             Rooms
                         </th>
-                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
+                        <th className="flex-1 px-4 py-2 text-center text-sm font-medium text-gray-500">
+                            Room Capacity
+                        </th>
+                        <th className="flex-1 px-4 py-2 text-center text-sm font-medium text-gray-500">
+                            Total Capacity
+                        </th>
+                        <th className="flex-1 px-4 py-2 text-center text-sm font-medium text-gray-500">
                             Actions
                         </th>
                     </tr>
@@ -125,26 +131,32 @@ const ListAccommodation: React.FC = () => {
                             key={acc._id}
                             className="flex w-full border-b border-gray-200 items-center hover:bg-gray-50"
                         >
-                            <td className="flex-1 px-4 py-2 text-sm font-medium text-gray-900">
+                            <td className="flex-1 px-4 py-2 text-center">
                                 <img
                                     src={`http://localhost:5000${acc.photo}`}
                                     alt={acc.name}
-                                    className="w-16 h-16 object-cover rounded"
+                                    className="w-16 h-16 object-cover rounded mx-auto"
                                 />
                             </td>
-                            <td className="flex-1 px-4 py-2 text-sm font-medium text-gray-900">
+                            <td className="flex-1 px-4 py-2 text-sm font-medium text-gray-900 text-center">
                                 {acc.name}
                             </td>
-                            <td className="flex-1 px-4 py-2 text-sm text-gray-500">
+                            <td className="flex-1 px-4 py-2 text-sm text-gray-500 text-center">
                                 {acc.location}
                             </td>
-                            <td className="flex-1 px-4 py-2 text-sm text-gray-500">
+                            <td className="flex-1 px-4 py-2 text-sm text-gray-500 text-center">
                                 {acc.price_per_night}
                             </td>
-                            <td className="flex-1 px-4 py-2 text-sm text-gray-500">
+                            <td className="flex-1 px-4 py-2 text-sm text-gray-500 text-center">
                                 {acc.available_rooms}
                             </td>
-                            <td className="flex-1 px-4 py-2 text-sm text-gray-500 flex space-x-2">
+                            <td className="flex-1 px-4 py-2 text-sm text-gray-500 text-center">
+                                {acc.max_occupancy}
+                            </td>
+                            <td className="flex-1 px-4 py-2 text-sm text-gray-500 text-center">
+                                {acc.available_rooms * acc.max_occupancy}
+                            </td>
+                            <td className="flex-1 px-4 py-2 text-sm text-gray-500 text-center flex justify-center space-x-2">
                                 <Link
                                     to={`/admin/accommodations/update/${acc._id}`}
                                     className="text-[#9B6763] hover:text-[#B8998C]"

@@ -1,13 +1,37 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
-const UpdateRetreat: React.FC = () => {
-    const { id } = useParams<{ id: string }>();
-    const navigate = useNavigate();
+type Guest = {
+    name: string;
+    guest_photo: File | null | string; // Handles both uploaded files and existing URLs
+};
 
-    const [formData, setFormData] = useState({
+type RetreatFormData = {
+    title: string;
+    description: string;
+    start_date: string;
+    end_date: string;
+    price_per_person: number;
+    max_participants: number;
+    address: string;
+    map_location: string;
+    meals_info: string;
+    organizer: string;
+    featuring_events: string;
+    accommodation_id: string | null;
+    instructor_id: string | null;
+    guests: Guest[];
+    photo: (File | string)[];
+};
+
+const UpdateRetreat: React.FC = () => {
+    const navigate = useNavigate();
+    const { id } = useParams<{ id: string }>();
+
+
+    const [formData, setFormData] = useState<RetreatFormData>({
         title: "",
         description: "",
         start_date: "",
@@ -21,96 +45,70 @@ const UpdateRetreat: React.FC = () => {
         featuring_events: "",
         accommodation_id: null,
         instructor_id: null,
-        guests: [] as { name: string; photo: File | null }[],
-        retreat_photo: [] as File[],
+        guests: [],
+        photo: [],
     });
 
-    const [loading, setLoading] = useState(true);
-    const [accommodations, setAccommodations] = useState([]);
-    const [instructors, setInstructors] = useState([]);
+    const [accommodations, setAccommodations] = useState<{ _id: string; name: string }[]>([]);
+    const [instructors, setInstructors] = useState<{ _id: string; name: string }[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-    // Fetch accommodations and instructors
+
+    // Fetch retreat details, accommodations, and instructors
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [accommodationRes, instructorRes] = await Promise.all([
+                console.log("Retreat ID params:::::", id);
+                const [retreatRes, accommodationRes, instructorRes] = await Promise.all([
+                    axios.get(`http://localhost:5000/api/retreats/${id}`),
                     axios.get("http://localhost:5000/api/accommodations"),
                     axios.get("http://localhost:5000/api/instructors"),
                 ]);
+
+                const retreatData = retreatRes.data;
+                console.log("RetreatData:::", retreatData);
+                const formattedStartDate = retreatData.start_date
+                    ? new Date(retreatData.start_date).toISOString().split("T")[0]
+                    : "";
+
+                const formattedEndDate = retreatData.end_date
+                    ? new Date(retreatData.end_date).toISOString().split("T")[0]
+                    : "";
+
+
+                setFormData({
+                    ...retreatData,
+                    accommodation_id: retreatData.accommodation_id._id,
+                    instructor_id: retreatData.instructor_id._id,
+                    start_date: formattedStartDate,
+                    end_date: formattedEndDate,
+                    meals_info: retreatData.meals_info.join(", "),
+                    featuring_events: retreatData.featuring_events.join(", "),
+                    photo: retreatData.photo || [],
+                    guests: retreatData.guests || [],
+                });
+
+                // Check if accommodation photo exists and set the image preview URL
+                if (retreatData.photo) {
+                    setImagePreview(`http://localhost:5000${retreatData.photo}`);
+                }
+
                 setAccommodations(accommodationRes.data || []);
                 setInstructors(instructorRes.data || []);
             } catch (error) {
-                console.error("Error fetching data:", error);
-                toast.error("Failed to fetch initial data.");
-            }
-        };
-        fetchData();
-    }, []);
-
-    // Fetch retreat details for editing
-    useEffect(() => {
-        const fetchRetreat = async () => {
-            try {
-                const response = await axios.get(`http://localhost:5000/api/retreats/${id}`);
-                const data = response.data;
-
-                // Format dates to "yyyy-MM-dd"
-                const formattedStartDate = data.start_date
-                    ? new Date(data.start_date).toISOString().split("T")[0]
-                    : "";
-                const formattedEndDate = data.end_date
-                    ? new Date(data.end_date).toISOString().split("T")[0]
-                    : "";
-
-                setFormData({
-                    ...data,
-                    start_date: formattedStartDate,
-                    end_date: formattedEndDate,
-                    meals_info: data.meals_info.join(", "),
-                    featuring_events: data.featuring_events.join(", "),
-                    guests: data.guests.map((guest: any) => ({
-                        name: guest.name,
-                        photo: null, // Keep null since the existing photo can't be uploaded again
-                    })),
-                    retreat_photo: [], // Reset to empty for new uploads
-                });
-
-                setLoading(false);
-            } catch (error) {
-                console.error("Error fetching retreat:", error);
-                setLoading(false);
+                console.error("Error fetching retreat data:", error);
                 toast.error("Failed to fetch retreat details.");
             }
         };
 
-        if (id) {
-            fetchRetreat();
-        }
+        fetchData();
     }, [id]);
 
-    // Handlers
+    // Form Handlers
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
-    };
-
-    const handleRetreatPhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const files = e.target.files ? Array.from(e.target.files) : [];
-        setFormData({ ...formData, retreat_photo: files });
-    };
-
-    const handleGuestChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        const newGuests = [...formData.guests];
-        newGuests[index] = { ...newGuests[index], [name]: value };
-        setFormData({ ...formData, guests: newGuests });
-    };
-
-    const handleGuestImageChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files ? e.target.files[0] : null;
-        const newGuests = [...formData.guests];
-        newGuests[index] = { ...newGuests[index], photo: file };
-        setFormData({ ...formData, guests: newGuests });
     };
 
     const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -118,45 +116,91 @@ const UpdateRetreat: React.FC = () => {
         setFormData({ ...formData, [name]: value || null });
     };
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            setFormData({ ...formData, photo: file });
+            setImagePreview(URL.createObjectURL(file));
+        }
+    };
+
+    const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files ? Array.from(e.target.files) : [];
+        const maxFileSize = 5 * 1024 * 1024; // 5MB
+
+        const validFiles = files.filter((file) => {
+            if (file.size > maxFileSize) {
+                toast.error(`File ${file.name} exceeds 5MB limit.`);
+                return false;
+            }
+            return true;
+        });
+
+        setFormData({ ...formData, photo: [...formData.photo, ...validFiles] });
+    };
+
+    const handleGuestChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        const updatedGuests = [...formData.guests];
+        updatedGuests[index] = { ...updatedGuests[index], [name]: value };
+        setFormData({ ...formData, guests: updatedGuests });
+    };
+
+    const handleGuestPhotoChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files ? e.target.files[0] : null;
+        const updatedGuests = [...formData.guests];
+        updatedGuests[index] = { ...updatedGuests[index], guest_photo: file };
+        setFormData({ ...formData, guests: updatedGuests });
+    };
+
     const addGuest = () => {
-        setFormData({ ...formData, guests: [...formData.guests, { name: "", photo: null }] });
+        setFormData({ ...formData, guests: [...formData.guests, { name: "", guest_photo: null }] });
     };
 
     const removeGuest = (index: number) => {
-        const newGuests = formData.guests.filter((_, i) => i !== index);
-        setFormData({ ...formData, guests: newGuests });
+        const updatedGuests = formData.guests.filter((_, i) => i !== index);
+        setFormData({ ...formData, guests: updatedGuests });
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setLoading(true);
 
-        console.log("Update Retreat Payload:::",formData);
+        if (new Date(formData.end_date) <= new Date(formData.start_date)) {
+            toast.error("End date must be after the start date.");
+            return;
+        }
 
-        try {
-            const formPayload = new FormData();
+        const formPayload = new FormData();
 
-            Object.entries(formData).forEach(([key, value]) => {
-                if (Array.isArray(value) && key === "retreat_photo") {
-                    value.forEach((photo) => formPayload.append("retreat_photos", photo));
-                } else if (Array.isArray(value) && key === "guests") {
+        // Append the photo if it's provided
+        if (formData.photo) {
+            formPayload.append("retreat_photo", formData.photo);
+        }
+
+        // Append other fields
+        Object.entries(formData).forEach(([key, value]) => {
+            if (Array.isArray(value)) {
+                if (key === "guests") {
                     value.forEach((guest, index) => {
                         formPayload.append(`guests[${index}][name]`, guest.name);
-                        if (guest.photo) {
-                            formPayload.append(`guests[${index}][photo]`, guest.photo);
+                        if (guest.guest_photo instanceof File) {
+                            formPayload.append(`guests[${index}][guest_photo]`, guest.guest_photo);
                         }
                     });
                 } else if (key === "meals_info" || key === "featuring_events") {
-                    formPayload.append(key, JSON.stringify(value.split(",").map((item) => item.trim())));
-                } else if (value !== null) {
-                    formPayload.append(key, value.toString());
+                    formPayload.append(key, JSON.stringify(value.map((item) => item.trim())));
                 }
-            });
+            } else {
+                formPayload.append(key, value?.toString() || "");
+            }
+        });
 
+        try {
+            setLoading(true);
+            console.log("Sending Form Data::::: ",formData);
             await axios.put(`http://localhost:5000/api/retreats/update/${id}`, formPayload, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
-
             toast.success("Retreat updated successfully!");
             navigate("/admin/retreats");
         } catch (error) {
@@ -167,18 +211,21 @@ const UpdateRetreat: React.FC = () => {
         }
     };
 
-    if (loading) {
-        return <div>Loading...</div>;
-    }
-
     return (
         <div className="max-w-3xl mx-auto p-6">
-            <h1 className="text-3xl font-semibold text-center mb-6">Update Retreat</h1>
+            <div className="flex justify-between items-center mb-6">
+                <button onClick={() => navigate(-1)} className="text-[#9B6763] hover:text-[#B8998C]">
+                    &#8592; Back
+                </button>
+                <h1 className="text-3xl font-semibold">Update Retreat</h1>
+            </div>
+
             <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Reuse the form inputs from AddRetreat */}
-                {/* Example: Title */}
+                {/* Title */}
                 <div>
-                    <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title</label>
+                    <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+                        Title
+                    </label>
                     <input
                         id="title"
                         name="title"
@@ -192,7 +239,9 @@ const UpdateRetreat: React.FC = () => {
 
                 {/* Description */}
                 <div>
-                    <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
+                    <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+                        Description
+                    </label>
                     <textarea
                         id="description"
                         name="description"
@@ -206,28 +255,27 @@ const UpdateRetreat: React.FC = () => {
 
                 {/* Start and End Dates */}
                 <div className="flex space-x-4">
-                    <div>
+                    <div className="w-1/2">
                         <label htmlFor="start_date" className="block text-sm font-medium text-gray-700">Start Date</label>
                         <input
                             id="start_date"
                             name="start_date"
                             type="date"
                             value={formData.start_date}
-                            onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
-                            className="mt-1 block w-full p-3 border border-gray-300 rounded-md"
+                            onChange={handleChange}
+                            className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm"
                             required
                         />
                     </div>
-
-                    <div>
+                    <div className="w-1/2">
                         <label htmlFor="end_date" className="block text-sm font-medium text-gray-700">End Date</label>
                         <input
                             id="end_date"
                             name="end_date"
                             type="date"
                             value={formData.end_date}
-                            onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
-                            className="mt-1 block w-full p-3 border border-gray-300 rounded-md"
+                            onChange={handleChange}
+                            className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm"
                             required
                         />
                     </div>
@@ -243,7 +291,7 @@ const UpdateRetreat: React.FC = () => {
                             type="number"
                             value={formData.price_per_person}
                             onChange={handleChange}
-                            className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm"
                             required
                         />
                     </div>
@@ -255,7 +303,7 @@ const UpdateRetreat: React.FC = () => {
                             type="number"
                             value={formData.max_participants}
                             onChange={handleChange}
-                            className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm"
                             required
                         />
                     </div>
@@ -270,7 +318,7 @@ const UpdateRetreat: React.FC = () => {
                         value={formData.meals_info}
                         onChange={handleChange}
                         placeholder="Comma separated list of meal options (e.g., Vegetarian, Vegan)"
-                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm"
                     />
                 </div>
 
@@ -283,7 +331,7 @@ const UpdateRetreat: React.FC = () => {
                         type="text"
                         value={formData.organizer}
                         onChange={handleChange}
-                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm"
                         required
                     />
                 </div>
@@ -296,8 +344,8 @@ const UpdateRetreat: React.FC = () => {
                         name="featuring_events"
                         value={formData.featuring_events}
                         onChange={handleChange}
-                        placeholder="Comma separated list of events (e.g., Kirtan Night, Yoga Classes)"
-                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        placeholder="Comma separated list of events (e.g., Kirtan Night, Nature Walk Meditation)"
+                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm"
                     />
                 </div>
 
@@ -307,16 +355,17 @@ const UpdateRetreat: React.FC = () => {
                     <select
                         id="accommodation_id"
                         name="accommodation_id"
-                        value={formData.accommodation_id || ""}
+                        value={formData.accommodation_id || ""}  // Ensure this is referring to the selected accommodation ID
                         onChange={handleSelectChange}
-                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm"
                     >
                         <option value="">Select Accommodation</option>
-                        {accommodations.map((acc: any) => (
-                            <option key={acc._id} value={acc._id}>{acc.name}</option>
+                        {accommodations.map((acc) => (
+                            <option key={acc._id} value={acc._id}>{acc.name}</option>  // Using acc._id for value and acc.name for display text
                         ))}
                     </select>
                 </div>
+
 
                 {/* Instructor */}
                 <div>
@@ -326,7 +375,7 @@ const UpdateRetreat: React.FC = () => {
                         name="instructor_id"
                         value={formData.instructor_id || ""}
                         onChange={handleSelectChange}
-                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm"
                     >
                         <option value="">Select Instructor</option>
                         {instructors.map((inst: any) => (
@@ -337,18 +386,23 @@ const UpdateRetreat: React.FC = () => {
 
                 {/* Retreat Photos */}
                 <div>
-                    <label htmlFor="retreat_photos" className="block text-sm font-medium text-gray-700">Retreat Photos</label>
+                    <label htmlFor="photo" className="block text-sm font-medium text-gray-700">Retreat Photos</label>
                     <input
-                        id="retreat_photos"
-                        name="retreat_photos"
+                        id="retreat_photo"
+                        name="retreat_photo"
                         type="file"
-                        onChange={handleRetreatPhotoChange}
+                        onChange={handleFileChange}
                         multiple
                         className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm"
                     />
-
                 </div>
-
+                {imagePreview && (
+                    <img
+                        src={imagePreview}
+                        alt="Accommodation Preview"
+                        className="mt-2 w-32 h-32 object-cover rounded-md"
+                    />
+                )}
 
                 {/* Guest Details */}
                 <div>
@@ -362,11 +416,11 @@ const UpdateRetreat: React.FC = () => {
                                     value={guest.name}
                                     onChange={(e) => handleGuestChange(index, e)}
                                     placeholder="Guest Name"
-                                    className="mt-1 block w-3/4 p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                    className="mt-1 block w-3/4 p-3 border border-gray-300 rounded-md shadow-sm"
                                 />
                                 <input
                                     type="file"
-                                    onChange={(e) => handleGuestImageChange(index, e)}
+                                    onChange={(e) => handleGuestPhotoChange(index, e)}
                                     className="p-3 border border-gray-300 rounded-md shadow-sm"
                                 />
                                 <button
@@ -387,7 +441,7 @@ const UpdateRetreat: React.FC = () => {
                         Add Guest
                     </button>
                 </div>
-
+                {/* Submit Button */}
                 <div className="flex justify-between mt-6">
                     <button
                         type="button"
@@ -398,8 +452,8 @@ const UpdateRetreat: React.FC = () => {
                     </button>
                     <button
                         type="submit"
-                        className="px-6 py-3 bg-indigo-500 text-white rounded-md shadow-sm"
                         disabled={loading}
+                        className="px-6 py-3 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700"
                     >
                         {loading ? "Updating..." : "Update Retreat"}
                     </button>

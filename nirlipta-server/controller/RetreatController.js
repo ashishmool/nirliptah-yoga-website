@@ -1,3 +1,5 @@
+const mongoose = require("mongoose");
+
 const Retreat = require("../models/Retreat");
 const upload = require("../config/multerConfig");
 
@@ -27,10 +29,6 @@ const getRetreatById = async (req, res) => {
 
 // Create a new retreat
 const createRetreat = async (req, res) => {
-    // Check if the retreat photo is uploaded
-    if (!req.files || !req.files.retreat_photo || req.files.retreat_photo.length === 0) {
-        return res.status(400).json({ message: "Retreat photo is required" });
-    }
 
     try {
         const {
@@ -63,12 +61,15 @@ const createRetreat = async (req, res) => {
             map_location,
             meals_info,
             organizer,
-            guests,
-            featuring_events,
+            guests: guests ? guests.split(",") : [],
+            featuring_events: featuring_events ? featuring_events.split(",") : [],
             accommodation_id,
             instructor_id,
-            retreat_photo: retreatPhotoPath,
+            photo: retreatPhotoPath,
         });
+        if (req.files && req.files.retreat_photo) {
+            req.body.photo = `/uploads/retreat_photos/${req.files.retreat_photo[0].filename}`;
+        }
 
         const savedRetreat = await newRetreat.save();
         res.status(201).json(savedRetreat);
@@ -83,8 +84,25 @@ const updateRetreat = async (req, res) => {
     try {
         const { id } = req.params;
 
-        if (req.files && req.files.retreat_photo && req.files.retreat_photo.length > 0) {
-            req.body.retreat_photo = `/uploads/retreat_photos/${req.files.retreat_photo[0].filename}`;
+        // Ensure the accommodation_id and instructor_id are ObjectIds (with 'new' keyword)
+        if (req.body.accommodation_id && typeof req.body.accommodation_id === 'string') {
+            req.body.accommodation_id = new mongoose.Types.ObjectId(req.body.accommodation_id);
+        }
+
+        if (req.body.instructor_id && typeof req.body.instructor_id === 'string') {
+            req.body.instructor_id = new mongoose.Types.ObjectId(req.body.instructor_id);
+        }
+
+        if (req.files && req.files.retreat_photo) {
+            req.body.photo = `/uploads/retreat_photos/${req.files.retreat_photo[0].filename}`;
+        }
+
+        if (req.body.guests) {
+            req.body.guests = req.body.guests.split(",");
+        }
+
+        if (req.body.featuring_events) {
+            req.body.featuring_events = req.body.featuring_events.split(",");
         }
 
         const updatedRetreat = await Retreat.findByIdAndUpdate(id, req.body, { new: true });
@@ -95,15 +113,29 @@ const updateRetreat = async (req, res) => {
 
         res.json(updatedRetreat);
     } catch (error) {
+        console.error("Error updating retreat:", error);
         res.status(500).json({ message: "Error updating retreat", error });
     }
 };
+
 
 // Partially update a retreat by ID (PATCH)
 const patchRetreat = async (req, res) => {
     try {
         const { id } = req.params;
 
+        if (req.body.guests) {
+            req.body.guests = req.body.guests.split(",");
+        }
+
+        if (req.files && req.files.retreat_photo) {
+            req.body.photo = `/uploads/retreat_photos/${req.files.retreat_photo[0].filename}`;
+        }
+
+        if (req.body.featuring_events) {
+            req.body.featuring_events = req.body.featuring_events.split(",");
+        }
+
         const updatedRetreat = await Retreat.findByIdAndUpdate(id, req.body, { new: true });
 
         if (!updatedRetreat) {
@@ -112,6 +144,7 @@ const patchRetreat = async (req, res) => {
 
         res.json(updatedRetreat);
     } catch (error) {
+        console.error("Error partially updating retreat:", error);
         res.status(500).json({ message: "Error partially updating retreat", error });
     }
 };
@@ -128,6 +161,7 @@ const deleteRetreat = async (req, res) => {
 
         res.json({ message: "Retreat deleted" });
     } catch (error) {
+        console.error("Error deleting retreat:", error);
         res.status(500).json({ message: "Error deleting retreat", error });
     }
 };
