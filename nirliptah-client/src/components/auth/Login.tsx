@@ -46,20 +46,30 @@ export default function Login({ onClose, onLoginSuccess }: LoginRegisterModalPro
                 password,
             });
 
-            const { token, user_id, email: userEmail, role } = response.data;
             console.log("Logged In Response Data:::", response.data);
+
+
+            const { token, user_id, email: userEmail, role, photo } = response.data;
             if (token) {
                 // Save credentials to localStorage
                 localStorage.setItem("token", token);
-                localStorage.setItem("user_id", user_id);
+                localStorage.setItem("id", user_id);
                 localStorage.setItem("email", userEmail);
                 localStorage.setItem("role", role);
+                localStorage.setItem("photo", photo);
+
+                // Update AuthContext with new info
+                setInfo({
+                    email: userEmail,
+                    role,
+                    user_id,
+                    photo,
+                });
 
                 toast.success("Login successful!");
 
                 // Update login state
                 setIsLoggedIn(true);
-                setInfo({email,role})
 
                 // // Optional success callback
                 // if (onLoginSuccess) onLoginSuccess();

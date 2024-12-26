@@ -1,24 +1,35 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import Logo from "../../../assets/logo-main.svg";
 import { AuthContext } from "@/context/AuthContext.tsx";
+import { fetchUserById } from "../../../backend/services/userService"; // Assuming this function is in userService.ts
 
 const AdminTopBar: React.FC = () => {
     const { info, setInfo } = useContext(AuthContext); // Correct placement of useContext
+    const [userData, setUserData] = useState<any>(null); // State to hold user data
     const navigate = useNavigate(); // Correct placement of useNavigate
+
+    // Fetch user data when user_id is available
+    useEffect(() => {
+        if (info.user_id) {
+            fetchUserById(info.user_id, setUserData);
+        }
+    }, [info.user_id]);
 
     // Handle logout
     const handleLogout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("email");
         localStorage.removeItem("role");
-        setInfo({ email: "", role: "" });
+        localStorage.removeItem("user_id");
+        setInfo({ email: "", role: "", user_id: "" });
         toast.success("Logged Out Successfully!");
         navigate('/'); // Redirect to home page
     };
 
-    console.log("Info::::", info);
+    console.log("Auth Info::::", info);
+    console.log("User Data::::", userData);
 
     return (
         <div className="navbar bg-base-100 h-16 shadow-md">
@@ -79,14 +90,15 @@ const AdminTopBar: React.FC = () => {
                         <div className="w-10 rounded-full">
                             <img
                                 alt="User Avatar"
-                                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                                src={`http://localhost:5000${userData?.photo}`}
+                            />
                         </div>
                     </button>
                     <ul
                         tabIndex={0}
                         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 w-52 p-2 shadow">
                         <li>
-                            <a className="justify-between">
+                            <a className="justify-between" href={'/my-profile'}>
                                 Profile
                                 <span className="badge">New</span>
                             </a>
