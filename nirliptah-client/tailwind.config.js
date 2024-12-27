@@ -1,14 +1,14 @@
-/** @type {import('tailwindcss').Config} */
 import tailwindcss_animate from "tailwindcss-animate";
 import daisyui from "daisyui";
 
+/** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: ["class"],
+  darkMode: ["class"], // Ensure dark mode is controlled by class
   content: [
-    './pages/**/*.{ts,tsx}',
+    './pages/**/*.{ts,tsx}',      // Adjust paths for your project
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
+    './src/**/*.{ts,tsx}',        // Include the src folder as well
   ],
   prefix: "",
   theme: {
@@ -77,4 +77,23 @@ export default {
     },
   },
   plugins: [tailwindcss_animate, daisyui],
+  daisyui: {
+    themes: [
+      "light",
+      "dark",
+      {
+        synthwave: {
+          "primary": "#9b6763",
+          "secondary": "#A38F85",
+          "accent": "#B8978C",
+          "neutral": "#1c1e26",
+          "base-100": "#1c1e26",
+          "info": "#209cee",
+          "success": "#8bc34a",
+          "warning": "#ff9800",
+          "error": "#ff5722",
+        },
+      },
+    ],
+  },
 };

@@ -30,7 +30,6 @@ import SingleWorkshop from "@/pages/public/workshop/SingleWorkshop.tsx";
 import InstructorDashboard from "@/pages/private/instructor/InstructorDashboard.tsx";
 import StudentDashboard from "@/pages/private/student/StudentDashboard.tsx";
 import AdminHome from "@/pages/private/admin/AdminHome.tsx";
-import MyProfile from "@/pages/private/MyProfile.tsx";
 
 // Helper functions for role-based access
 const isAdmin = () => localStorage.getItem("role") === "admin";

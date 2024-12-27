@@ -128,6 +128,33 @@ const UpdateWorkshop: React.FC = () => {
         }
     };
 
+    const handlePriceChange = (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const { name, value } = e.target;
+        const numericValue = parseFloat(value);
+
+        // Ensure the value is not negative
+        if (numericValue < 0) {
+            toast.error(`${name === "price" ? "Price" : "Discounted price"} cannot be negative.`);
+            return;
+        }
+
+        // Check discounted price validation
+        if (name === "discount_price" && numericValue >= parseFloat(formData.price)) {
+            toast.error("Discounted price must be less than the price.");
+            return;
+        }
+
+        // Check price validation
+        if (name === "price" && parseFloat(formData.discount_price) >= numericValue) {
+            toast.error("Discounted price must be less than the price.");
+            return;
+        }
+
+        setFormData({ ...formData, [name]: value });
+    };
+
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
     ) => {
@@ -262,6 +289,84 @@ const UpdateWorkshop: React.FC = () => {
                     </div>
                 </div>
 
+                {/* Difficulty Level, Price, and Address in the same line */}
+                <div className="flex space-x-6">
+                    <div className="flex-1">
+                        <label htmlFor="difficulty_level" className="block text-sm font-medium text-gray-700">Difficulty Level</label>
+                        <select
+                            id="difficulty_level"
+                            name="difficulty_level"
+                            value={formData.difficulty_level}
+                            onChange={handleChange}
+                            className="mt-1 block w-full p-3 border border-gray-300 rounded-md"
+                            required
+                        >
+                            <option value="beginner">Beginner</option>
+                            <option value="intermediate">Intermediate</option>
+                            <option value="advanced">Advanced</option>
+                        </select>
+                    </div>
+                    <div className="flex-1">
+                        <label htmlFor="price" className="block text-sm font-medium text-gray-700">Price</label>
+                        <input
+                            id="price"
+                            name="price"
+                            type="number"
+                            value={formData.price}
+                            onChange={handlePriceChange}
+                            className="mt-1 block w-full p-3 border border-gray-300 rounded-md"
+                            required
+                        />
+                    </div>
+                    <div className="flex-1">
+                        <label htmlFor="discount_price" className="block text-sm font-medium text-gray-700">Discounted Price</label>
+                        <input
+                            id="discount_price"
+                            name="discount_price"
+                            type="number"
+                            value={formData.discount_price}
+                            onChange={handlePriceChange}
+                            className="mt-1 block w-full p-3 border border-gray-300 rounded-md"
+                        />
+                    </div>
+                    <div className="flex-1">
+                        <label htmlFor="address" className="block text-sm font-medium text-gray-700">Address</label>
+                        <input
+                            id="address"
+                            name="address"
+                            type="text"
+                            value={formData.address}
+                            onChange={handleChange}
+                            className="mt-1 block w-full p-3 border border-gray-300 rounded-md"
+                        />
+                    </div>
+                </div>
+
+                {/* Classroom Info and Map Location in the same line */}
+                <div className="flex space-x-6">
+                    <div className="flex-1">
+                        <label htmlFor="classroom_info" className="block text-sm font-medium text-gray-700">Classroom Info</label>
+                        <textarea
+                            id="classroom_info"
+                            name="classroom_info"
+                            value={formData.classroom_info}
+                            onChange={handleChange}
+                            className="mt-1 block w-full p-3 border border-gray-300 rounded-md"
+                        />
+                    </div>
+                    <div className="flex-1">
+                        <label htmlFor="map_location" className="block text-sm font-medium text-gray-700">Map Location</label>
+                        <input
+                            id="map_location"
+                            name="map_location"
+                            type="text"
+                            value={formData.map_location}
+                            onChange={handleChange}
+                            className="mt-1 block w-full p-3 border border-gray-300 rounded-md"
+                        />
+                    </div>
+                </div>
+
                 {/* Description */}
                 <div>
                     <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
@@ -270,6 +375,7 @@ const UpdateWorkshop: React.FC = () => {
                         name="description"
                         value={formData.description}
                         onChange={handleChange}
+                        rows={4}
                         className="mt-1 block w-full p-3 border border-gray-300 rounded-md"
                         required
                     />

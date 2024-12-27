@@ -1,5 +1,4 @@
 // Common
-export { default as Navbar } from './common/AdminNavBar.tsx';
 export { default as Footer } from './common/Footer';
 export { default as Newsletter } from './common/Newsletter';
 export { default as Brands } from './common/Partners.tsx';

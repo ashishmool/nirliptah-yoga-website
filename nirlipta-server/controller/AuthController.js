@@ -1,7 +1,12 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const transporter = require("../config/mailConfig"); // Assuming you've set up a mail transporter for sending emails
+
+const RegistrationPasswordEmail = require("../config/RegistrationPasswordEmail");
+const ResetPasswordEmail = require ("../config/ResetPasswordEmail");
+
+const transporter = require("../config/mailConfig");
+
 require("dotenv").config();
 
 const SECRET_KEY = process.env.SECRET_KEY;
@@ -28,14 +33,12 @@ const register = async (req, res) => {
         // Construct reset link
         const resetLink = `${process.env.CLIENT_URL}/reset-password?token=${resetToken}`;
 
-        // Send email with the reset link
+        // Send the email
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: user.email,
             subject: "Complete Your Registration - Set Your Password",
-            html: `<p>Welcome, ${email}!</p>
-                   <p>Click <a href="${resetLink}">here</a> to set your password and complete your registration.</p>
-                   <p>If you did not register, please ignore this email.</p>`,
+            html: RegistrationPasswordEmail({ email: user.email, resetLink }),
         };
 
         await transporter.sendMail(mailOptions);
@@ -124,12 +127,12 @@ const resetPasswordRequest = async (req, res) => {
         // Construct reset link
         const resetLink = `${process.env.CLIENT_URL}/reset-password?token=${resetToken}`;
 
-        // Send email with the reset link
+        // In your email sending logic
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: user.email,
             subject: "Password Reset Request",
-            html: `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>`
+            html: ResetPasswordEmail({ email: user.email, resetLink }),
         };
 
         await transporter.sendMail(mailOptions);
@@ -163,7 +166,7 @@ const resetPassword = async (req, res) => {
         // Hash the new password and update the user's password
         const hashedPassword = await bcrypt.hash(newPassword, 10);
         user.password = hashedPassword;
-
+        user.status = "verified";
         // Save the updated user
         await user.save();
 

@@ -1,24 +1,31 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import Logo from "../../../assets/logo-main.svg";
 import { AuthContext } from "@/context/AuthContext.tsx";
-import { fetchUserById } from "../../../backend/services/userService"; // Assuming this function is in userService.ts
+import { fetchUserById } from "../../../backend/services/userService";
+import ThemeToggle from "../../components/ThemeToggle"; // Import ThemeToggle
+import LightLogo from "../../../assets/logo-main.svg";
+import DarkLogo from "../../../assets/logo-white.svg";
 
 const AdminTopBar: React.FC = () => {
-    const { info, setInfo } = useContext(AuthContext); // Correct placement of useContext
-    const [userData, setUserData] = useState<any>(null); // State to hold user data
-    const navigate = useNavigate(); // Correct placement of useNavigate
+    const { info, setInfo } = useContext(AuthContext);
+    const [userData, setUserData] = useState<unknown>(null);
+    const [theme, setTheme] = useState<string>(localStorage.getItem("theme") || "light"); // Track theme state
+    const navigate = useNavigate();
 
-    // Fetch user data when user_id is available
     useEffect(() => {
         if (info.user_id) {
             fetchUserById(info.user_id, setUserData);
         }
-        console.log("Fecthed User::::",info );
+        console.log("Fetched User::::", info);
     }, [info.user_id]);
 
-    // Handle logout
+    useEffect(() => {
+        // Update the theme in localStorage when it changes
+        localStorage.setItem("theme", theme);
+        document.documentElement.setAttribute("data-theme", theme);
+    }, [theme]);
+
     const handleLogout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("email");
@@ -29,16 +36,17 @@ const AdminTopBar: React.FC = () => {
         navigate('/'); // Redirect to home page
     };
 
-
     return (
         <div className="navbar bg-base-100 h-16 shadow-md">
             <div className="flex-1 flex items-center">
-                {/* Logo */}
+                {/* Logo with dynamic logo based on theme */}
                 <Link to="/" className="mr-3">
-                    <img src={Logo} className="w-32 h-auto mx-auto" alt="Nirlipta Yoga" />
+                    <img
+                        src={theme === "dark" ? DarkLogo : LightLogo}
+                        className="w-32 h-auto mx-auto"
+                        alt="Nirlipta Yoga"
+                    />
                 </Link>
-            </div>
-            <div className="flex-none flex items-center gap-4">
                 {/* Hamburger Menu (Dropdown) */}
                 <div className="dropdown">
                     <button tabIndex={0} className="btn btn-ghost btn-circle">
@@ -63,6 +71,11 @@ const AdminTopBar: React.FC = () => {
                         <li><a href="#">About</a></li>
                     </ul>
                 </div>
+            </div>
+
+            <div className="flex-none flex items-center gap-4">
+                {/* Pass theme state and setTheme function to ThemeToggle */}
+                <ThemeToggle theme={theme} setTheme={setTheme} />
 
                 {/* Notifications */}
                 <button className="btn btn-ghost btn-circle">
@@ -79,13 +92,12 @@ const AdminTopBar: React.FC = () => {
                                 strokeWidth="2"
                                 d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                         </svg>
-                        <span className="badge badge-xs" style={{ backgroundColor: '#9B6763' }}></span> {/* Changed color */}
+                        <span className="badge badge-xs" style={{ backgroundColor: '#9B6763' }}></span>
                     </div>
                 </button>
 
-
                 {/* Avatar Dropdown */}
-                <div className="dropdown dropdown-end">
+                <div className="dropdown dropdown-end p-6">
                     <button tabIndex={0} className="btn btn-ghost btn-circle avatar">
                         <div className="w-10 rounded-full">
                             <img
@@ -98,14 +110,11 @@ const AdminTopBar: React.FC = () => {
                         tabIndex={0}
                         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 w-52 p-2 shadow">
                         <li>
-                            <a className="justify-between" href={'/my-profile'}>
-                                Profile
-                                <span className="badge">New</span>
-                            </a>
+                            <a className="justify-between" href={'/my-profile'}>Profile</a>
                         </li>
                         <li><a href="#">Settings</a></li>
                         <li>
-                            <button onClick={handleLogout}>Logout</button> {/* Fixed Logout */}
+                            <button onClick={handleLogout}>Logout</button>
                         </li>
                     </ul>
                 </div>

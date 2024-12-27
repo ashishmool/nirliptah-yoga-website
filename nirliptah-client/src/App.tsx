@@ -10,7 +10,6 @@ import { checkSession } from "@/backend/services/auth/checkSession";
 // CONTEXT
 import { AuthProvider } from "@/context/AuthContext.tsx";
 
-
 // UI
 import { Footer } from "@/components";
 import { LoadingScreen } from "@/components/ui/loading";
@@ -37,6 +36,20 @@ export default function App() {
         validateSession();
     }, []);
 
+    useEffect(() => {
+        // Apply saved theme on load
+        const savedTheme = localStorage.getItem("theme") || "light";
+        document.documentElement.setAttribute("data-theme", savedTheme);
+
+        // Attach theme change listener
+        const themeToggle = document.querySelector(".theme-controller");
+        themeToggle?.addEventListener("change", (e) => {
+            const theme = (e.target as HTMLInputElement).value;
+            document.documentElement.setAttribute("data-theme", theme);
+            localStorage.setItem("theme", theme);
+        });
+    }, []);
+
     const Layout = () => {
         const location = useLocation();
 
@@ -46,7 +59,6 @@ export default function App() {
         return (
             <>
                 <Routing />
-                {/* Conditionally render Navbar or MainNav */}
                 {!isAdminRoute && <MainNav />}
                 {!isAdminRoute && <Footer />}
             </>

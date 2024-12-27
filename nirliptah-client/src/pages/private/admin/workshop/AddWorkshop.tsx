@@ -69,6 +69,34 @@ const AddWorkshop: React.FC = () => {
         setFormData({ ...formData, [name]: value });
     };
 
+    const handlePriceChange = (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const { name, value } = e.target;
+        const numericValue = parseFloat(value);
+
+        // Ensure the value is not negative
+        if (numericValue < 0) {
+            toast.error(`${name === "price" ? "Price" : "Discounted price"} cannot be negative.`);
+            return;
+        }
+
+        // Check discounted price validation
+        if (name === "discount_price" && numericValue >= parseFloat(formData.price)) {
+            toast.error("Discounted price must be less than the price.");
+            return;
+        }
+
+        // Check price validation
+        if (name === "price" && parseFloat(formData.discount_price) >= numericValue) {
+            toast.error("Discounted price must be less than the price.");
+            return;
+        }
+
+        setFormData({ ...formData, [name]: value });
+    };
+
+
     const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedCategory = e.target.value;
         setFormData({ ...formData, category: selectedCategory });
@@ -218,7 +246,7 @@ const AddWorkshop: React.FC = () => {
                             name="price"
                             type="number"
                             value={formData.price}
-                            onChange={handleChange}
+                            onChange={handlePriceChange}
                             className="mt-1 block w-full p-3 border border-gray-300 rounded-md"
                             required
                         />
@@ -230,7 +258,7 @@ const AddWorkshop: React.FC = () => {
                             name="discount_price"
                             type="number"
                             value={formData.discount_price}
-                            onChange={handleChange}
+                            onChange={handlePriceChange}
                             className="mt-1 block w-full p-3 border border-gray-300 rounded-md"
                         />
                     </div>
