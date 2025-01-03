@@ -2,10 +2,6 @@ const mongoose = require("mongoose");
 
 const retreatSchema = new mongoose.Schema(
     {
-        retreat_id: {
-            type: mongoose.Schema.Types.ObjectId, // Primary Key
-            auto: true,
-        },
         title: {
             type: String,
             required: true,

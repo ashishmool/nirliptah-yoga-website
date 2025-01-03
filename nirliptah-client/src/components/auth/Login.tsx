@@ -16,7 +16,7 @@ import {
 import Signup from "@/components/auth/Signup";
 import ResetRequest from "@/components/auth/ResetRequest";
 import { UserInfoContext } from "@/context/UserInfoContext.tsx";
-import {AuthContext} from "@/context/AuthContext.tsx";
+import { AuthContext } from "@/context/AuthContext.tsx";
 
 type LoginRegisterModalProps = {
     onClose: () => void;
@@ -46,61 +46,45 @@ export default function Login({ onClose, onLoginSuccess }: LoginRegisterModalPro
                 password,
             });
 
-            console.log("Logged In Response Data:::", response.data);
-
-
             const { token, user_id, email: userEmail, role, photo } = response.data;
-            if (token) {
-                // Save credentials to localStorage
-                localStorage.setItem("token", token);
-                localStorage.setItem("id", user_id);
-                localStorage.setItem("email", userEmail);
-                localStorage.setItem("role", role);
-                localStorage.setItem("photo", photo);
 
-                // Update AuthContext with new info
-                setInfo({
-                    email: userEmail,
-                    role,
-                    user_id,
-                    photo,
-                });
+            // Save credentials to localStorage
+            localStorage.setItem("token", token);
+            localStorage.setItem("user_id", user_id);
+            localStorage.setItem("email", userEmail);
+            localStorage.setItem("role", role);
+            localStorage.setItem("photo", photo);
 
-                toast.success("Login successful!");
+            // Update AuthContext
+            setInfo({ email: userEmail, role, user_id, photo });
 
-                // Update login state
-                setIsLoggedIn(true);
+            toast.success("Login successful!");
 
-                // // Optional success callback
-                // if (onLoginSuccess) onLoginSuccess();
-                //
-                // Redirect based on role
-                const roleRedirects: Record<string, string> = {
-                    admin: "/admin/home",
-                    instructor: "/instructor",
-                    student: "/student",
-                };
+            // Update login state
+            setIsLoggedIn(true);
 
-                window.location.href = roleRedirects[role] || "/";
+            // Optional success callback
+            onLoginSuccess?.();
 
-                onClose();
-            } else {
-                throw new Error("Token not found in response");
-            }
+            // Redirect based on role
+            const roleRedirects: Record<string, string> = {
+                admin: "/admin/home",
+                instructor: "/instructor",
+                student: "/student",
+            };
+
+            window.location.href = roleRedirects[role] || "/";
+            onClose();
         } catch (error) {
-            if (error instanceof AxiosError) {
-                const errorMessage = error.response?.data?.message || "Unable to login. Please try again.";
-                toast.error(errorMessage);
-            } else {
-                toast.error("An unexpected error occurred.");
-            }
+            const errorMessage =
+                (error as AxiosError)?.response?.data?.message || "Unable to login. Please try again.";
+            toast.error(errorMessage);
         } finally {
             setLoading(false);
         }
     };
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
-
         if (event.key === "Enter") {
             handleLogin();
         }
@@ -110,9 +94,7 @@ export default function Login({ onClose, onLoginSuccess }: LoginRegisterModalPro
         <Dialog open onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>
-                        {isResetPassword ? "Reset Password" : "Login"}
-                    </DialogTitle>
+                    <DialogTitle>{isResetPassword ? "Reset Password" : "Login"}</DialogTitle>
                     <DialogDescription>
                         {isResetPassword
                             ? "Enter your email to reset your password."

@@ -22,7 +22,7 @@ export default function MainNav() {
         const role = localStorage.getItem("role");
 
         if (token && email && role) {
-            setInfo({ email, role });
+            setInfo({email, role});
         }
     }, []);
 
@@ -39,7 +39,7 @@ export default function MainNav() {
         localStorage.removeItem("token");
         localStorage.removeItem("email");
         localStorage.removeItem("role");
-        setInfo({ email: "", role: "" });
+        setInfo({email: "", role: ""});
         toast.success("Logged Out Successfully!");
         navigate ('/');
     };

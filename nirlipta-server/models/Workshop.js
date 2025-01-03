@@ -2,10 +2,6 @@ const mongoose = require("mongoose");
 
 const workshopSchema = new mongoose.Schema(
     {
-        course_id: {
-            type: mongoose.Schema.Types.ObjectId, // Primary Key
-            auto: true,
-        },
         title: {
             type: String,
             required: true,
@@ -16,7 +12,7 @@ const workshopSchema = new mongoose.Schema(
         },
         difficulty_level: {
             type: String,
-            enum: ["beginner", "intermediate", "advanced"], // Fixed values
+            enum: ["beginner", "intermediate", "advanced"],
             required: true,
         },
         price: {

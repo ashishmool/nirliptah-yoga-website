@@ -1,30 +1,43 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, ReactNode } from "react";
 
+// Define structure of AuthInfo
 interface AuthInfo {
     email: string;
     role: string;
     user_id: string;
+    photo: string;
 }
 
-export const AuthContext = createContext({
-    info: { email: "", role: "", user_id: "" },
-    setInfo: (_info: AuthInfo) => {},
+// AuthContext with default values
+export const AuthContext = createContext<{
+    info: AuthInfo;
+    setInfo: (info: { role: any; user_id: any; photo: any; email: any }) => void;
+}>({
+    info: { email: "", role: "", user_id: "", photo:"" },
+    setInfo: () => {}, // Default no-op function
 });
 
-export const AuthProvider = ({ children }) => {
+// Props for AuthProvider
+interface AuthProviderProps {
+    children: ReactNode;
+}
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [info, setInfo] = useState<AuthInfo>(() => {
-        // Initialize with values from localStorage if they exist
         const email = localStorage.getItem("email") || "";
         const role = localStorage.getItem("role") || "";
-        const user_id = localStorage.getItem("id") || "";
+        const user_id = localStorage.getItem("user_id") || "";
         return { email, role, user_id };
     });
 
     useEffect(() => {
-        // Sync the info state with localStorage if it changes
-        localStorage.setItem("email", info.email);
-        localStorage.setItem("role", info.role);
-        localStorage.setItem("id", info.user_id);
+        try {
+            localStorage.setItem("email", info.email);
+            localStorage.setItem("role", info.role);
+            localStorage.setItem("user_id", info.user_id);
+        } catch (error) {
+            console.error("Failed to sync state with localStorage:", error);
+        }
     }, [info]);
 
     return (

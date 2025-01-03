@@ -2,10 +2,6 @@ const mongoose = require("mongoose");
 
 const instructorSchema = new mongoose.Schema(
     {
-        instructor_id: {
-            type: mongoose.Schema.Types.ObjectId, // Primary Key
-            auto: true,
-        },
         user_id: {
             type: mongoose.Schema.Types.ObjectId, // Foreign Key
             ref: "User",
@@ -19,7 +15,7 @@ const instructorSchema = new mongoose.Schema(
             trim: true,
         },
         specialization: {
-            type: [String], // Array of specializations
+            type: [String],
             default: [],
         },
         experience: {
@@ -28,10 +24,10 @@ const instructorSchema = new mongoose.Schema(
             max: 30,
         },
         availability: {
-            type: String, // E.g., "Mon-Fri: 9AM-5PM"
+            type: String,
         },
     },
-    { timestamps: true } // Adds `created_at` and `updated_at`
+    { timestamps: true }
 );
 
 const Instructor = mongoose.model("Instructor", instructorSchema);

@@ -2,85 +2,65 @@ const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema(
     {
-        user_id: {
-            type: mongoose.Schema.Types.ObjectId, // Primary Key
-            auto: true,
-        },
         name: {
-            type: String,
-            required: false,
+            type: String
         },
         email: {
             type: String,
             required: true,
             unique: true,
             trim: true,
-            lowercase: true,
+            lowercase: true
         },
         password: {
             type: String,
-            required: false,
-            default: null,
             minlength: 8,
+            default: null
         },
         photo: {
-            type: String,
-            required: false,
+            type: String
         },
         role: {
             type: String,
-            enum: ["student", "instructor", "admin"], // Role options
-            default: "student",
+            enum: ["student", "instructor", "admin"],
+            default: "student"
         },
         dob: {
-            type: Date,
-            default: Date.now,
-            required: false,
+            type: Date
         },
         gender: {
             type: String,
-            enum: ["male", "female", "other"],
-            default: null,
+            enum: ["male", "female", "other"]
         },
         medical_conditions: {
-            type: [String], // Array of medical conditions
-            required: false,
+            type: [String]
         },
         status: {
             type: String,
-            default: "pending" },
-        otp: {
-            type: String },
-        otpExpiry: {
-            type: Date }, // OTP expiry field
+            default: "pending"
+        },
         enrolled_courses: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: "Workshop", // Reference to the Workshop model
-                default: null, // Optional
-            },
+                ref: "Workshop"
+            }
         ],
-        subscribed_courses: [
+        booked_retreats: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: "OnlineCourse", // Reference to the OnlineCourse model
-                default: null, // Optional
-            },
+                ref: "Retreat"
+            }
         ],
         payments: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: "Payment", // Reference to the Payment model
-                default: null, // Optional
-            },
+                ref: "Payment"
+            }
         ],
     },
-    {
-        timestamps: true, // Automatically adds `createdAt` and `updatedAt` fields
-    }
+    { timestamps: true }
 );
 
 const User = mongoose.model("User", userSchema);
-module.exports = User;
 
-//Field OTP
+module.exports = User;

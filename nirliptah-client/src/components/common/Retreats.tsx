@@ -1,25 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "../ui/button";
-import { FaLeaf } from "react-icons/fa";
-import { LuVegan } from "react-icons/lu";
-import { BiFoodTag } from "react-icons/bi";
-import { PiBowlFoodFill } from "react-icons/pi";
-import { Badge } from "@/components/ui/badge.tsx";
-import { format, differenceInDays, parseISO } from "date-fns";
-import axios from "axios"; // Or use fetch if preferred
+import axios from "axios";
+import RetreatCard from "../ui/RetreatCard";
+import SingleRetreat from "./SingleRetreat";
 
 const Retreats: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
-    const [retreats, setRetreats] = useState<any[]>([]); // State to hold retreats data
-    const [loading, setLoading] = useState(true); // Loading state
+    const [retreats, setRetreats] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [selectedRetreat, setSelectedRetreat] = useState<any>(null);
+
+    const retreatsPerPage = 3;
 
     useEffect(() => {
-        // Fetch retreats from the backend
         const fetchRetreats = async () => {
             try {
                 const response = await axios.get("http://localhost:5000/api/retreats");
-                setRetreats(response.data); // Set retreat data
-                setLoading(false); // Set loading to false after fetching data
+                setRetreats(response.data);
+                setLoading(false);
             } catch (error) {
                 console.error("Error fetching retreats:", error);
                 setLoading(false);
@@ -31,33 +29,15 @@ const Retreats: React.FC = () => {
 
     if (loading) return <div>Loading...</div>;
 
-    const totalPages = retreats.length;
-    const currentRetreat = retreats[currentPage - 1]; // Page number maps to index
+    if (selectedRetreat) {
+        return <SingleRetreat retreat={selectedRetreat} />;
+    }
 
-    const startDate = currentRetreat.start_date;
-    const endDate = currentRetreat.end_date;
-
-    // Format the dates
-    const formattedStartDate = startDate ? format(parseISO(startDate), "dd.MM.yyyy") : "Unknown";
-    const formattedEndDate = endDate ? format(parseISO(endDate), "dd.MM.yyyy") : "Unknown";
-
-    // Calculate the difference in days
-    const numberOfNights = startDate && endDate
-        ? differenceInDays(parseISO(endDate), parseISO(startDate))
-        : 0;
-
-    // Pagination Logic
-    const goToNextPage = () => {
-        if (currentPage < totalPages) {
-            setCurrentPage(currentPage + 1);
-        }
-    };
-
-    const goToPreviousPage = () => {
-        if (currentPage > 1) {
-            setCurrentPage(currentPage - 1);
-        }
-    };
+    // Calculate paginated retreats
+    const indexOfLastRetreat = currentPage * retreatsPerPage;
+    const indexOfFirstRetreat = indexOfLastRetreat - retreatsPerPage;
+    const currentRetreats = retreats.slice(indexOfFirstRetreat, indexOfLastRetreat);
+    const totalPages = Math.ceil(retreats.length / retreatsPerPage);
 
     const goToPage = (page: number) => {
         if (page >= 1 && page <= totalPages) {
@@ -66,165 +46,47 @@ const Retreats: React.FC = () => {
     };
 
     return (
-        <div className="retreats-page max-w-screen-xl mx-auto flex flex-col items-center p-6 mb-16">
-            <div className="relative sm:mx-auto mx-3 pt-[10px] pb-[20px] text-center">
-                <div className="container">
-                    <h1 className="sm:text-5xl text-4xl font-bold capitalize mb-6">Upcoming Retreats</h1>
-                    <p className="text-gray-700 text-lg sm:w-[100%] mx-auto">
-                        Dive into the transformative world of yoga with our retreats.
-                    </p>
-                </div>
+        <div className="retreats-page max-w-screen-xl mx-auto p-6 mb-16">
+            {/* Retreat Cards */}
+            <div className="flex flex-wrap justify-center gap-6">
+                {currentRetreats.map((retreat, index) => (
+                    <RetreatCard
+                        key={index}
+                        retreat={retreat}
+                        onDetailsClick={() => setSelectedRetreat(retreat)}
+                    />
+                ))}
             </div>
-            <div className="flex flex-wrap lg:flex-nowrap w-full gap-6">
-                {/* Left Section */}
-                <div className="left-section lg:w-3/5 flex flex-col sticky top-0 space-y-6 relative">
-                    {/* Badge */}
-                    <Badge
-                        className="absolute z-10 text-white rounded-none mt-20 left-0 px-4 py-2"
-                        style={{ backgroundColor: "#A38F85" }}
+
+            {/* Pagination */}
+            <div className="flex justify-center mt-8">
+                <div className="btn-group space-x-2">
+                    <button
+                        className="btn px-4 py-2"
+                        disabled={currentPage === 1}
+                        onClick={() => goToPage(currentPage - 1)}
                     >
-                        {startDate && endDate ? (
-                            <>
-                                <strong className="text-xl font-bold">{numberOfNights}</strong> <span className="text-xs">Nights</span>/
-                                <strong className="text-xl font-bold">{numberOfNights + 1}</strong> <span className="text-xs">Days</span>
-                            </>
-                        ) : (
-                            "Duration Not Available"
-                        )}
-                    </Badge>
-
-                    {/* Dates Display */}
-                    <div className="absolute z-10 text-white text-sm top-4 right-4 bg-opacity-50 bg-black px-4 py-2 rounded">
-                        From: <strong>{formattedStartDate}</strong> to <strong>{formattedEndDate}</strong>
-                    </div>
-
-                    {/* Main Image */}
-                    <div className="main-image w-full h-[600px] relative">
-                        <img
-                            src={`http://localhost:5000${currentRetreat.photo || "fallback-image.png"}`}
-                            alt={`${currentRetreat.title}`}
-                            className="object-cover w-full h-full"
-                        />
-                        <div className="book-now-container absolute left-1/2 bottom-[5%] transform -translate-x-1/2 z-20">
-                            <Button className="book-now-btn bg-[#9B6763] text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-[#7B4F4C] transition duration-300">
-                                Book Now
-                            </Button>
-                        </div>
-                    </div>
-
-                    {/* Price and Actions */}
-                    <div className="price-and-actions absolute left-1/2 bottom-0 transform -translate-x-1/2 translate-y-1/2 bg-gray-50 rounded-lg shadow-lg p-6 w-4/5 grid grid-cols-3 gap-4 text-center">
-                        <div className="price flex flex-col items-center">
-                            <span className="font-semibold text-sm">Price</span>
-                            <span className="text-gray-800 font-bold text-md">
-                                {currentRetreat.price === 0 ? "Free" : `AU$ ${currentRetreat.price}`}
-                            </span>
-                        </div>
-                        <div className="single-rooms flex flex-col items-center mt-4">
-                            <span className="font-semibold text-sm">Single Room</span>
-                            <span className="text-gray-800 text-sm">
-                                {currentRetreat.SingleRoomsQuantity > 0 ? "Available" : "Fully Booked"}
-                            </span>
-                        </div>
-                        <div className="seats-left flex flex-col items-center">
-                            <span className="font-semibold text-sm">Seats Left</span>
-                            <span className="text-gray-800 text-sm">{currentRetreat.MaxParticipants}</span>
-                        </div>
-                    </div>
-
-                    {/* Pagination */}
-                    <div className="pagination-controls px-4 py-2 flex items-center space-x-2">
-                        <button onClick={goToPreviousPage} disabled={currentPage === 1} className={`text-sm ${currentPage === 1 ? "text-gray-400 cursor-not-allowed" : "text-black hover:text-blue-600"}`}>
-                            &lt;
-                        </button>
-                        {[...Array(totalPages)].map((_, index) => (
-                            <button
-                                key={index}
-                                onClick={() => goToPage(index + 1)}
-                                className={`px-3 py-1 rounded-2xl text-sm ${currentPage === index + 1 ? "bg-black text-white font-bold" : "text-gray-500 hover:text-black"}`}
-                            >
-                                {index + 1}
-                            </button>
-                        ))}
-                        <button onClick={goToNextPage} disabled={currentPage === totalPages} className={`text-sm ${currentPage === totalPages ? "text-gray-400 cursor-not-allowed" : "text-black hover:text-blue-600"}`}>
-                            &gt;
-                        </button>
-                    </div>
-                    <div className="text-xs text-gray-600 mb-2">
-                        Page <span className="font-semibold text-gray-900">{currentPage}</span> of <span className="font-semibold text-gray-900">{totalPages}</span>
-                    </div>
-                </div>
-
-                {/* Right Section */}
-                <div className="right-section lg:w-2/5 p-8 flex flex-col sticky top-0 justify-between">
-                    <div className="retreat-details space-y-6">
-                        <h3 className="retreat-title font-bold text-2xl text-gray-800">{currentRetreat.title}</h3>
-                        <p className="retreat-description text-gray-600 text-base">{currentRetreat.description}</p>
-
-                        <p className="text-gray-600 text-base">
-                            <span className="font-semibold">Organizer:</span> {currentRetreat.organizer}
-                        </p>
-
-                        <div className="guests mt-4">
-                            <span className="font-semibold text-gray-800 text-lg">Guests:</span>
-                            <ul className="flex flex-wrap gap-4 mt-2">
-                                {currentRetreat.guests?.map((guest: any, index: number) => (
-                                    <li key={index} className="flex items-center gap-3">
-                                        <img
-                                            src={guest.photo}
-                                            alt={guest.name}
-                                            className="w-12 h-12 rounded-full object-cover border border-gray-300 shadow-sm"
-                                        />
-                                        <span className="text-gray-600 text-sm">{guest.name}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-
-                        <div className="featuring-events">
-                            <span className="font-semibold text-gray-800">Featuring Events:</span>
-                            <ul className="list-disc list-inside text-gray-600 text-sm mt-2">
-                                {currentRetreat.featuring_events?.map((event: string, index: number) => (
-                                    <li key={index}>{event}</li>
-                                ))}
-                            </ul>
-                        </div>
-
-                        <div className="meal-options">
-                            <span className="font-semibold text-gray-800">Meal Options:</span>
-                            <ul className="list-disc list-inside text-gray-600 text-sm mt-2">
-                                {currentRetreat.meals_info?.map((option: string, index: number) => (
-                                    <li key={index} className="flex items-center space-x-2">
-                                        {option === "Vegetarian" ? (
-                                            <FaLeaf className="text-green-500" />
-                                        ) : option === "Vegan" ? (
-                                            <LuVegan className="text-green-700" />
-                                        ) : option === "Non-Vegetarian" ? (
-                                            <BiFoodTag className="text-[#681E1A]" />
-                                        ) : (
-                                            <PiBowlFoodFill className="text-[#9B6763]" />
-                                        )}
-                                        <span>{option}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-
-                        <p className="contact text-gray-600 text-base">
-                            <span className="font-semibold">Contact:</span> {currentRetreat.contact}
-                        </p>
-
-                        <a
-                            href={currentRetreat.socialLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="social-link text-sm text-[#9B6763] hover:underline flex mt-4"
+                        Prev
+                    </button>
+                    {[...Array(totalPages)].map((_, index) => (
+                        <button
+                            key={index}
+                            className={`btn px-4 py-2 ${currentPage === index + 1 ? "btn-active" : ""}`}
+                            onClick={() => goToPage(index + 1)}
                         >
-                            Click for More Info!
-                        </a>
-                    </div>
+                            {index + 1}
+                        </button>
+                    ))}
+                    <button
+                        className="btn px-4 py-2"
+                        disabled={currentPage === totalPages}
+                        onClick={() => goToPage(currentPage + 1)}
+                    >
+                        Next
+                    </button>
                 </div>
             </div>
+
         </div>
     );
 };

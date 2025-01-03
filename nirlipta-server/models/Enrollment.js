@@ -2,41 +2,37 @@ const mongoose = require("mongoose");
 
 const enrollmentSchema = new mongoose.Schema(
     {
-        enrollment_id: {
-            type: mongoose.Schema.Types.ObjectId, // Primary Key
-            auto: true,
-        },
         user_id: {
-            type: mongoose.Schema.Types.ObjectId, // Foreign Key
-            ref: "User", // Reference to the User collection
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
             required: true,
         },
-        course_id: {
-            type: mongoose.Schema.Types.ObjectId, // Foreign Key
-            ref: "Workshop", // Reference to the Workshop collection
-        },
-        schedule_id: {
-            type: mongoose.Schema.Types.ObjectId, // Foreign Key
-            ref: "Schedule", // Reference to the Schedule collection
-        },
-        retreat_id: {
-            type: mongoose.Schema.Types.ObjectId, // Foreign Key
-            ref: "Retreat", // Reference to the Retreat collection
+        workshop_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Workshop",
         },
         status: {
             type: String,
-            enum: ["enrolled", "completed", "canceled"], // Enrollment status options
-            default: "enrolled",
+            enum: ["enrolled", "pending", "completed", "canceled"],
+            default: "pending",
         },
         enrolled_at: {
             type: Date,
-            default: Date.now, // Enrollment date
+            default: Date.now,
         },
         completed_at: {
-            type: Date, // Completion date (optional)
+            type: Date,
+        },
+        total_price: {
+            type: Number,  // Total price of the course after discounts (if applicable)
+        },
+        payment_status: {
+            type: String,
+            enum: ["pending", "completed", "failed"],
+            default: "pending",
         },
     },
-    { timestamps: true } // Adds createdAt and updatedAt fields
+    { timestamps: true }
 );
 
 const Enrollment = mongoose.model("Enrollment", enrollmentSchema);

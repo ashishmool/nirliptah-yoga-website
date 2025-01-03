@@ -23,7 +23,6 @@ const folderMapping = {
     "workshop_photo": "workshop_photos",
     "accommodation_photo": "accommodation_photos",
     "user_photo": "user_photos",
-    "pose_photo": "pose_photos",
     "file": "pdf_files",
 };
 
@@ -50,7 +49,6 @@ const fileFilter = (req, file, cb) => {
         "workshop_photo": /image\/(jpeg|jpg|png)/,
         "accommodation_photo": /image\/(jpeg|jpg|png)/,
         "user_photo": /image\/(jpeg|jpg|png)/,
-        "pose_photo": /image\/(jpeg|jpg|png)/,
         "file": /application\/pdf/,
         "files": /(application\/pdf|image\/(jpeg|jpg|png))/,
     };
@@ -69,21 +67,9 @@ const upload = multer({ storage, fileFilter }).fields([
     { name: "workshop_photo", maxCount: 1 },
     { name: "accommodation_photo", maxCount: 1 },
     { name: "user_photo", maxCount: 1 },
-    { name: "pose_photo", maxCount: 1 },
     { name: "file", maxCount: 1 },
     { name: "guests[photo]", maxCount: 10 },
 ]);
 
-const uploadSingle = multer({
-    storage,
-    fileFilter,
-    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
-}).single("file");
 
-const uploadArray = multer({
-    storage,
-    fileFilter,
-    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit per file
-}).array("files", 10); // Up to 10 files
-
-module.exports = { upload, uploadSingle, uploadArray };
+module.exports = {upload};

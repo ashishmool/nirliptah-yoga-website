@@ -11,9 +11,9 @@ const paymentSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId, // Foreign Key
             ref: "Retreat",
         },
-        subscription_id: {
+        workshop_id: {
             type: mongoose.Schema.Types.ObjectId, // Foreign Key
-            ref: "Subscription",
+            ref: "Workshop",
         },
         amount: {
             type: Number,

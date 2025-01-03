@@ -45,7 +45,7 @@ const AdminHome = () => {
                         <YAxis />
                         <Tooltip />
                         <Legend />
-                        <Bar dataKey="count" fill="#82ca9d" />
+                        <Bar dataKey="count" fill="#9b6763" />
                     </BarChart>
                 </div>
 

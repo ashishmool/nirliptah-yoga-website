@@ -83,8 +83,9 @@ const ListUsers: React.FC = () => {
                             d="M12 4v16m8-8H4"
                         />
                     </svg>
-                    Add User
+                    Add Student
                 </Link>
+
                 <input
                     type="text"
                     placeholder="Search users"
