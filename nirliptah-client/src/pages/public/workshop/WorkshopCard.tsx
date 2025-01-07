@@ -1,7 +1,7 @@
 import React from "react";
 import { Badge } from "@/pages/components/ui/badge.tsx";
 import { Button } from "@/pages/components/ui/button.tsx";
-import { format, parseISO, differenceInDays } from "date-fns";
+// import { format, parseISO, differenceInDays } from "date-fns";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 interface WorkshopCardProps {
@@ -11,19 +11,19 @@ interface WorkshopCardProps {
 
 const WorkshopCard: React.FC<WorkshopCardProps> = ({ workshop, categories }) => {
     const navigate = useNavigate(); // Hook to navigate
-    const startDate = workshop.start_date;
-    const endDate = workshop.end_date;
-
-    const formattedStartDate = startDate
-        ? format(parseISO(startDate), "dd.MM.yyyy")
-        : "Unknown";
-    const formattedEndDate = endDate
-        ? format(parseISO(endDate), "dd.MM.yyyy")
-        : "Unknown";
-
-    const numberOfDays = startDate && endDate
-        ? differenceInDays(parseISO(endDate), parseISO(startDate))
-        : 0;
+    // const startDate = workshop.start_date;
+    // const endDate = workshop.end_date;
+    //
+    // const formattedStartDate = startDate
+    //     ? format(parseISO(startDate), "dd.MM.yyyy")
+    //     : "Unknown";
+    // const formattedEndDate = endDate
+    //     ? format(parseISO(endDate), "dd.MM.yyyy")
+    //     : "Unknown";
+    //
+    // const numberOfDays = startDate && endDate
+    //     ? differenceInDays(parseISO(endDate), parseISO(startDate))
+    //     : 0;
 
     // Find the category name from categories
     const category = categories.find((cat) => cat._id === workshop.category._id);

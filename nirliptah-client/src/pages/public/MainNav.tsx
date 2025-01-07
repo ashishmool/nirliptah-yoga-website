@@ -3,8 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/pages/components/ui/button.tsx";
 import { FaBars, FaTimes, FaGithub, FaInstagram } from "react-icons/fa";
 import { CgLogOut } from "react-icons/cg";
-import Login from "@/pages/auth/Login.tsx";
-import Logo from "../../../assets/logo-main.svg";
+import Login from "@/pages/private/auth/Login.tsx";
+import Logo from "../../assets/logo-main.svg";
 import { AuthContext } from "@/context/AuthContext.tsx";
 import { toast } from "sonner";
 
@@ -64,7 +64,7 @@ export default function MainNav() {
                     <Link to="/" className="mr-3 w-1/8">
                         <img
                             src={Logo}
-                            className={`w-24 h-auto transition-all duration-300 ${
+                            className={`w-32 h-auto transition-all duration-300 ${
                                 isScrolled ? "w-20" : "w-24"
                             }`}
                             alt="Nirlipta Yoga"

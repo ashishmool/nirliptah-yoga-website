@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom"; // Import useLocation hook
 import axios from "axios";
-import RetreatCard from "../common/RetreatCard.tsx";
+import RetreatCard from "./RetreatCard.tsx";
 import SingleRetreat from "./SingleRetreat.tsx";
 
 const Retreats: React.FC = () => {

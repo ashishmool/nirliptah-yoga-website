@@ -21,11 +21,10 @@ import UpdateUser from "@/pages/private/admin/user/UpdateUser.tsx";
 import ListWorkshops from "@/pages/private/admin/workshop/ListWorkshops.tsx";
 import AddWorkshop from "@/pages/private/admin/workshop/AddWorkshop.tsx";
 import UpdateWorkshop from "@/pages/private/admin/workshop/UpdateWorkshop.tsx";
-import Reset from "@/pages/auth/Reset.tsx";
-import ResetPassword from "@/pages/auth/ResetPassword.tsx";
+import Reset from "@/pages/private/auth/Reset.tsx";
+import ResetPassword from "@/pages/private/auth/ResetPassword.tsx";
 import SingleWorkshop from "@/pages/public/workshop/SingleWorkshop.tsx";
 import InstructorDashboard from "@/pages/private/instructor/InstructorDashboard.tsx";
-import StudentDashboard from "@/pages/private/student/StudentDashboard.tsx";
 import AdminHome from "@/pages/private/admin/AdminHome.tsx";
 import Workshops from "@/pages/public/workshop/Workshops.tsx";
 import Retreats from "@/pages/public/retreat/Retreats.tsx";
@@ -97,7 +96,7 @@ export default function Routing() {
 
             {/* Student Routes */}
             {isStudent() ? (
-                <Route path="student" element={<StudentDashboard />}>
+                <Route path="student" element={<Home />}>
                     {/* Add more student-specific routes here if needed */}
                 </Route>
             ) : (

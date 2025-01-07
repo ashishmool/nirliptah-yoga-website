@@ -13,8 +13,8 @@ import {
     DialogDescription,
     DialogClose,
 } from "@/pages/components/ui/dialog.tsx";
-import Signup from "@/pages/auth/Signup.tsx";
-import ResetRequest from "@/pages/auth/ResetRequest.tsx";
+import Signup from "@/pages/private/auth/Signup.tsx";
+import ResetRequest from "@/pages/private/auth/ResetRequest.tsx";
 import { UserInfoContext } from "@/context/UserInfoContext.tsx";
 import { AuthContext } from "@/context/AuthContext.tsx";
 

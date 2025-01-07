@@ -16,7 +16,7 @@ import { LoadingScreen } from "@/pages/components/ui/loading";
 import { Toaster } from "sonner";
 
 // Components
-import MainNav from "@/pages/public/common/MainNav";
+import MainNav from "@/pages/public/MainNav.tsx";
 import Routing from "./Routing";
 
 export default function App() {

@@ -1,5 +1,5 @@
 import Workshops from "@/pages/public/workshop/Workshops.tsx";
-import Journey from "@/pages/public/common/Journey.tsx";
+import Journey from "@/pages/public/Journey.tsx";
 import Retreats from "@/pages/public/retreat/Retreats.tsx";
 
 export default function Home() {

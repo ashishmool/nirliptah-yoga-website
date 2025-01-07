@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import WorkshopCard from "@/pages/public/common/WorkshopCard";
+import WorkshopCard from "@/pages/public/workshop/WorkshopCard.tsx";
 import { Badge } from "@/pages/components/ui/badge";
 import { Button } from "@/pages/components/ui/button";
 
