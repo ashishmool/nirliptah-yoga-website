@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 // ICON
 import { FaLinkedin, FaGithub } from "react-icons/fa";
 
+import { toast } from "sonner"; // Import the toast library
+
+
 export default function Footer() {
     // Scroll top when clicking on Link
     function scrollTopFunc() {
@@ -11,6 +14,30 @@ export default function Footer() {
             behavior: "instant",
         });
     }
+
+    function handleSubscription() {
+        const emailInput = document.querySelector(".subscription-input");
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex for email validation
+
+        if (emailInput && emailInput.value) {
+            if (emailRegex.test(emailInput.value)) {
+                // Example success notification
+                toast.success(`Successfully subscribed with ${emailInput.value}!`);
+
+                // Clear the input after subscription
+                emailInput.value = "";
+
+                // Add logic here to call your backend or API to handle the subscription
+            } else {
+                // Example error notification for invalid email format
+                toast.error("Please enter a valid email address.");
+            }
+        } else {
+            // Example error notification for empty input
+            toast.error("Please enter an email address.");
+        }
+    }
+
 
     return (
         <footer
@@ -127,10 +154,13 @@ export default function Footer() {
                         <p className="text-[#9B6763] mb-4 font-semibold">Stay Updated</p>
                         <div className="join">
                             <input
-                                className="input input-bordered join-item"
+                                className="input input-bordered join-item subscription-input text-black"
                                 placeholder="Email"
                             />
-                            <button className="btn join-item rounded-r-full">
+                            <button
+                                onClick={handleSubscription}
+                                className="btn join-item rounded-r-full"
+                            >
                                 Subscribe
                             </button>
                         </div>

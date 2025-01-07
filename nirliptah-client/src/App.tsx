@@ -18,6 +18,7 @@ import { Toaster } from "sonner";
 // Components
 import MainNav from "@/pages/public/MainNav.tsx";
 import Routing from "./Routing";
+import FloatingAction from "@/pages/components/FloatingAction.tsx";
 
 export default function App() {
     const [activeLoadingScreen, setActiveLoadingScreen] = useState<boolean>(true);
@@ -85,6 +86,7 @@ export default function App() {
                     <BrowserRouter>
                         <Toaster richColors />
                         <Layout />
+                        <FloatingAction />
                     </BrowserRouter>
                 )}
             </div>

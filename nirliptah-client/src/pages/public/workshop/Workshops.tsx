@@ -116,31 +116,49 @@ const Workshops: React.FC = () => {
             {/* Pagination */}
             <div className="flex justify-center mt-8">
                 <div className="btn-group space-x-2">
+                    {/* Previous Button */}
                     <button
-                        className="btn px-4 py-2"
+                        className={`px-4 py-2 border rounded ${
+                            currentPage === 1
+                                ? "text-gray-400 border-gray-300 cursor-not-allowed"
+                                : "text-[#9B6763] border-[#9B6763] hover:bg-[#9B6763] hover:text-white"
+                        } transition`}
                         disabled={currentPage === 1}
-                        onClick={() => goToPreviousPage()}
+                        onClick={() => goToPage(currentPage - 1)}
                     >
                         Prev
                     </button>
+
+                    {/* Page Buttons */}
                     {[...Array(totalPages)].map((_, index) => (
                         <button
                             key={index}
-                            className={`btn px-4 py-2 ${currentPage === index + 1 ? "btn-active" : ""}`}
+                            className={`px-4 py-2 border rounded ${
+                                currentPage === index + 1
+                                    ? "bg-[#A38F85] text-white border-[#A38F85]" // Active button style
+                                    : "text-[#9B6763] border-[#9B6763] hover:bg-[#9B6763] hover:text-white"
+                            } transition`}
                             onClick={() => goToPage(index + 1)}
                         >
                             {index + 1}
                         </button>
                     ))}
+
+                    {/* Next Button */}
                     <button
-                        className="btn px-4 py-2"
+                        className={`px-4 py-2 border rounded ${
+                            currentPage === totalPages
+                                ? "text-gray-400 border-gray-300 cursor-not-allowed"
+                                : "text-[#9B6763] border-[#9B6763] hover:bg-[#9B6763] hover:text-white"
+                        } transition`}
                         disabled={currentPage === totalPages}
-                        onClick={() => goToNextPage()}
+                        onClick={() => goToPage(currentPage + 1)}
                     >
                         Next
                     </button>
                 </div>
             </div>
+
         </div>
     );
 };
