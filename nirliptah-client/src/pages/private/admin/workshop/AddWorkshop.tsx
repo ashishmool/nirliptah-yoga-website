@@ -41,15 +41,28 @@ const AddWorkshop: React.FC = () => {
     const [categories, setCategories] = useState<any[]>([]);
 
     useEffect(() => {
+        // const fetchInstructors = async () => {
+        //     try {
+        //         const response = await axios.get("http://localhost:5000/api/instructors");
+        //         setInstructors(response.data);
+        //     } catch (error) {
+        //         console.error("Error fetching instructors:", error);
+        //         toast.error("Failed to fetch instructors.");
+        //     }
+        // };
+
         const fetchInstructors = async () => {
             try {
-                const response = await axios.get("http://localhost:5000/api/instructors");
-                setInstructors(response.data);
+                const response = await axios.get("http://localhost:5000/api/users");
+                const instructors = response.data.filter(user => user.role === "instructor");
+                setInstructors(instructors);
+                console.log("New Instructor fetching mechanishm::::", instructors);
             } catch (error) {
                 console.error("Error fetching instructors:", error);
                 toast.error("Failed to fetch instructors.");
             }
         };
+
         const fetchCategories = async () => {
             try {
                 const response = await axios.get("http://localhost:5000/api/workshop-categories");

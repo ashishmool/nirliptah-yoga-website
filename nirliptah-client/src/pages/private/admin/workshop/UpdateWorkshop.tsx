@@ -47,44 +47,30 @@ const UpdateWorkshop: React.FC = () => {
     const [categories, setCategories] = useState<any[]>([]);
     const [isNewCategory, setIsNewCategory] = useState(false);
 
-    // Fetch instructors
     useEffect(() => {
+        // Fetch instructors list for the select options
         const fetchInstructors = async () => {
-            setLoading(true);
             try {
-                const response = await axios.get("http://localhost:5000/api/instructors");
-                setInstructors(response.data);
+                const response = await axios.get("http://localhost:5000/api/users");
+                const instructorList = response.data.filter(user => user.role === "instructor");
+                setInstructors(instructorList);
             } catch (error) {
                 console.error("Error fetching instructors:", error);
                 toast.error("Failed to fetch instructors.");
-            } finally {
-                setLoading(false);
             }
         };
 
-        fetchInstructors();
-    }, []);
-
-    // Fetch categories
-    useEffect(() => {
+        // Fetch categories list for the select options
         const fetchCategories = async () => {
-            setLoading(true);
             try {
                 const response = await axios.get("http://localhost:5000/api/workshop-categories");
                 setCategories(response.data);
             } catch (error) {
                 console.error("Error fetching categories:", error);
                 toast.error("Failed to fetch categories.");
-            } finally {
-                setLoading(false);
             }
         };
 
-        fetchCategories();
-    }, []);
-
-    // Fetch workshop data on component mount
-    useEffect(() => {
         const fetchWorkshopData = async () => {
             setLoading(true);
             try {
@@ -99,11 +85,10 @@ const UpdateWorkshop: React.FC = () => {
                     classroom_info: workshop.classroom_info || "",
                     address: workshop.address || "",
                     map_location: workshop.map_location || "",
-                    photo: null,
-                    instructor_id: workshop.instructor_id._id || "",
+                    photo: null, // Photo will be handled separately
+                    instructor_id: workshop.instructor_id || "",  // Fetch instructor and set it
                     category: workshop.category._id || "",
                     modules: workshop.modules || [],
-
                 });
 
                 if (workshop.photo) {
@@ -117,8 +102,11 @@ const UpdateWorkshop: React.FC = () => {
             }
         };
 
+        fetchInstructors();
+        fetchCategories();
         fetchWorkshopData();
-    }, [id]);
+    }, [id]); // Runs when the component is mounted or when id changes
+
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -387,20 +375,21 @@ const UpdateWorkshop: React.FC = () => {
                     <select
                         id="instructor_id"
                         name="instructor_id"
-                        value={formData.instructor_id}
+                        value={formData.instructor_id._id}
                         onChange={handleInstructorChange}
                         className="mt-1 block w-full p-3 border border-gray-300 rounded-md"
                     >
                         <option value="">Select an instructor</option>
                         {instructors.map((instructor) => (
-                            <option key={instructor._id} value={instructor._id}>
-                                {instructor.name}
+                            <option key={instructor._id} value={instructor._id}> {/* Use _id as value */}
+                                {instructor.name} {/* Display the name in the dropdown */}
                             </option>
                         ))}
                     </select>
-
-
                 </div>
+
+
+
 
                 {/* Modules */}
                 <div>

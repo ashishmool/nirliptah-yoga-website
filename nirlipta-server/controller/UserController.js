@@ -109,10 +109,14 @@ const patchUser = async (req, res) => {
             req.body.photo = `/uploads/user_photos/${req.files.user_photo[0].filename}`;
         }
 
-        const patchedUser = await User.findByIdAndUpdate(id, req.body, {
-            new: true,
-            runValidators: true,
-        });
+        const patchedUser = await User.findByIdAndUpdate(
+            id,
+            { $set: req.body }, // Use $set for partial updates
+            {
+                new: true, // Return the updated document
+                runValidators: true, // Enforce validation rules
+            }
+        );
 
         if (!patchedUser) {
             return res.status(404).json({ message: "User not found" });
@@ -124,6 +128,7 @@ const patchUser = async (req, res) => {
         res.status(500).json({ message: "Error patching user", error });
     }
 };
+
 
 // Delete user by ID
 const deleteUser = async (req, res) => {

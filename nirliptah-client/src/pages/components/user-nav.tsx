@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar.tsx'
+import { Avatar, AvatarFallback, AvatarImage } from '@/pages/components/ui/avatar.tsx'
 import { Button } from './button.tsx'
 import {
   DropdownMenu,
@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu.tsx'
+} from '@/pages/components/ui/dropdown-menu.tsx'
 
 export function UserNav() {
   return (

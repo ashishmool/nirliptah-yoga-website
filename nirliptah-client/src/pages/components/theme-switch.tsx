@@ -6,7 +6,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu.tsx'
+} from '@/pages/components/ui/dropdown-menu.tsx'
 import { useTheme } from './theme-provider.tsx'
 import { Button } from './button.tsx'
 

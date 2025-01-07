@@ -15,7 +15,6 @@ const AdminDashboard: React.FC = () => {
         { label: "Dashboard", href: "/admin/home", icon: <FaHome /> },
         { label: "Retreats", href: "/admin/retreats", icon: <FaSuitcase /> },
         { label: "Accommodations", href: "/admin/accommodations", icon: <FaHome /> },
-        { label: "Instructors", href: "/admin/instructors", icon: <FaChalkboardTeacher /> },
         { label: "Workshops", href: "/admin/workshops", icon: <FaHammer /> },
         { label: "Users", href: "/admin/users", icon: <FaUsers /> }
     ];

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Input } from '@/components/ui/input.tsx'
+import { Input } from '@/pages/components/ui/input.tsx'
 import { cn } from '@/lib/utils.ts'
 
 interface PinInputOgProps {

@@ -5,7 +5,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu.tsx'
+} from '@/pages/components/ui/dropdown-menu.tsx'
 import { Button } from './button.tsx'
 import { IconMenu } from '@tabler/icons-react'
 

@@ -11,12 +11,12 @@ import { checkSession } from "@/backend/services/auth/checkSession";
 import { AuthProvider } from "@/context/AuthContext.tsx";
 
 // UI
-import { Footer } from "@/components";
-import { LoadingScreen } from "@/components/ui/loading";
+import { Footer } from "@/pages/components";
+import { LoadingScreen } from "@/pages/components/ui/loading";
 import { Toaster } from "sonner";
 
 // Components
-import MainNav from "@/components/common/MainNav";
+import MainNav from "@/pages/public/common/MainNav";
 import Routing from "./Routing";
 
 export default function App() {

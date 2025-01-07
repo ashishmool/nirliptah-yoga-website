@@ -1,10 +1,10 @@
 import { useState } from "react";
 
 // UI
-import { Label } from "@/components/ui/label.tsx";
-import { Input } from "@/components/ui/input.tsx";
-import { Textarea } from "@/components/ui/textarea.tsx";
-import { Button } from "@/components/ui/button.tsx";
+import { Label } from "@/pages/components/ui/label.tsx";
+import { Input } from "@/pages/components/ui/input.tsx";
+import { Textarea } from "@/pages/components/ui/textarea.tsx";
+import { Button } from "@/pages/components/ui/button.tsx";
 import { toast } from "sonner";
 
 // ICONS

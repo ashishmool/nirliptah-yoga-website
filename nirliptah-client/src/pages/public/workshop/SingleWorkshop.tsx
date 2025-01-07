@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { Button } from "../../../components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/pages/components/ui/button";
+import { Badge } from "@/pages/components/ui/badge";
 import { toast } from "sonner";
 import { FaMapMarkerAlt, FaUserTie, FaRegClock } from "react-icons/fa"; // React Icons
 

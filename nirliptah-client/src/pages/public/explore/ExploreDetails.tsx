@@ -1,4 +1,4 @@
-import { Explore } from "@/components";
+import { Explore } from "@/pages/components";
 
 export default function ExploreDetails() {
     return (

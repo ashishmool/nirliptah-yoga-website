@@ -29,15 +29,19 @@ const AddRetreat: React.FC = () => {
     const [instructors, setInstructors] = useState([]);
 
     // Fetch accommodations and instructors on component mount
+    // Fetch accommodations and instructors on component mount
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const [accommodationRes, instructorRes] = await Promise.all([
                     axios.get("http://localhost:5000/api/accommodations"),
-                    axios.get("http://localhost:5000/api/instructors"),
+                    axios.get("http://localhost:5000/api/users"),
                 ]);
+
+                // Filter instructors from the fetched users
+                const instructors = instructorRes.data.filter((user: any) => user.role === "instructor");
                 setAccommodations(accommodationRes.data || []);
-                setInstructors(instructorRes.data || []);
+                setInstructors(instructors);  // Set the filtered instructors
             } catch (error) {
                 console.error("Error fetching data:", error);
                 toast.error("Failed to fetch initial data.");
@@ -45,6 +49,7 @@ const AddRetreat: React.FC = () => {
         };
         fetchData();
     }, []);
+
 
     // Handlers
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

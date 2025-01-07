@@ -36,7 +36,7 @@ const workshopSchema = new mongoose.Schema(
         },
         instructor_id: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Instructor",
+            ref: "User",
         },
         category: {
             type: mongoose.Schema.Types.ObjectId,

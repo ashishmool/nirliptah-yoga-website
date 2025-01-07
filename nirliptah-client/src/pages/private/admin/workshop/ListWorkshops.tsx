@@ -26,6 +26,8 @@ const ListWorkshops: React.FC = () => {
         fetchWorkshops();
     }, []);
 
+    console.log("Workshops::: ", filteredWorkshops);
+
     useEffect(() => {
         const filtered = workshops.filter((workshop) =>
             Object.values(workshop)

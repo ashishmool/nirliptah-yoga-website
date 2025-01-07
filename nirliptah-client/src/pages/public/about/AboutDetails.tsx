@@ -1,6 +1,6 @@
 import aboutPhoto from "@/assets/about-us.jpg";
 import aboutVideo from "@/assets/videos/about-nirlipta.mp4";
-import MainNav from "@/components/common/MainNav.tsx";
+import MainNav from "@/pages/public/common/MainNav.tsx";
 
 export default function AboutDetails() {
     return (

@@ -11,7 +11,6 @@ const connectDB = require("./config/db");
 const accommodationRoutes = require("./routes/AccommodationRoutes");
 const userRoutes = require("./routes/UserRoutes");
 const enrollmentRoutes = require("./routes/EnrollmentRoutes");
-const instructorRoutes = require("./routes/InstructorRoutes");
 const paymentRoutes = require("./routes/PaymentRoutes");
 const workshopRoutes = require("./routes/WorkshopRoutes");
 const workshopCategoryRoutes = require("./routes/WorkshopCategoryRoutes");
@@ -32,7 +31,6 @@ app.use('/uploads', express.static('uploads')); //Endpoint for Image Location
 app.use("/api/accommodations", accommodationRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/enrollments", enrollmentRoutes);
-app.use("/api/instructors", instructorRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/workshops", workshopRoutes);
 app.use("/api/workshop-categories", workshopCategoryRoutes);

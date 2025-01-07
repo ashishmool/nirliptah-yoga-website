@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button.tsx";
+import { Button } from "@/pages/components/ui/button.tsx";
 import { Player } from "@lottiefiles/react-lottie-player";
 import ErrorAnimation from "@/assets/animations/error.json";
 

@@ -135,6 +135,7 @@ const UpdateUser: React.FC = () => {
                         <select
                             id="gender"
                             name="gender"
+                            defaultValue={formData.gender}
                             value={formData.gender}
                             onChange={handleChange}
                             className="mt-1 block w-full p-3 border border-gray-300 rounded-md"

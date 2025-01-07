@@ -56,7 +56,7 @@ const retreatSchema = new mongoose.Schema(
         },
         instructor_id: {
             type: mongoose.Schema.Types.ObjectId, // Foreign Key
-            ref: "Instructor",
+            ref: "User",
             required: false, // Nullable for testing purpose
         },
         photo: {

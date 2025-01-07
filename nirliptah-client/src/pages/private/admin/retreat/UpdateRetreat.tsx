@@ -63,7 +63,7 @@ const UpdateRetreat: React.FC = () => {
                 const [retreatRes, accommodationRes, instructorRes] = await Promise.all([
                     axios.get(`http://localhost:5000/api/retreats/${id}`),
                     axios.get("http://localhost:5000/api/accommodations"),
-                    axios.get("http://localhost:5000/api/instructors"),
+                    axios.get("http://localhost:5000/api/users"),
                 ]);
 
                 const retreatData = retreatRes.data;

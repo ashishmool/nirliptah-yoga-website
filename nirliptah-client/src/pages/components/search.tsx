@@ -1,4 +1,4 @@
-import { Input } from '@/components/ui/input.tsx'
+import { Input } from '@/pages/components/ui/input.tsx'
 import { useTranslations } from 'use-intl'
 
 export function Search() {

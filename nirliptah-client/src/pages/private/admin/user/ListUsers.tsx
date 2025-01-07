@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { FaMale, FaFemale, FaTransgenderAlt } from "react-icons/fa";
 import axios from "axios";
 import Pagination from "../../../components/Pagination"; // Adjust the import path as needed
+import { toast } from "sonner"; // For toast notifications
 
 const ListUsers: React.FC = () => {
     const [users, setUsers] = useState<any[]>([]);
@@ -48,12 +49,29 @@ const ListUsers: React.FC = () => {
         try {
             await axios.delete(`http://localhost:5000/api/users/delete/${userId}`);
             setUsers(users.filter((user) => user._id !== userId));
-            alert("User deleted successfully.");
+            toast.success("User deleted successfully.");
         } catch (error) {
             console.error("Error deleting user:", error);
-            alert("Failed to delete user.");
+            toast.error("Failed to delete user.");
         }
     };
+
+    const handleRoleChange = async (userId: string, newRole: string) => {
+        try {
+            const payload = { role: newRole }; // Only send the updated role
+            await axios.patch(`http://localhost:5000/api/users/patch/${userId}`, payload);
+            setUsers(
+                users.map((user) =>
+                    user._id === userId ? { ...user, role: newRole } : user
+                )
+            );
+            toast.success(`User role updated to ${newRole}`);
+        } catch (error) {
+            console.error("Error updating role:", error);
+            toast.error("Failed to update user role.");
+        }
+    };
+
 
     const paginatedUsers = filteredUsers.slice(
         (currentPage - 1) * ITEMS_PER_PAGE,
@@ -61,7 +79,7 @@ const ListUsers: React.FC = () => {
     );
 
     return (
-        <div className="max-w-7xl mx-auto p-6 flex flex-col h-full">
+        <div className="max-w-7xl mx-auto p-6 flex flex-col">
             <h1 className="text-3xl font-semibold text-center mb-6">Users</h1>
 
             <div className="flex justify-between items-center mb-4">
@@ -83,7 +101,7 @@ const ListUsers: React.FC = () => {
                             d="M12 4v16m8-8H4"
                         />
                     </svg>
-                    Add Student
+                    Add User
                 </Link>
 
                 <input
@@ -98,46 +116,119 @@ const ListUsers: React.FC = () => {
             {loading ? (
                 <p className="text-center text-gray-500">Loading users...</p>
             ) : filteredUsers.length > 0 ? (
-                <table className="flex-1 flex flex-col min-w-full bg-white border border-gray-300">
-                    <thead className="bg-gray-100">
-                    <tr className="flex w-full">
-                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500 text-center">Gender</th>
-                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">Email</th>
-                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">Role</th>
-                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody className="flex flex-col">
-                    {paginatedUsers.map((user) => (
-                        <tr
-                            key={user._id}
-                            className="flex w-full border-b border-gray-200 items-center hover:bg-gray-50"
-                        >
-                            <td className="flex-1 px-4 py-2 text-sm font-medium text-gray-900 text-center">
-                                {user.gender === "male" && <FaMale className="inline-block mr-2" />}
-                                {user.gender === "female" && <FaFemale className="inline-block mr-2" />}
-                                {user.gender === "other" && <FaTransgenderAlt className="inline-block mr-2" />}
-                            </td>
-                            <td className="flex-1 px-4 py-2 text-sm text-gray-500">{user.email}</td>
-                            <td className="flex-1 px-4 py-2 text-sm text-gray-500">{user.role}</td>
-                            <td className="flex-1 px-4 py-2 text-sm text-gray-500 flex space-x-2">
-                                <Link
-                                    to={`/admin/users/update/${user._id}`}
-                                    className="text-[#9B6763] hover:text-[#B8998C]"
-                                >
-                                    Edit
-                                </Link>
-                                <button
-                                    onClick={() => handleDelete(user._id)}
-                                    className="text-[#B8978C] hover:text-[#A38F85]"
-                                >
-                                    Delete
-                                </button>
-                            </td>
+                <div className="overflow-x-auto">
+                    <table className="table w-full">
+                        <thead>
+                        <tr>
+                            <th>Profile</th>
+                            <th>Email</th>
+                            <th>Name</th>
+                            <th>Gender</th>
+                            <th>Role</th>
+                            <th>Actions</th>
                         </tr>
-                    ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        {paginatedUsers.map((user) => (
+                            <tr key={user._id}>
+                                {/* Profile */}
+                                <td>
+                                    <div className="avatar">
+                                        <div className="mask mask-squircle w-12 h-12">
+                                            <img
+                                                src={`http://localhost:5000${user.photo}`}
+                                                alt={`${user.name || "User"}'s avatar`}
+                                            />
+                                        </div>
+                                    </div>
+                                </td>
+
+                                {/* Email */}
+                                <td>{user.email}</td>
+
+                                {/* Name */}
+                                <td>{user.name || "N/A"}</td>
+
+                                {/* Gender */}
+                                <td className="flex items-center gap-2">
+                                    {user.gender === "male" && (
+                                        <>
+                                            <FaMale className="text-blue-500" />
+                                            <span>Male</span>
+                                        </>
+                                    )}
+                                    {user.gender === "female" && (
+                                        <>
+                                            <FaFemale className="text-pink-500" />
+                                            <span>Female</span>
+                                        </>
+                                    )}
+                                    {user.gender === "other" && (
+                                        <>
+                                            <FaTransgenderAlt className="text-purple-500" />
+                                            <span>Other</span>
+                                        </>
+                                    )}
+                                    {!user.gender && (
+                                        <>
+                                            <span className="text-gray-500">N/A</span>
+                                        </>
+                                    )}
+                                </td>
+
+                                {/* Role */}
+                                <td>
+                                    <span className="badge badge-ghost badge-sm">{user.role}</span>
+                                </td>
+
+                                {/* Actions */}
+                                <td>
+                                    <Link
+                                        to={`/admin/users/update/${user._id}`}
+                                        className="btn btn-xs btn-ghost"
+                                    >
+                                        Edit
+                                    </Link>
+                                    <button
+                                        onClick={() => handleDelete(user._id)}
+                                        className="btn btn-xs btn-error mr-2"
+                                    >
+                                        Delete
+                                    </button>
+                                    {user.role === "student" && (
+                                        <button
+                                            onClick={() => handleRoleChange(user._id, "instructor")}
+                                            className="btn btn-xs btn-info mr-2"
+                                        >
+                                            Make Instructor
+                                        </button>
+                                    )}
+                                    {user.role === "instructor" && (
+                                        <button
+                                            onClick={() => handleRoleChange(user._id, "student")}
+                                            className="btn btn-xs btn-warning mr-2"
+                                        >
+                                            Make Student
+                                        </button>
+                                    )}
+                                </td>
+
+                            </tr>
+                        ))}
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <th>Profile</th>
+                            <th>Email</th>
+                            <th>Name</th>
+                            <th>Gender</th>
+                            <th>Role</th>
+                            <th>Actions</th>
+                        </tr>
+                        </tfoot>
+                    </table>
+
+                </div>
             ) : (
                 <p className="text-center text-gray-500">No users found.</p>
             )}
