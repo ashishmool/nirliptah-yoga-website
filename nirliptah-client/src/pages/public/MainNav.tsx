@@ -14,6 +14,7 @@ export default function MainNav() {
     const [isScrolled, setIsScrolled] = useState(false);
     const { info, setInfo } = useContext(AuthContext);
 
+
     useEffect(() => {
         const handleScroll = () => setIsScrolled(window.scrollY > 50);
         window.addEventListener("scroll", handleScroll);
@@ -81,18 +82,7 @@ export default function MainNav() {
                             >
                                 Retreats
                             </button>
-                            <Link
-                                to="/about"
-                                className="text-gray-800 hover:text-[#9B6763] text-base font-medium"
-                            >
-                                About Nirlipta
-                            </Link>
-                            <Link
-                                to="/contact"
-                                className="text-gray-800 hover:text-[#9B6763] text-base font-medium"
-                            >
-                                Contact
-                            </Link>
+
                         </div>
                     </div>
 
@@ -139,6 +129,7 @@ export default function MainNav() {
                         )}
                     </div>
                 </div>
+
             </nav>
             {isDialogOpen && <Login onClose={() => setIsDialogOpen(false)} />}
         </div>

@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { AuthContext } from "@/context/AuthContext.tsx";
 import { fetchUserById } from "../../../backend/services/userService";
-import ThemeToggle from "../../components/ThemeToggle"; // Import ThemeToggle
+// import ThemeToggle from "../../components/ThemeToggle"; // Import ThemeToggle
 import LightLogo from "../../../assets/logo-main.svg";
 import DarkLogo from "../../../assets/logo-white.svg";
 
@@ -91,7 +91,7 @@ const AdminTopBar: React.FC = () => {
 
             <div className="flex-none flex items-center gap-4">
                 {/* Theme Toggle */}
-                <ThemeToggle theme={theme} setTheme={setTheme} />
+                {/*<ThemeToggle theme={theme} setTheme={setTheme} />*/}
 
                 {/* Notifications */}
                 <button className="btn btn-ghost btn-circle">
