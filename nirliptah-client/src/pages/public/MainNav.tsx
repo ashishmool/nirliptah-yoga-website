@@ -82,6 +82,12 @@ export default function MainNav() {
                             >
                                 Retreats
                             </button>
+                            <button
+                                onClick={() => handleScrollToSection("contact-us")}
+                                className="text-gray-800 hover:text-[#9B6763] text-base font-medium"
+                            >
+                                Contact
+                            </button>
 
                         </div>
                     </div>

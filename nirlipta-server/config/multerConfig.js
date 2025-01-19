@@ -22,6 +22,7 @@ const folderMapping = {
     "guest_photo": "guest_photos",
     "workshop_photo": "workshop_photos",
     "accommodation_photo": "accommodation_photos",
+    "room_photo": "room_photos",
     "user_photo": "user_photos",
     "file": "pdf_files",
 };
@@ -48,6 +49,7 @@ const fileFilter = (req, file, cb) => {
         "guest_photo": /image\/(jpeg|jpg|png)/,
         "workshop_photo": /image\/(jpeg|jpg|png)/,
         "accommodation_photo": /image\/(jpeg|jpg|png)/,
+        "room_photo": /image\/(jpeg|jpg|png)/,
         "user_photo": /image\/(jpeg|jpg|png)/,
         "file": /application\/pdf/,
         "files": /(application\/pdf|image\/(jpeg|jpg|png))/,
@@ -66,6 +68,7 @@ const upload = multer({ storage, fileFilter }).fields([
     { name: "retreat_photo", maxCount: 1 },
     { name: "workshop_photo", maxCount: 1 },
     { name: "accommodation_photo", maxCount: 1 },
+    { name: "room_photo", maxCount: 1 },
     { name: "user_photo", maxCount: 1 },
     { name: "file", maxCount: 1 },
     { name: "guests[photo]", maxCount: 10 },

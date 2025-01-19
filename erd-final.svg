@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 1131 1953">
+  <defs>
+    <style>
+      .cls-1, .cls-2 {
+        fill: none;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4 {
+        stroke: #000;
+      }
+
+      .cls-5 {
+        font-size: 14px;
+      }
+
+      .cls-5, .cls-6, .cls-7 {
+        isolation: isolate;
+      }
+
+      .cls-5, .cls-7 {
+        font-family: TimesNewRomanPSMT, 'Times New Roman';
+      }
+
+      .cls-2 {
+        stroke-dasharray: 5 2;
+      }
+
+      .cls-3 {
+        fill: #fff;
+      }
+
+      .cls-3, .cls-4 {
+        stroke-opacity: 0;
+      }
+
+      .cls-6 {
+        font-family: TimesNewRomanPS-BoldItalicMT, 'Times New Roman';
+        font-style: italic;
+        font-weight: 700;
+      }
+
+      .cls-6, .cls-7 {
+        font-size: 9px;
+      }
+
+      .cls-4 {
+        fill: #f5fdff;
+      }
+    </style>
+  </defs>
+  <!-- Generator: Adobe Illustrator 28.6.0, SVG Export Plug-In . SVG Version: 1.2.0 Build 709)  -->
+  <g>
+    <g id="Layer_1">
+      <polygon class="cls-3" points=".2 1953 .2 0 1130.8 0 1130.8 1953 .2 1953"/>
+      <polygon class="cls-3" points="145.7 402 145.7 144 248.7 144 248.7 402 145.7 402"/>
+      <polygon class="cls-4" points="146.2 162 146.2 144 249.2 144 249.2 162 146.2 162"/>
+      <polygon class="cls-1" points="146.2 162 146.2 144 249.2 144 249.2 162 146.2 162"/>
+      <text class="cls-6" transform="translate(165 155.1)"><tspan x="0" y="0">accommodations</tspan></text>
+      <polygon class="cls-1" points="146.2 182 146.2 162 249.2 162 249.2 182 146.2 182"/>
+      <text class="cls-7" transform="translate(151.2 175.1)"><tspan x="0" y="0">name: String</tspan></text>
+      <polygon class="cls-1" points="146.2 202 146.2 182 249.2 182 249.2 202 146.2 202"/>
+      <text class="cls-7" transform="translate(151.2 195.1)"><tspan x="0" y="0">description: String</tspan></text>
+      <polygon class="cls-1" points="146.2 222 146.2 202 249.2 202 249.2 222 146.2 222"/>
+      <text class="cls-7" transform="translate(151.2 215.1)"><tspan x="0" y="0">price_per_night: Number</tspan></text>
+      <polygon class="cls-1" points="146.2 242 146.2 222 249.2 222 249.2 242 146.2 242"/>
+      <text class="cls-7" transform="translate(151.2 235.1)"><tspan x="0" y="0">location: String</tspan></text>
+      <polygon class="cls-1" points="146.2 262 146.2 242 249.2 242 249.2 262 146.2 262"/>
+      <text class="cls-7" transform="translate(151.2 255.1)"><tspan x="0" y="0">max_occupancy: Number</tspan></text>
+      <polygon class="cls-1" points="146.2 282 146.2 262 249.2 262 249.2 282 146.2 282"/>
+      <text class="cls-7" transform="translate(150.9 275.1)"><tspan x="0" y="0">available_rooms: Number</tspan></text>
+      <polygon class="cls-1" points="146.2 302 146.2 282 249.2 282 249.2 302 146.2 302"/>
+      <text class="cls-7" transform="translate(151.2 295.1)"><tspan x="0" y="0">amenities: Array</tspan></text>
+      <polygon class="cls-1" points="146.2 322 146.2 302 249.2 302 249.2 322 146.2 322"/>
+      <text class="cls-7" transform="translate(151.2 315.1)"><tspan x="0" y="0">photo: String</tspan></text>
+      <polygon class="cls-1" points="146.2 342 146.2 322 249.2 322 249.2 342 146.2 342"/>
+      <text class="cls-7" transform="translate(151.2 335.1)"><tspan x="0" y="0">_id: ObjectId</tspan></text>
+      <polygon class="cls-1" points="146.2 362 146.2 342 249.2 342 249.2 362 146.2 362"/>
+      <text class="cls-7" transform="translate(151.2 355.1)"><tspan x="0" y="0">createdAt: Date</tspan></text>
+      <polygon class="cls-1" points="146.2 382 146.2 362 249.2 362 249.2 382 146.2 382"/>
+      <text class="cls-7" transform="translate(151.2 375.1)"><tspan x="0" y="0">updatedAt: Date</tspan></text>
+      <polygon class="cls-1" points="146.2 402 146.2 382 249.2 382 249.2 402 146.2 402"/>
+      <text class="cls-7" transform="translate(151.2 395.1)"><tspan x="0" y="0">__v: Number</tspan></text>
+      <g id="node2">
+        <polygon class="cls-3" points="853.8 430 853.8 152 986.8 152 986.8 430 853.8 430"/>
+        <polygon class="cls-4" points="854.3 170 854.3 152 987.3 152 987.3 170 854.3 170"/>
+        <polygon class="cls-1" points="854.3 170 854.3 152 987.3 152 987.3 170 854.3 170"/>
+        <text class="cls-6" transform="translate(902 163.1)"><tspan x="0" y="0">bookings</tspan></text>
+        <polygon class="cls-1" points="854.3 190 854.3 170 987.3 170 987.3 190 854.3 190"/>
+        <text class="cls-7" transform="translate(859.3 183.1)"><tspan x="0" y="0">user_id: ObjectId</tspan></text>
+        <polygon class="cls-1" points="854.3 210 854.3 190 987.3 190 987.3 210 854.3 210"/>
+        <text class="cls-7" transform="translate(859.3 203.1)"><tspan x="0" y="0">retreat_id: ObjectId</tspan></text>
+        <polygon class="cls-1" points="854.3 230 854.3 210 987.3 210 987.3 230 854.3 230"/>
+        <text class="cls-7" transform="translate(859.3 223.1)"><tspan x="0" y="0">accommodation_id: ObjectId</tspan></text>
+        <polygon class="cls-1" points="854.3 250 854.3 230 987.3 230 987.3 250 854.3 250"/>
+        <text class="cls-7" transform="translate(859.3 243.1)"><tspan x="0" y="0">no_persons: Number</tspan></text>
+        <polygon class="cls-1" points="854.3 270 854.3 250 987.3 250 987.3 270 854.3 270"/>
+        <text class="cls-7" transform="translate(859.2 263.1)"><tspan x="0" y="0">accommodation_amount: Number</tspan></text>
+        <polygon class="cls-1" points="854.3 290 854.3 270 987.3 270 987.3 290 854.3 290"/>
+        <text class="cls-7" transform="translate(859.3 283.1)"><tspan x="0" y="0">retreat_amount: Number</tspan></text>
+        <polygon class="cls-1" points="854.3 310 854.3 290 987.3 290 987.3 310 854.3 310"/>
+        <text class="cls-7" transform="translate(859.3 303.1)"><tspan x="0" y="0">total_amount: Number</tspan></text>
+        <polygon class="cls-1" points="854.3 330 854.3 310 987.3 310 987.3 330 854.3 330"/>
+        <text class="cls-7" transform="translate(859.3 323.1)"><tspan x="0" y="0">status: String</tspan></text>
+        <polygon class="cls-1" points="854.3 350 854.3 330 987.3 330 987.3 350 854.3 350"/>
+        <text class="cls-7" transform="translate(859.3 343.1)"><tspan x="0" y="0">booked_on: Date</tspan></text>
+        <polygon class="cls-1" points="854.3 370 854.3 350 987.3 350 987.3 370 854.3 370"/>
+        <text class="cls-7" transform="translate(859.3 363.1)"><tspan x="0" y="0">_id: ObjectId</tspan></text>
+        <polygon class="cls-1" points="854.3 390 854.3 370 987.3 370 987.3 390 854.3 390"/>
+        <text class="cls-7" transform="translate(859.3 383.1)"><tspan x="0" y="0">createdAt: Date</tspan></text>
+        <polygon class="cls-1" points="854.3 410 854.3 390 987.3 390 987.3 410 854.3 410"/>
+        <text class="cls-7" transform="translate(859.3 403.1)"><tspan x="0" y="0">updatedAt: Date</tspan></text>
+        <polygon class="cls-1" points="854.3 430 854.3 410 987.3 410 987.3 430 854.3 430"/>
+        <text class="cls-7" transform="translate(859.3 423.1)"><tspan x="0" y="0">__v: Number</tspan></text>
+      </g>
+      <g id="edge3">
+        <path class="cls-2" d="M249.2,332c127,0,459.3,5.8,568.5-59,24.6-14.6,7.9-53,36.5-53"/>
+        <text class="cls-5" transform="translate(499.5 313.8)"><tspan x="0" y="0">accommodations-bookings</tspan></text>
+        <text class="cls-5" transform="translate(844.2 215.8)"><tspan x="0" y="0">N</tspan></text>
+        <text class="cls-5" transform="translate(249.2 344.6)"><tspan x="0" y="0">1</tspan></text>
+      </g>
+      <g id="node5">
+        <polygon class="cls-3" points="517.4 844 517.4 446 632.4 446 632.4 844 517.4 844"/>
+        <polygon class="cls-4" points="517.9 464 517.9 446 632.9 446 632.9 464 517.9 464"/>
+        <polygon class="cls-1" points="517.9 464 517.9 446 632.9 446 632.9 464 517.9 464"/>
+        <text class="cls-6" transform="translate(559.9 457.1)"><tspan x="0" y="0">retreats</tspan></text>
+        <polygon class="cls-1" points="517.9 484 517.9 464 632.9 464 632.9 484 517.9 484"/>
+        <text class="cls-7" transform="translate(522.9 477.1)"><tspan x="0" y="0">title: String</tspan></text>
+        <polygon class="cls-1" points="517.9 504 517.9 484 632.9 484 632.9 504 517.9 504"/>
+        <text class="cls-7" transform="translate(522.9 497.1)"><tspan x="0" y="0">description: String</tspan></text>
+        <polygon class="cls-1" points="517.9 524 517.9 504 632.9 504 632.9 524 517.9 524"/>
+        <text class="cls-7" transform="translate(522.9 517.1)"><tspan x="0" y="0">start_date: Date</tspan></text>
+        <polygon class="cls-1" points="517.9 544 517.9 524 632.9 524 632.9 544 517.9 544"/>
+        <text class="cls-7" transform="translate(522.9 537.1)"><tspan x="0" y="0">end_date: Date</tspan></text>
+        <polygon class="cls-1" points="517.9 564 517.9 544 632.9 544 632.9 564 517.9 564"/>
+        <text class="cls-7" transform="translate(522.9 557.1)"><tspan x="0" y="0">price_per_person: Number</tspan></text>
+        <polygon class="cls-1" points="517.9 584 517.9 564 632.9 564 632.9 584 517.9 584"/>
+        <text class="cls-7" transform="translate(522.9 577.1)"><tspan x="0" y="0">max_participants: Number</tspan></text>
+        <polygon class="cls-1" points="517.9 604 517.9 584 632.9 584 632.9 604 517.9 604"/>
+        <text class="cls-7" transform="translate(522.9 597.1)"><tspan x="0" y="0">address: String</tspan></text>
+        <polygon class="cls-1" points="517.9 624 517.9 604 632.9 604 632.9 624 517.9 624"/>
+        <text class="cls-7" transform="translate(522.9 617.1)"><tspan x="0" y="0">map_location: String</tspan></text>
+        <polygon class="cls-1" points="517.9 644 517.9 624 632.9 624 632.9 644 517.9 644"/>
+        <text class="cls-7" transform="translate(522.9 637.1)"><tspan x="0" y="0">meals_info: Array</tspan></text>
+        <polygon class="cls-1" points="517.9 664 517.9 644 632.9 644 632.9 664 517.9 664"/>
+        <text class="cls-7" transform="translate(522.9 657.1)"><tspan x="0" y="0">organizer: String</tspan></text>
+        <polygon class="cls-1" points="517.9 684 517.9 664 632.9 664 632.9 684 517.9 684"/>
+        <text class="cls-7" transform="translate(522.9 677.1)"><tspan x="0" y="0">guests: Array</tspan></text>
+        <polygon class="cls-1" points="517.9 704 517.9 684 632.9 684 632.9 704 517.9 704"/>
+        <text class="cls-7" transform="translate(522.9 697.1)"><tspan x="0" y="0">featuring_events: Array</tspan></text>
+        <polygon class="cls-1" points="517.9 724 517.9 704 632.9 704 632.9 724 517.9 724"/>
+        <text class="cls-7" transform="translate(522.8 717.1)"><tspan x="0" y="0">accommodation_id: ObjectId</tspan></text>
+        <polygon class="cls-1" points="517.9 744 517.9 724 632.9 724 632.9 744 517.9 744"/>
+        <text class="cls-7" transform="translate(522.9 737.1)"><tspan x="0" y="0">instructor_id: ObjectId</tspan></text>
+        <polygon class="cls-1" points="517.9 764 517.9 744 632.9 744 632.9 764 517.9 764"/>
+        <text class="cls-7" transform="translate(522.9 757.1)"><tspan x="0" y="0">photo: String</tspan></text>
+        <polygon class="cls-1" points="517.9 784 517.9 764 632.9 764 632.9 784 517.9 784"/>
+        <text class="cls-7" transform="translate(522.9 777.1)"><tspan x="0" y="0">_id: ObjectId</tspan></text>
+        <polygon class="cls-1" points="517.9 804 517.9 784 632.9 784 632.9 804 517.9 804"/>
+        <text class="cls-7" transform="translate(522.9 797.1)"><tspan x="0" y="0">createdAt: Date</tspan></text>
+        <polygon class="cls-1" points="517.9 824 517.9 804 632.9 804 632.9 824 517.9 824"/>
+        <text class="cls-7" transform="translate(522.9 817.1)"><tspan x="0" y="0">updatedAt: Date</tspan></text>
+        <polygon class="cls-1" points="517.9 844 517.9 824 632.9 824 632.9 844 517.9 844"/>
+        <text class="cls-7" transform="translate(522.9 837.1)"><tspan x="0" y="0">__v: Number</tspan></text>
+      </g>
+      <g id="edge9">
+        <path class="cls-2" d="M249.2,332c25.9,0,242.8,382,268.7,382"/>
+        <text class="cls-5" transform="translate(304.5 375.8)"><tspan x="0" y="0">accommodations-retreats</tspan></text>
+        <text class="cls-5" transform="translate(507.8 709.8)"><tspan x="0" y="0">N</tspan></text>
+        <text class="cls-5" transform="translate(249.2 327.8)"><tspan x="0" y="0">1</tspan></text>
+      </g>
+      <g id="node3">
+        <polygon class="cls-3" points="873.8 1809 873.8 1571 966.8 1571 966.8 1809 873.8 1809"/>
+        <polygon class="cls-4" points="874.3 1589 874.3 1571 967.3 1571 967.3 1589 874.3 1589"/>
+        <polygon class="cls-1" points="874.3 1589 874.3 1571 967.3 1571 967.3 1589 874.3 1589"/>
+        <text class="cls-6" transform="translate(897.3 1582.1)"><tspan x="0" y="0">enrollments</tspan></text>
+        <polygon class="cls-1" points="874.3 1609 874.3 1589 967.3 1589 967.3 1609 874.3 1609"/>
+        <text class="cls-7" transform="translate(879.3 1602.1)"><tspan x="0" y="0">user_id: ObjectId</tspan></text>
+        <polygon class="cls-1" points="874.3 1629 874.3 1609 967.3 1609 967.3 1629 874.3 1629"/>
+        <text class="cls-7" transform="translate(879.2 1622.1)"><tspan x="0" y="0">workshop_id: ObjectId</tspan></text>
+        <polygon class="cls-1" points="874.3 1649 874.3 1629 967.3 1629 967.3 1649 874.3 1649"/>
+        <text class="cls-7" transform="translate(879.3 1642.1)"><tspan x="0" y="0">status: String</tspan></text>
+        <polygon class="cls-1" points="874.3 1669 874.3 1649 967.3 1649 967.3 1669 874.3 1669"/>
+        <text class="cls-7" transform="translate(879.3 1662.1)"><tspan x="0" y="0">enrolled_at: Date</tspan></text>
+        <polygon class="cls-1" points="874.3 1689 874.3 1669 967.3 1669 967.3 1689 874.3 1689"/>
+        <text class="cls-7" transform="translate(879.3 1682.1)"><tspan x="0" y="0">completed_at: Date</tspan></text>
+        <polygon class="cls-1" points="874.3 1709 874.3 1689 967.3 1689 967.3 1709 874.3 1709"/>
+        <text class="cls-7" transform="translate(879.3 1702.1)"><tspan x="0" y="0">total_price: Number</tspan></text>
+        <polygon class="cls-1" points="874.3 1729 874.3 1709 967.3 1709 967.3 1729 874.3 1729"/>
+        <text class="cls-7" transform="translate(879.3 1722.1)"><tspan x="0" y="0">payment_status: String</tspan></text>
+        <polygon class="cls-1" points="874.3 1749 874.3 1729 967.3 1729 967.3 1749 874.3 1749"/>
+        <text class="cls-7" transform="translate(879.3 1742.1)"><tspan x="0" y="0">_id: ObjectId</tspan></text>
+        <polygon class="cls-1" points="874.3 1769 874.3 1749 967.3 1749 967.3 1769 874.3 1769"/>
+        <text class="cls-7" transform="translate(879.3 1762.1)"><tspan x="0" y="0">createdAt: Date</tspan></text>
+        <polygon class="cls-1" points="874.3 1789 874.3 1769 967.3 1769 967.3 1789 874.3 1789"/>
+        <text class="cls-7" transform="translate(879.3 1782.1)"><tspan x="0" y="0">updatedAt: Date</tspan></text>
+        <polygon class="cls-1" points="874.3 1809 874.3 1789 967.3 1789 967.3 1809 874.3 1809"/>
+        <text class="cls-7" transform="translate(879.3 1802.1)"><tspan x="0" y="0">__v: Number</tspan></text>
+      </g>
+      <g id="node4">
+        <polygon class="cls-3" points="870.8 1433 870.8 1195 969.8 1195 969.8 1433 870.8 1433"/>
+        <polygon class="cls-4" points="871.3 1213 871.3 1195 970.3 1195 970.3 1213 871.3 1213"/>
+        <polygon class="cls-1" points="871.3 1213 871.3 1195 970.3 1195 970.3 1213 871.3 1213"/>
+        <text class="cls-6" transform="translate(901.3 1206.1)"><tspan x="0" y="0">payments</tspan></text>
+        <polygon class="cls-1" points="871.3 1233 871.3 1213 970.3 1213 970.3 1233 871.3 1233"/>
+        <text class="cls-7" transform="translate(876.3 1226.1)"><tspan x="0" y="0">user_id: ObjectId</tspan></text>
+        <polygon class="cls-1" points="871.3 1253 871.3 1233 970.3 1233 970.3 1253 871.3 1253"/>
+        <text class="cls-7" transform="translate(876.3 1246.1)"><tspan x="0" y="0">retreat_id: ObjectId</tspan></text>
+        <polygon class="cls-1" points="871.3 1273 871.3 1253 970.3 1253 970.3 1273 871.3 1273"/>
+        <text class="cls-7" transform="translate(876.3 1266.1)"><tspan x="0" y="0">workshop_id: ObjectId</tspan></text>
+        <polygon class="cls-1" points="871.3 1293 871.3 1273 970.3 1273 970.3 1293 871.3 1293"/>
+        <text class="cls-7" transform="translate(876.3 1286.1)"><tspan x="0" y="0">amount: Number</tspan></text>
+        <polygon class="cls-1" points="871.3 1313 871.3 1293 970.3 1293 970.3 1313 871.3 1313"/>
+        <text class="cls-7" transform="translate(876.3 1306.1)"><tspan x="0" y="0">payment_date: Date</tspan></text>
+        <polygon class="cls-1" points="871.3 1333 871.3 1313 970.3 1313 970.3 1333 871.3 1333"/>
+        <text class="cls-7" transform="translate(876.2 1326.1)"><tspan x="0" y="0">payment_method: String</tspan></text>
+        <polygon class="cls-1" points="871.3 1353 871.3 1333 970.3 1333 970.3 1353 871.3 1353"/>
+        <text class="cls-7" transform="translate(876.3 1346.1)"><tspan x="0" y="0">status: String</tspan></text>
+        <polygon class="cls-1" points="871.3 1373 871.3 1353 970.3 1353 970.3 1373 871.3 1373"/>
+        <text class="cls-7" transform="translate(876.3 1366.1)"><tspan x="0" y="0">_id: ObjectId</tspan></text>
+        <polygon class="cls-1" points="871.3 1393 871.3 1373 970.3 1373 970.3 1393 871.3 1393"/>
+        <text class="cls-7" transform="translate(876.3 1386.1)"><tspan x="0" y="0">createdAt: Date</tspan></text>
+        <polygon class="cls-1" points="871.3 1413 871.3 1393 970.3 1393 970.3 1413 871.3 1413"/>
+        <text class="cls-7" transform="translate(876.3 1406.1)"><tspan x="0" y="0">updatedAt: Date</tspan></text>
+        <polygon class="cls-1" points="871.3 1433 871.3 1413 970.3 1413 970.3 1433 871.3 1433"/>
+        <text class="cls-7" transform="translate(876.3 1426.1)"><tspan x="0" y="0">__v: Number</tspan></text>
+      </g>
+      <g id="edge2">
+        <path class="cls-2" d="M632.9,774c136.7,0,84.6-574,221.3-574"/>
+        <text class="cls-5" transform="translate(703.5 218.8)"><tspan x="0" y="0">retreats-bookings</tspan></text>
+        <text class="cls-5" transform="translate(844.2 195.8)"><tspan x="0" y="0">N</tspan></text>
+        <text class="cls-5" transform="translate(632.9 786.6)"><tspan x="0" y="0">1</tspan></text>
+      </g>
+      <g id="edge7">
+        <path class="cls-2" d="M632.9,774c233.8,0,4.5,469,238.3,469"/>
+        <text class="cls-5" transform="translate(702.3 783.8)"><tspan x="0" y="0">retreats-payments</tspan></text>
+        <text class="cls-5" transform="translate(861.2 1255.6)"><tspan x="0" y="0">N</tspan></text>
+        <text class="cls-5" transform="translate(632.9 769.8)"><tspan x="0" y="0">1</tspan></text>
+      </g>
+      <g id="node6">
+        <polygon class="cls-3" points="873.8 1123 873.8 885 966.8 885 966.8 1123 873.8 1123"/>
+        <polygon class="cls-4" points="874.3 903 874.3 885 967.3 885 967.3 903 874.3 903"/>
+        <polygon class="cls-1" points="874.3 903 874.3 885 967.3 885 967.3 903 874.3 903"/>
+        <text class="cls-6" transform="translate(901 896.1)"><tspan x="0" y="0">schedules</tspan></text>
+        <polygon class="cls-1" points="874.3 923 874.3 903 967.3 903 967.3 923 874.3 923"/>
+        <text class="cls-7" transform="translate(879.3 916.1)"><tspan x="0" y="0">title: String</tspan></text>
+        <polygon class="cls-1" points="874.3 943 874.3 923 967.3 923 967.3 943 874.3 943"/>
+        <text class="cls-7" transform="translate(879.3 936.1)"><tspan x="0" y="0">instructor_id: ObjectId</tspan></text>
+        <polygon class="cls-1" points="874.3 963 874.3 943 967.3 943 967.3 963 874.3 963"/>
+        <text class="cls-7" transform="translate(879.2 956.1)"><tspan x="0" y="0">workshop_id: ObjectId</tspan></text>
+        <polygon class="cls-1" points="874.3 983 874.3 963 967.3 963 967.3 983 874.3 983"/>
+        <text class="cls-7" transform="translate(879.3 976.1)"><tspan x="0" y="0">day_of_week: String</tspan></text>
+        <polygon class="cls-1" points="874.3 1003 874.3 983 967.3 983 967.3 1003 874.3 1003"/>
+        <text class="cls-7" transform="translate(879.3 996.1)"><tspan x="0" y="0">start_time: String</tspan></text>
+        <polygon class="cls-1" points="874.3 1023 874.3 1003 967.3 1003 967.3 1023 874.3 1023"/>
+        <text class="cls-7" transform="translate(879.3 1016.1)"><tspan x="0" y="0">end_time: String</tspan></text>
+        <polygon class="cls-1" points="874.3 1043 874.3 1023 967.3 1023 967.3 1043 874.3 1043"/>
+        <text class="cls-7" transform="translate(879.3 1036.1)"><tspan x="0" y="0">status: String</tspan></text>
+        <polygon class="cls-1" points="874.3 1063 874.3 1043 967.3 1043 967.3 1063 874.3 1063"/>
+        <text class="cls-7" transform="translate(879.3 1056.1)"><tspan x="0" y="0">_id: ObjectId</tspan></text>
+        <polygon class="cls-1" points="874.3 1083 874.3 1063 967.3 1063 967.3 1083 874.3 1083"/>
+        <text class="cls-7" transform="translate(879.3 1076.1)"><tspan x="0" y="0">createdAt: Date</tspan></text>
+        <polygon class="cls-1" points="874.3 1103 874.3 1083 967.3 1083 967.3 1103 874.3 1103"/>
+        <text class="cls-7" transform="translate(879.3 1096.1)"><tspan x="0" y="0">updatedAt: Date</tspan></text>
+        <polygon class="cls-1" points="874.3 1123 874.3 1103 967.3 1103 967.3 1123 874.3 1123"/>
+        <text class="cls-7" transform="translate(879.3 1116.1)"><tspan x="0" y="0">__v: Number</tspan></text>
+      </g>
+      <g id="node7">
+        <polygon class="cls-3" points="144.2 1084 144.2 746 250.2 746 250.2 1084 144.2 1084"/>
+        <polygon class="cls-4" points="144.2 764 144.2 746 250.2 746 250.2 764 144.2 764"/>
+        <polygon class="cls-1" points="144.2 764 144.2 746 250.2 746 250.2 764 144.2 764"/>
+        <text class="cls-6" transform="translate(185.7 757.1)"><tspan x="0" y="0">users</tspan></text>
+        <polygon class="cls-1" points="144.2 784 144.2 764 250.2 764 250.2 784 144.2 784"/>
+        <text class="cls-7" transform="translate(149.2 777.1)"><tspan x="0" y="0">name: String</tspan></text>
+        <polygon class="cls-1" points="144.2 804 144.2 784 250.2 784 250.2 804 144.2 804"/>
+        <text class="cls-7" transform="translate(149.2 797.1)"><tspan x="0" y="0">email: String</tspan></text>
+        <polygon class="cls-1" points="144.2 824 144.2 804 250.2 804 250.2 824 144.2 824"/>
+        <text class="cls-7" transform="translate(149.2 817.1)"><tspan x="0" y="0">password: String</tspan></text>
+        <polygon class="cls-1" points="144.2 844 144.2 824 250.2 824 250.2 844 144.2 844"/>
+        <text class="cls-7" transform="translate(149.2 837.1)"><tspan x="0" y="0">photo: String</tspan></text>
+        <polygon class="cls-1" points="144.2 864 144.2 844 250.2 844 250.2 864 144.2 864"/>
+        <text class="cls-7" transform="translate(149.2 857.1)"><tspan x="0" y="0">role: String</tspan></text>
+        <polygon class="cls-1" points="144.2 884 144.2 864 250.2 864 250.2 884 144.2 884"/>
+        <text class="cls-7" transform="translate(149.2 877.1)"><tspan x="0" y="0">dob: Date</tspan></text>
+        <polygon class="cls-1" points="144.2 904 144.2 884 250.2 884 250.2 904 144.2 904"/>
+        <text class="cls-7" transform="translate(149.2 897.1)"><tspan x="0" y="0">gender: String</tspan></text>
+        <polygon class="cls-1" points="144.2 924 144.2 904 250.2 904 250.2 924 144.2 924"/>
+        <text class="cls-7" transform="translate(149.1 917.1)"><tspan x="0" y="0">medical_conditions: Array</tspan></text>
+        <polygon class="cls-1" points="144.2 944 144.2 924 250.2 924 250.2 944 144.2 944"/>
+        <text class="cls-7" transform="translate(149.2 937.1)"><tspan x="0" y="0">status: String</tspan></text>
+        <polygon class="cls-1" points="144.2 964 144.2 944 250.2 944 250.2 964 144.2 964"/>
+        <text class="cls-7" transform="translate(149.2 957.1)"><tspan x="0" y="0">enrolled_courses: Array</tspan></text>
+        <polygon class="cls-1" points="144.2 984 144.2 964 250.2 964 250.2 984 144.2 984"/>
+        <text class="cls-7" transform="translate(149.2 977.1)"><tspan x="0" y="0">booked_retreats: Array</tspan></text>
+        <polygon class="cls-1" points="144.2 1004 144.2 984 250.2 984 250.2 1004 144.2 1004"/>
+        <text class="cls-7" transform="translate(149.2 997.1)"><tspan x="0" y="0">payments: Array</tspan></text>
+        <polygon class="cls-1" points="144.2 1024 144.2 1004 250.2 1004 250.2 1024 144.2 1024"/>
+        <text class="cls-7" transform="translate(149.2 1017.1)"><tspan x="0" y="0">_id: ObjectId</tspan></text>
+        <polygon class="cls-1" points="144.2 1044 144.2 1024 250.2 1024 250.2 1044 144.2 1044"/>
+        <text class="cls-7" transform="translate(149.2 1037.1)"><tspan x="0" y="0">createdAt: Date</tspan></text>
+        <polygon class="cls-1" points="144.2 1064 144.2 1044 250.2 1044 250.2 1064 144.2 1064"/>
+        <text class="cls-7" transform="translate(149.2 1057.1)"><tspan x="0" y="0">updatedAt: Date</tspan></text>
+        <polygon class="cls-1" points="144.2 1084 144.2 1064 250.2 1064 250.2 1084 144.2 1084"/>
+        <text class="cls-7" transform="translate(149.2 1077.1)"><tspan x="0" y="0">__v: Number</tspan></text>
+      </g>
+      <g id="edge1">
+        <path class="cls-2" d="M250.2,1014c69.4,0,12.3-244.8,36-310,49-134.9,120.4-138.2,177.3-270,27.3-63.3-6.7-96.8,36-151,101.6-129,190.6-103,354.8-103"/>
+        <text class="cls-5" transform="translate(532.5 179.8)"><tspan x="0" y="0">users-bookings</tspan></text>
+        <text class="cls-5" transform="translate(844.2 175.8)"><tspan x="0" y="0">N</tspan></text>
+        <text class="cls-5" transform="translate(250.2 1026.6)"><tspan x="0" y="0">1</tspan></text>
+      </g>
+      <g id="edge4">
+        <path class="cls-2" d="M250.2,1014c49.1,0,13.2,396.6,36,440,56.9,108.5,97.9,133.5,213.3,174.8,133.2,47.6,180.3,26.4,318.3-4.8,26.8-6.1,29-25,56.5-25"/>
+        <text class="cls-5" transform="translate(525.2 1623.8)"><tspan x="0" y="0">users-enrollments</tspan></text>
+        <text class="cls-5" transform="translate(864.2 1611.6)"><tspan x="0" y="0">N</tspan></text>
+        <text class="cls-5" transform="translate(250.2 1009.8)"><tspan x="0" y="0">1</tspan></text>
+      </g>
+      <g id="edge6">
+        <path class="cls-2" d="M250.2,1014c17.7,0,19.2,11.5,36,17,228.7,75.1,334.1-33.7,531.5,104,37.5,26.2,7.7,88,53.5,88"/>
+        <text class="cls-5" transform="translate(531.4 1054.8)"><tspan x="0" y="0">users-payments</tspan></text>
+        <text class="cls-5" transform="translate(861.2 1235.6)"><tspan x="0" y="0">N</tspan></text>
+        <text class="cls-5" transform="translate(243.2 1026.6)"><tspan x="0" y="0">1</tspan></text>
+      </g>
+      <g id="edge10">
+        <path class="cls-2" d="M250.2,1014c62.5,0-1.2-85.7,36-136,72.1-97.5,110.5-144,231.7-144"/>
+        <text class="cls-5" transform="translate(337.5 734.8)"><tspan x="0" y="0">users-retreats</tspan></text>
+        <text class="cls-5" transform="translate(507.8 729.8)"><tspan x="0" y="0">N</tspan></text>
+        <text class="cls-5" transform="translate(250.2 1026.6)"><tspan x="0" y="0">1</tspan></text>
+      </g>
+      <g id="edge11">
+        <path class="cls-2" d="M250.2,1014c279.7,0,344.4-81,624-81"/>
+        <text class="cls-5" transform="translate(531 948.8)"><tspan x="0" y="0">users-schedules</tspan></text>
+        <text class="cls-5" transform="translate(864.2 945.6)"><tspan x="0" y="0">N</tspan></text>
+        <text class="cls-5" transform="translate(243.2 1009.8)"><tspan x="0" y="0">1</tspan></text>
+      </g>
+      <g id="node8">
+        <polygon class="cls-3" points="526.4 1576 526.4 1238 623.4 1238 623.4 1576 526.4 1576"/>
+        <polygon class="cls-4" points="526.9 1256 526.9 1238 623.9 1238 623.9 1256 526.9 1256"/>
+        <polygon class="cls-1" points="526.9 1256 526.9 1238 623.9 1238 623.9 1256 526.9 1256"/>
+        <text class="cls-6" transform="translate(553.7 1249.1)"><tspan x="0" y="0">workshops</tspan></text>
+        <polygon class="cls-1" points="526.9 1276 526.9 1256 623.9 1256 623.9 1276 526.9 1276"/>
+        <text class="cls-7" transform="translate(531.9 1269.1)"><tspan x="0" y="0">title: String</tspan></text>
+        <polygon class="cls-1" points="526.9 1296 526.9 1276 623.9 1276 623.9 1296 526.9 1296"/>
+        <text class="cls-7" transform="translate(531.9 1289.1)"><tspan x="0" y="0">description: String</tspan></text>
+        <polygon class="cls-1" points="526.9 1316 526.9 1296 623.9 1296 623.9 1316 526.9 1316"/>
+        <text class="cls-7" transform="translate(531.9 1309.1)"><tspan x="0" y="0">difficulty_level: String</tspan></text>
+        <polygon class="cls-1" points="526.9 1336 526.9 1316 623.9 1316 623.9 1336 526.9 1336"/>
+        <text class="cls-7" transform="translate(531.9 1329.1)"><tspan x="0" y="0">price: Number</tspan></text>
+        <polygon class="cls-1" points="526.9 1356 526.9 1336 623.9 1336 623.9 1356 526.9 1356"/>
+        <text class="cls-7" transform="translate(531.8 1349.1)"><tspan x="0" y="0">discount_price: Number</tspan></text>
+        <polygon class="cls-1" points="526.9 1376 526.9 1356 623.9 1356 623.9 1376 526.9 1376"/>
+        <text class="cls-7" transform="translate(531.9 1369.1)"><tspan x="0" y="0">classroom_info: String</tspan></text>
+        <polygon class="cls-1" points="526.9 1396 526.9 1376 623.9 1376 623.9 1396 526.9 1396"/>
+        <text class="cls-7" transform="translate(531.9 1389.1)"><tspan x="0" y="0">address: String</tspan></text>
+        <polygon class="cls-1" points="526.9 1416 526.9 1396 623.9 1396 623.9 1416 526.9 1416"/>
+        <text class="cls-7" transform="translate(531.9 1409.1)"><tspan x="0" y="0">map_location: String</tspan></text>
+        <polygon class="cls-1" points="526.9 1436 526.9 1416 623.9 1416 623.9 1436 526.9 1436"/>
+        <text class="cls-7" transform="translate(531.9 1429.1)"><tspan x="0" y="0">photo: String</tspan></text>
+        <polygon class="cls-1" points="526.9 1456 526.9 1436 623.9 1436 623.9 1456 526.9 1456"/>
+        <text class="cls-7" transform="translate(531.9 1449.1)"><tspan x="0" y="0">instructor_id: ObjectId</tspan></text>
+        <polygon class="cls-1" points="526.9 1476 526.9 1456 623.9 1456 623.9 1476 526.9 1476"/>
+        <text class="cls-7" transform="translate(531.9 1469.1)"><tspan x="0" y="0">category: ObjectId</tspan></text>
+        <polygon class="cls-1" points="526.9 1496 526.9 1476 623.9 1476 623.9 1496 526.9 1496"/>
+        <text class="cls-7" transform="translate(531.9 1489.1)"><tspan x="0" y="0">modules: Array</tspan></text>
+        <polygon class="cls-1" points="526.9 1516 526.9 1496 623.9 1496 623.9 1516 526.9 1516"/>
+        <text class="cls-7" transform="translate(531.9 1509.1)"><tspan x="0" y="0">_id: ObjectId</tspan></text>
+        <polygon class="cls-1" points="526.9 1536 526.9 1516 623.9 1516 623.9 1536 526.9 1536"/>
+        <text class="cls-7" transform="translate(531.9 1529.1)"><tspan x="0" y="0">createdAt: Date</tspan></text>
+        <polygon class="cls-1" points="526.9 1556 526.9 1536 623.9 1536 623.9 1556 526.9 1556"/>
+        <text class="cls-7" transform="translate(531.9 1549.1)"><tspan x="0" y="0">updatedAt: Date</tspan></text>
+        <polygon class="cls-1" points="526.9 1576 526.9 1556 623.9 1556 623.9 1576 526.9 1576"/>
+        <text class="cls-7" transform="translate(531.9 1569.1)"><tspan x="0" y="0">__v: Number</tspan></text>
+      </g>
+      <g id="edge13">
+        <path class="cls-2" d="M250.2,1014c69.3,0,4.5,90,36,151.8,74.5,146.3,76.5,280.2,240.7,280.2"/>
+        <text class="cls-5" transform="translate(327.8 1160.8)"><tspan x="0" y="0">users-workshops</tspan></text>
+        <text class="cls-5" transform="translate(516.8 1458.6)"><tspan x="0" y="0">N</tspan></text>
+        <text class="cls-5" transform="translate(250.2 1009.8)"><tspan x="0" y="0">1</tspan></text>
+      </g>
+      <g id="edge5">
+        <path class="cls-2" d="M623.9,1506c122.1,0,128.3,113,250.3,113"/>
+        <text class="cls-5" transform="translate(686.4 1515.8)"><tspan x="0" y="0">workshops-enrollments</tspan></text>
+        <text class="cls-5" transform="translate(864.2 1631.6)"><tspan x="0" y="0">N</tspan></text>
+        <text class="cls-5" transform="translate(623.9 1518.6)"><tspan x="0" y="0">1</tspan></text>
+      </g>
+      <g id="edge8">
+        <path class="cls-2" d="M623.9,1506c51.3,0,160.3-86.4,193.8-125.2,37.6-43.5-4-117.8,53.5-117.8"/>
+        <text class="cls-5" transform="translate(692.6 1375.8)"><tspan x="0" y="0">workshops-payments</tspan></text>
+        <text class="cls-5" transform="translate(861.2 1275.6)"><tspan x="0" y="0">N</tspan></text>
+        <text class="cls-5" transform="translate(623.9 1501.8)"><tspan x="0" y="0">1</tspan></text>
+      </g>
+      <g id="edge12">
+        <path class="cls-2" d="M623.9,1506c74.7,0,14.4-98.8,62.4-156,44.2-52.6,92.8-24.4,131.4-81.2,40.1-59-14.8-315.8,56.5-315.8"/>
+        <text class="cls-5" transform="translate(692.2 1263.8)"><tspan x="0" y="0">workshops-schedules</tspan></text>
+        <text class="cls-5" transform="translate(864.2 965.6)"><tspan x="0" y="0">N</tspan></text>
+        <text class="cls-5" transform="translate(616.9 1518.6)"><tspan x="0" y="0">1</tspan></text>
+      </g>
+      <g id="node9">
+        <polygon class="cls-3" points="155.2 1794 155.2 1656 239.2 1656 239.2 1794 155.2 1794"/>
+        <polygon class="cls-4" points="155.2 1674 155.2 1656 239.2 1656 239.2 1674 155.2 1674"/>
+        <polygon class="cls-1" points="155.2 1674 155.2 1656 239.2 1656 239.2 1674 155.2 1674"/>
+        <text class="cls-6" transform="translate(159 1667.1)"><tspan x="0" y="0">workshopcategories</tspan></text>
+        <polygon class="cls-1" points="155.2 1694 155.2 1674 239.2 1674 239.2 1694 155.2 1694"/>
+        <text class="cls-7" transform="translate(160.2 1687.1)"><tspan x="0" y="0">name: String</tspan></text>
+        <polygon class="cls-1" points="155.2 1714 155.2 1694 239.2 1694 239.2 1714 155.2 1714"/>
+        <text class="cls-7" transform="translate(160.2 1707.1)"><tspan x="0" y="0">description: String</tspan></text>
+        <polygon class="cls-1" points="155.2 1734 155.2 1714 239.2 1714 239.2 1734 155.2 1734"/>
+        <text class="cls-7" transform="translate(160.2 1727.1)"><tspan x="0" y="0">_id: ObjectId</tspan></text>
+        <polygon class="cls-1" points="155.2 1754 155.2 1734 239.2 1734 239.2 1754 155.2 1754"/>
+        <text class="cls-7" transform="translate(160.2 1747.1)"><tspan x="0" y="0">createdAt: Date</tspan></text>
+        <polygon class="cls-1" points="155.2 1774 155.2 1754 239.2 1754 239.2 1774 155.2 1774"/>
+        <text class="cls-7" transform="translate(160.2 1767.1)"><tspan x="0" y="0">updatedAt: Date</tspan></text>
+        <polygon class="cls-1" points="155.2 1794 155.2 1774 239.2 1774 239.2 1794 155.2 1794"/>
+        <text class="cls-7" transform="translate(160.2 1787.1)"><tspan x="0" y="0">__v: Number</tspan></text>
+      </g>
+      <g id="edge14">
+        <path class="cls-2" d="M239.2,1724c171.8,0,116-258,287.7-258"/>
+        <text class="cls-5" transform="translate(286.2 1478.8)"><tspan x="0" y="0">workshopcategories-workshops</tspan></text>
+        <text class="cls-5" transform="translate(516.8 1478.6)"><tspan x="0" y="0">N</tspan></text>
+        <text class="cls-5" transform="translate(239.2 1736.6)"><tspan x="0" y="0">1</tspan></text>
+      </g>
+    </g>
+  </g>
+</svg>

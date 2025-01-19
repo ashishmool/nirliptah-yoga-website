@@ -1,13 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FaHammer, FaHome, FaSuitcase, FaUsers } from "react-icons/fa";
-import { FaBookBookmark } from "react-icons/fa6";
+import {FaBookBookmark, FaUserClock} from "react-icons/fa6";
 
 const sidelinks = [
     { title: "Dashboard", href: "/admin/home", icon: <FaHome /> },
     { title: "Workshops", href: "/admin/workshops", icon: <FaHammer /> },
     { title: "Accommodations", href: "/admin/accommodations", icon: <FaHome /> },
     { title: "Retreats", href: "/admin/retreats", icon: <FaSuitcase /> },
+    { title: "Schedules", href: "/admin/schedules", icon: <FaUserClock /> },
     { title: "Bookings", href: "/admin/bookings", icon: <FaBookBookmark /> },
     { title: "Users", href: "/admin/users", icon: <FaUsers /> },
 ];

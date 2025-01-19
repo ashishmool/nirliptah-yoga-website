@@ -11,35 +11,33 @@ const accommodationSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        price_per_night: {
-            type: Number,
-            required: true,
-        },
         location: {
             type: String,
             required: true,
         },
-        max_occupancy: {
-            type: Number,
-            required: true,
-        },
-        available_rooms: {
-            type: Number,
-            required: true,
-        },
         amenities: {
-            type: [String], // Array of amenities
+            type: [String],
             default: [],
         },
+        room_types: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Room",
+            },
+        ],
         photo: {
-            type: String, // URL or file path for accommodation image
+            type: String,
             default: null,
         },
     },
-    {
-        timestamps: true, // Automatically adds `createdAt` and `updatedAt` fields
-    }
+    { timestamps: true }
 );
+
+// Middleware for cascading deletion of rooms
+accommodationSchema.pre("remove", async function (next) {
+    await mongoose.model("Room").deleteMany({ accommodation_id: this._id });
+    next();
+});
 
 const Accommodation = mongoose.model("Accommodation", accommodationSchema);
 module.exports = Accommodation;

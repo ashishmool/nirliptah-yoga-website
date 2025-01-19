@@ -51,7 +51,7 @@ const Retreats: React.FC = () => {
     const dynamicMarginTop = location.pathname === "/retreats" ? "mt-32" : "mt-0";
 
     return (
-        <div className={`retreats-page max-w-screen-xl mx-auto p-6 mb-16 ${dynamicMarginTop}`}>
+        <div className={`retreats-page max-w-screen-xl mx-auto p-6 ${dynamicMarginTop}`}>
             {/* Section Title */}
             <div className="space-y-4 text-center mb-8">
                 <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Upcoming Retreats</h1>

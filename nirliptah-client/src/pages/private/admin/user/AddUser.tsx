@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const AddUser: React.FC = () => {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
         password: "",
-        profile_picture: "",
+        photo: null as File | null,
         role: "student",
         age: 0,
         height: 0,
@@ -17,12 +17,20 @@ const AddUser: React.FC = () => {
     });
 
     const navigate = useNavigate();
-
     const [loading, setLoading] = useState(false);
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
+    };
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            setFormData({ ...formData, photo: file });
+            setImagePreview(URL.createObjectURL(file)); // Set the preview URL
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -34,15 +42,36 @@ const AddUser: React.FC = () => {
             medical_conditions: formData.medical_conditions.split(",").map((condition) => condition.trim()),
         };
 
+        const formDataObj = new FormData();
+        formDataObj.append("name", formData.name);
+        formDataObj.append("email", formData.email);
+        formDataObj.append("password", formData.password);
+        formDataObj.append("role", formData.role);
+        formDataObj.append("age", formData.age.toString());
+        formDataObj.append("height", formData.height.toString());
+        formDataObj.append("weight", formData.weight.toString());
+        formDataObj.append("gender", formData.gender);
+        formDataObj.append("medical_conditions", payload.medical_conditions.join(","));
+
+        // If there's a profile picture, append it to the form data
+        if (formData.photo) {
+            formDataObj.append("user_photo", formData.photo);
+        }
+
         try {
-            const response = await axios.post("http://localhost:5000/api/users/add", payload);
+            const response = await axios.post("http://localhost:5000/api/users/save", formDataObj, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
             alert("User added successfully!");
             console.log("Response:", response.data);
             setFormData({
                 name: "",
                 email: "",
                 password: "",
-                profile_picture: "",
+                photo: null,
                 role: "student",
                 age: 0,
                 height: 0,
@@ -74,7 +103,7 @@ const AddUser: React.FC = () => {
                 {[
                     { label: "Name", name: "name", type: "text" },
                     { label: "Email", name: "email", type: "email" },
-                    { label: "Profile Picture (URL)", name: "profile_picture", type: "text" },
+                    { label: "Password", name: "password", type: "password" },
                     { label: "Age", name: "age", type: "number" },
                     { label: "Height (cm)", name: "height", type: "number" },
                     { label: "Weight (kg)", name: "weight", type: "number" },
@@ -85,7 +114,7 @@ const AddUser: React.FC = () => {
                             id={name}
                             name={name}
                             type={type}
-                            value={formData.name}
+                            value={formData[name as keyof typeof formData] as string | number}
                             onChange={handleChange}
                             className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                             required
@@ -140,6 +169,29 @@ const AddUser: React.FC = () => {
                         className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         required
                     />
+                </div>
+
+                {/* Profile Picture */}
+                <div>
+                    <label htmlFor="profile_picture" className="block text-sm font-medium text-gray-700">Profile Picture</label>
+                    <input
+                        id="profile_picture"
+                        name="profile_picture"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                    {imagePreview && (
+                        <div className="mt-4">
+                            <p className="text-sm text-gray-500">Image Preview:</p>
+                            <img
+                                src={imagePreview}
+                                alt="Selected Profile"
+                                className="w-full h-60 object-cover border border-gray-300 rounded-md shadow-sm"
+                            />
+                        </div>
+                    )}
                 </div>
 
                 {/* Submit Button */}

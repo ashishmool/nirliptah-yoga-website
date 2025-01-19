@@ -2,10 +2,6 @@ const User = require("../models/User");
 const transporter = require("../config/mailConfig");
 const path = require("path");
 
-// Helper function to handle file uploads
-const getFilePath = (file) => {
-    return file ? path.join("/uploads/misc", file.filename) : null;
-};
 
 // Helper function to validate environment variables
 const validateEnv = () => {

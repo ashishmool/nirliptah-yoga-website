@@ -18,7 +18,6 @@ interface WorkshopFormData {
     address: string;
     map_location: string;
     photo: File | null;
-    instructor_id: string;
     category: string;
     newCategory?: string;
     modules: Module[];
@@ -37,28 +36,16 @@ const UpdateWorkshop: React.FC = () => {
         address: "",
         map_location: "",
         photo: null,
-        instructor_id: "", // Initialize as an empty object with an _id and name
-        category: "", // Same for category
+        category: "",
         modules: [],
     });
     const [loading, setLoading] = useState(false);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
-    const [instructors, setInstructors] = useState<any[]>([]);
     const [categories, setCategories] = useState<any[]>([]);
     const [isNewCategory, setIsNewCategory] = useState(false);
 
     useEffect(() => {
         // Fetch instructors list for the select options
-        const fetchInstructors = async () => {
-            try {
-                const response = await axios.get("http://localhost:5000/api/users");
-                const instructorList = response.data.filter(user => user.role === "instructor");
-                setInstructors(instructorList);
-            } catch (error) {
-                console.error("Error fetching instructors:", error);
-                toast.error("Failed to fetch instructors.");
-            }
-        };
 
         // Fetch categories list for the select options
         const fetchCategories = async () => {
@@ -85,8 +72,7 @@ const UpdateWorkshop: React.FC = () => {
                     classroom_info: workshop.classroom_info || "",
                     address: workshop.address || "",
                     map_location: workshop.map_location || "",
-                    photo: null, // Photo will be handled separately
-                    instructor_id: workshop.instructor_id || "",  // Fetch instructor and set it
+                    photo: null,
                     category: workshop.category._id || "",
                     modules: workshop.modules || [],
                 });
@@ -102,7 +88,6 @@ const UpdateWorkshop: React.FC = () => {
             }
         };
 
-        fetchInstructors();
         fetchCategories();
         fetchWorkshopData();
     }, [id]); // Runs when the component is mounted or when id changes
@@ -369,24 +354,6 @@ const UpdateWorkshop: React.FC = () => {
                     />
                 </div>
 
-                {/* Instructor */}
-                <div>
-                    <label htmlFor="instructor_id" className="block text-sm font-medium text-gray-700">Instructor</label>
-                    <select
-                        id="instructor_id"
-                        name="instructor_id"
-                        value={formData.instructor_id._id}
-                        onChange={handleInstructorChange}
-                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md"
-                    >
-                        <option value="">Select an instructor</option>
-                        {instructors.map((instructor) => (
-                            <option key={instructor._id} value={instructor._id}> {/* Use _id as value */}
-                                {instructor.name} {/* Display the name in the dropdown */}
-                            </option>
-                        ))}
-                    </select>
-                </div>
 
 
 

@@ -1,5 +1,5 @@
 const Accommodation = require("../models/Accommodation");
-const upload = require("../config/multerConfig"); // Import the multer configuration
+const Room = require("../models/Room");
 
 // Get all accommodations
 const getAccommodations = async (req, res) => {
@@ -32,22 +32,16 @@ const createAccommodation = async (req, res) => {
     }
 
     try {
-        const { name, description, price_per_night, location, max_occupancy, available_rooms, amenities } = req.body;
-
-        if (!available_rooms || !price_per_night) {
-            return res.status(400).json({ message: "Price and available rooms are required" });
-        }
+        const { name, description, location, room_types, amenities } = req.body;
 
         const accommodationPhotoPath = `/uploads/accommodation_photos/${req.files.accommodation_photo[0].filename}`;
 
         const newAccommodation = new Accommodation({
             name,
             description,
-            price_per_night,
             location,
-            available_rooms,
-            max_occupancy,
             amenities,
+            room_types,
             photo: accommodationPhotoPath, // Store the relative path to the image
         });
 
@@ -100,15 +94,38 @@ const patchAccommodation = async (req, res) => {
 const deleteAccommodation = async (req, res) => {
     try {
         const { id } = req.params;
-        const deletedAccommodation = await Accommodation.findByIdAndDelete(id);
-        if (!deletedAccommodation) {
+
+        // Find the accommodation by ID
+        const accommodation = await Accommodation.findById(id);
+
+        if (!accommodation) {
             return res.status(404).json({ message: "Accommodation not found" });
         }
-        res.json({ message: "Accommodation deleted" });
+
+        // Find all rooms associated with the accommodation
+        const rooms = await Room.find({ accommodation_id: id });
+
+        // If rooms are found, delete each one
+        if (rooms.length > 0) {
+            // Loop through and delete each associated room
+            for (const room of rooms) {
+                await Room.findByIdAndDelete(room._id);
+            }
+        }
+
+        // Now delete the accommodation itself
+        await accommodation.deleteOne();
+
+        res.json({ message: "Accommodation and associated rooms deleted successfully" });
     } catch (error) {
-        res.status(500).json({ message: "Error deleting accommodation", error });
+        console.error("Error during deletion:", error);
+        res.status(500).json({
+            message: "Error deleting accommodation and rooms",
+            error: error.message || error,
+        });
     }
 };
+
 
 module.exports = {
     getAccommodations,

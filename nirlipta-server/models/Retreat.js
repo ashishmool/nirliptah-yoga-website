@@ -5,6 +5,7 @@ const retreatSchema = new mongoose.Schema(
         title: {
             type: String,
             required: true,
+            trim: true,
         },
         description: {
             type: String,
@@ -27,46 +28,40 @@ const retreatSchema = new mongoose.Schema(
         },
         address: {
             type: String,
-            required: false,
         },
         map_location: {
-            type: String, // URL or coordinates
-            required: false,
+            type: String, // Coordinates or Google Maps URL
         },
         meals_info: {
-            type: [String], // Array of meal options (e.g., "Vegetarian", "Vegan", etc.)
+            type: [String],
+            default: [],
         },
         organizer: {
-            type: String, // Organizer name
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
             required: true,
         },
         guests: [
             {
-                name: { type: String, required: false }, // Guest name
-                guest_photo: { type: String, required: false }, // Photo URL (Tes Purpose)
+                name: String,
+                guest_photo: String,
             },
         ],
         featuring_events: {
-            type: [String], // Array of events (e.g., "Kirtan Night", "Nature Walk Meditation")
+            type: [String],
+            default: [],
         },
         accommodation_id: {
-            type: mongoose.Schema.Types.ObjectId, // Foreign Key
-            ref: "Accommodation", // Link to the Accommodation
-            required: false, // Nullable for testing purpose
-        },
-        instructor_id: {
-            type: mongoose.Schema.Types.ObjectId, // Foreign Key
-            ref: "User",
-            required: false, // Nullable for testing purpose
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Accommodation",
         },
         photo: {
             type: String,
-            required: false,
+            default: null,
         },
     },
     { timestamps: true }
 );
-
 
 const Retreat = mongoose.model("Retreat", retreatSchema);
 module.exports = Retreat;

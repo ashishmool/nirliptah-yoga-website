@@ -4,7 +4,8 @@ import { useParams } from "react-router-dom";
 import { Button } from "@/pages/components/ui/button";
 import { Badge } from "@/pages/components/ui/badge";
 import { toast } from "sonner";
-import { FaMapMarkerAlt, FaUserTie, FaRegClock } from "react-icons/fa"; // React Icons
+import { FaMapMarkerAlt, FaRegClock } from "react-icons/fa"; // React Icons
+import LoginModal from "../../../pages/private/auth/Login"; // Import your Login Modal component
 
 interface Module {
     name: string;
@@ -38,6 +39,9 @@ const SingleWorkshop: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const [workshop, setWorkshop] = useState<Workshop | null>(null);
     const [category, setCategory] = useState<Category | null>(null);
+    const [isEnrolling, setIsEnrolling] = useState(false);
+    const [isAlreadyEnrolled, setIsAlreadyEnrolled] = useState<boolean | null>(null); // Track enrollment status
+    const [showLoginModal, setShowLoginModal] = useState(false); // State to control LoginModal visibility
 
     useEffect(() => {
         const fetchWorkshop = async () => {
@@ -60,10 +64,55 @@ const SingleWorkshop: React.FC = () => {
             }
         };
 
+        const checkEnrollmentStatus = async () => {
+            const user_id = localStorage.getItem("user_id");
+
+            if (!user_id || !id) return;
+
+            try {
+                const response = await axios.get(`http://localhost:5000/api/enrollments/check/${user_id}/${id}`);
+                setIsAlreadyEnrolled(response.data.enrolled); // Set enrollment status based on backend response
+            } catch (error) {
+                console.error("Error checking enrollment status:", error);
+            }
+        };
+
         if (id) {
             fetchWorkshop();
+            checkEnrollmentStatus(); // Check enrollment status when workshop is loaded
         }
     }, [id]);
+
+    const handleEnroll = async () => {
+        const user_id = localStorage.getItem("user_id");
+
+        if (!user_id) {
+            setShowLoginModal(true); // Show the login modal if the user is not logged in
+            return;
+        }
+
+        if (!workshop) {
+            toast.error("Workshop details are missing.");
+            return;
+        }
+
+        setIsEnrolling(true);
+
+        try {
+            const response = await axios.post("http://localhost:5000/api/enrollments/save", {
+                user_id,
+                workshop_id: workshop._id,
+            });
+
+            toast.success(response.data.message);
+            setIsAlreadyEnrolled(true); // Mark the user as enrolled
+        } catch (error) {
+            console.error("Error enrolling in workshop:", error);
+            toast.error("Failed to enroll in the workshop.");
+        } finally {
+            setIsEnrolling(false);
+        }
+    };
 
     if (!workshop) {
         return <div>Loading...</div>;
@@ -111,7 +160,7 @@ const SingleWorkshop: React.FC = () => {
                 <div className="mt-6">
                     <h3 className="font-semibold text-lg text-gray-800">Modules:</h3>
                     <ul className="list-disc pl-6">
-                        {workshop.modules.map((module, index) => (
+                        {workshop.modules.map((module) => (
                             <li key={module._id} className="mt-2 text-gray-600">
                                 <span className="font-semibold">{module.name}</span> - {module.duration} mins
                             </li>
@@ -129,13 +178,34 @@ const SingleWorkshop: React.FC = () => {
                             </span>
                         </>
                     ) : (
-                        <span className="text-gray-800 font-bold text-lg"><strong>Price: </strong>AED ($) {workshop.price}</span>
+                        <span className="text-gray-800 font-bold text-lg">
+                            <strong>Price: </strong>AED ($) {workshop.price}
+                        </span>
                     )}
                 </div>
 
                 {/* Enroll Button */}
-                <Button className="enroll-btn mt-6 bg-black text-white px-6 py-3">Enroll Now</Button>
+                {isAlreadyEnrolled === null ? (
+                    <div className="mt-6 text-center text-gray-600">
+                        <p>Loading enrollment status...</p>
+                    </div>
+                ) : isAlreadyEnrolled ? (
+                    <div className="mt-6 text-center text-gray-600">
+                        <p>You have already enrolled in this course.</p>
+                    </div>
+                ) : (
+                    <Button
+                        className="enroll-btn mt-6 bg-black text-white px-6 py-3"
+                        onClick={handleEnroll}
+                        disabled={isEnrolling}
+                    >
+                        {isEnrolling ? "Enrolling..." : "Enroll Now"}
+                    </Button>
+                )}
             </div>
+
+            {/* Show Login Modal if needed */}
+            {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}
         </div>
     );
 };

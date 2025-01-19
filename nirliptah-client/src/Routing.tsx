@@ -29,6 +29,8 @@ import AdminHome from "@/pages/private/admin/AdminHome.tsx";
 import Workshops from "@/pages/public/workshop/Workshops.tsx";
 import Retreats from "@/pages/public/retreat/Retreats.tsx";
 import SingleRetreatContainer from "@/pages/public/retreat/SingleRetreat.tsx";
+import ListSchedule from "@/pages/private/admin/schedule/ListSchedules.tsx";
+import AddSchedule from "@/pages/private/admin/schedule/AddSchedule.tsx";
 
 // Helper functions for role-based access
 const isAdmin = () => localStorage.getItem("role") === "admin";
@@ -53,6 +55,7 @@ export default function Routing() {
             <Route path="contact" element={<Contact />} />
 
 
+
             {/* Admin Routes */}
             {isAdmin() ? (
                 <Route path="admin" element={<AdminDashboard />}>
@@ -74,6 +77,10 @@ export default function Routing() {
                     <Route path="workshops" element={<ListWorkshops />} />
                     <Route path="workshops/add" element={<AddWorkshop />} />
                     <Route path="workshops/update/:id" element={<UpdateWorkshop />} />
+
+                    {/* Schedule Routes */}
+                    <Route path="schedules" element={<ListSchedule />} />
+                    <Route path="schedules/add" element={<AddSchedule />} />
 
                     {/* User Routes */}
                     <Route path="users" element={<ListUsers />} />

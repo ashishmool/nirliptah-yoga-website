@@ -106,19 +106,16 @@ const ListAccommodation: React.FC = () => {
                             Name
                         </th>
                         <th className="flex-1 px-4 py-2 text-center text-sm font-medium text-gray-500">
+                            Description
+                        </th>
+                        <th className="flex-1 px-4 py-2 text-center text-sm font-medium text-gray-500">
                             Location
                         </th>
                         <th className="flex-1 px-4 py-2 text-center text-sm font-medium text-gray-500">
-                            Price per Night
+                            Amenities
                         </th>
                         <th className="flex-1 px-4 py-2 text-center text-sm font-medium text-gray-500">
-                            Rooms
-                        </th>
-                        <th className="flex-1 px-4 py-2 text-center text-sm font-medium text-gray-500">
-                            Room Capacity
-                        </th>
-                        <th className="flex-1 px-4 py-2 text-center text-sm font-medium text-gray-500">
-                            Total Capacity
+                            Room Types
                         </th>
                         <th className="flex-1 px-4 py-2 text-center text-sm font-medium text-gray-500">
                             Actions
@@ -142,20 +139,18 @@ const ListAccommodation: React.FC = () => {
                                 {acc.name}
                             </td>
                             <td className="flex-1 px-4 py-2 text-sm text-gray-500 text-center">
+                                {acc.description}
+                            </td>
+                            <td className="flex-1 px-4 py-2 text-sm text-gray-500 text-center">
                                 {acc.location}
                             </td>
                             <td className="flex-1 px-4 py-2 text-sm text-gray-500 text-center">
-                                {acc.price_per_night}
+                                {acc.amenities}
                             </td>
                             <td className="flex-1 px-4 py-2 text-sm text-gray-500 text-center">
-                                {acc.available_rooms}
+                                {acc.room_types}
                             </td>
-                            <td className="flex-1 px-4 py-2 text-sm text-gray-500 text-center">
-                                {acc.max_occupancy}
-                            </td>
-                            <td className="flex-1 px-4 py-2 text-sm text-gray-500 text-center">
-                                {acc.available_rooms * acc.max_occupancy}
-                            </td>
+
                             <td className="flex-1 px-4 py-2 text-sm text-gray-500 text-center flex justify-center space-x-2">
                                 <Link
                                     to={`/admin/accommodations/update/${acc._id}`}

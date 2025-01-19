@@ -5,7 +5,6 @@ const Category = require("../models/WorkshopCategory");
 const getAllWorkshops = async (req, res) => {
     try {
         const workshops = await Workshop.find()
-            .populate("instructor_id")
             .populate("category");
         res.json(workshops);
     } catch (error) {
@@ -18,7 +17,6 @@ const getWorkshopById = async (req, res) => {
     try {
         const { id } = req.params;
         const workshop = await Workshop.findById(id)
-            .populate("instructor_id")
             .populate("category");
         if (!workshop) {
             return res.status(404).json({ message: "Workshop not found" });
@@ -45,7 +43,6 @@ const createWorkshop = async (req, res) => {
             classroom_info,
             address,
             map_location,
-            instructor_id,
             category,
             newCategory,
             modules,
@@ -76,7 +73,6 @@ const createWorkshop = async (req, res) => {
             classroom_info,
             address,
             map_location,
-            instructor_id,
             category: selectedCategory,
             modules: parsedModules,
             photo: `/uploads/workshop_photos/${req.files.workshop_photo[0].filename}`,

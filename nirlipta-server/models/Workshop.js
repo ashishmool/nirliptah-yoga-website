@@ -10,6 +10,15 @@ const workshopSchema = new mongoose.Schema(
         description: {
             type: String,
         },
+        address: {
+            type: String,
+        },
+        classroom_info: {
+            type: String,
+        },
+        map_location: {
+            type: String,
+        },
         difficulty_level: {
             type: String,
             enum: ["beginner", "intermediate", "advanced"],
@@ -22,42 +31,24 @@ const workshopSchema = new mongoose.Schema(
         discount_price: {
             type: Number,
         },
-        classroom_info: {
-            type: String,
-        },
-        address: {
-            type: String,
-        },
-        map_location: {
-            type: String,
-        },
-        photo: {
-            type: String,
-        },
-        instructor_id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-        },
         category: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "WorkshopCategory",
             required: true,
+        },
+        photo: {
+            type: String,
+            default: null,
         },
         modules: [
             {
                 name: {
                     type: String,
                     required: true,
-                    trim: true,
                 },
                 duration: {
                     type: Number,
                     required: true,
-                    min: 1,
-                    validate: {
-                        validator: Number.isInteger,
-                        message: "Module duration must be an integer.",
-                    },
                 },
             },
         ],

@@ -6,6 +6,7 @@ const {
     createEnrollment,
     updateEnrollment,
     deleteEnrollment,
+    checkEnrollmentStatus, // Add the check enrollment status controller here
 } = require("../controller/EnrollmentController");
 
 // Get all enrollments
@@ -22,5 +23,8 @@ router.put("/update/:id", updateEnrollment);
 
 // Delete enrollment by ID
 router.delete("/delete/:id", deleteEnrollment);
+
+// Check if a user is enrolled in a specific workshop
+router.get("/check/:user_id/:workshop_id", checkEnrollmentStatus); // Added this line for the check
 
 module.exports = router;

@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import WorkshopCard from "@/pages/public/workshop/WorkshopCard.tsx";
 import { Badge } from "@/pages/components/ui/badge";
 import { Button } from "@/pages/components/ui/button";
+import { RxCross2 } from 'react-icons/rx';  // Import the cross icon
+
 
 const Workshops: React.FC = () => {
     const [workshops, setWorkshops] = useState<any[]>([]);
@@ -77,9 +79,10 @@ const Workshops: React.FC = () => {
             </div>
 
             {/* Top Bar for Category Filtering */}
+            {/* Top Bar for Category Filtering */}
             <div className="top-bar p-6 w-full mt-4 flex flex-col sm:flex-row justify-between items-center bg-transparent rounded-lg mb-4">
                 <div className="categories-container flex flex-wrap gap-4">
-                    <h2 className="text-2xl font-bold text-gray-800 mb-2">Workshops Categories </h2>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-2">Workshops Categories</h2>
                     {categories.map((category) => (
                         <button
                             key={category._id}
@@ -87,14 +90,26 @@ const Workshops: React.FC = () => {
                                 selectedCategoryIds.includes(category._id)
                                     ? 'bg-black text-white hover:bg-black'
                                     : 'bg-white text-black border hover:bg-black hover:text-white'
-                            } mr-2 rounded`}
+                            } mr-2 rounded relative`}  // Added relative positioning for the button
                             onClick={() => handleCategorySelection(category._id)}
                         >
                             {category.name}
+                            {selectedCategoryIds.includes(category._id) && (
+                                <span
+                                    className="absolute top-0 right-0 flex justify-center items-center w-6 h-6 bg-transparent text-black rounded-full border border-black -mr-2 -mt-2 cursor-pointer"  // Positioning the cross icon outside the button
+                                    onClick={(e) => {
+                                        e.stopPropagation(); // Prevent button's onClick when clicking on the cross icon
+                                        handleCategorySelection(category._id);
+                                    }}
+                                >
+                        <RxCross2 size={16} />
+                    </span>
+                            )}
                         </button>
                     ))}
                 </div>
             </div>
+
 
             {/* Workshop Cards */}
             <div className="flex flex-wrap justify-center gap-6">

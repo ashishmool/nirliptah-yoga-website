@@ -67,35 +67,64 @@ const ListWorkshops: React.FC = () => {
         <div className="max-w-7xl mx-auto p-6 flex flex-col h-full">
             <h1 className="text-3xl font-semibold text-center mb-6">Workshops</h1>
 
-            <div className="flex justify-between items-center mb-4">
-                <Link
-                    to="/admin/workshops/add"
-                    className="inline-flex items-center py-2 px-4 bg-[#9B6763] text-white rounded-md hover:bg-[#B8998C]"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 mr-2"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
+            <div className="flex mb-4">
+                {/* Left Container for Buttons */}
+                <div className="flex-6 flex gap-4">
+                    <Link
+                        to="/admin/workshops/add"
+                        className="inline-flex py-2 px-4 bg-[#9B6763] text-white rounded-md hover:bg-[#B8998C]"
                     >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M12 4v16m8-8H4"
-                        />
-                    </svg>
-                    Add Workshop
-                </Link>
-                <input
-                    type="text"
-                    placeholder="Search workshops"
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                    className="p-2 w-full max-w-xs border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500"
-                />
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5 mr-2"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M12 4v16m8-8H4"
+                            />
+                        </svg>
+                        Add Workshop
+                    </Link>
+                    <Link
+                        to="/admin/schedules/add"
+                        className="inline-flex py-2 px-4 bg-[#9B6763] text-white rounded-md hover:bg-[#B8998C]"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5 mr-2"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M12 4v16m8-8H4"
+                            />
+                        </svg>
+                        Add Schedule
+                    </Link>
+                </div>
+
+                {/* Right Container for Search Input */}
+                <div className="flex-2 ml-auto">
+                    <input
+                        type="text"
+                        placeholder="Search workshops"
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        className="p-2 w-full max-w-xs border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500"
+                    />
+                </div>
             </div>
+
+
 
             {workshops.length > 0 ? (
                 <table className="flex-1 flex flex-col min-w-full bg-white border border-gray-300">
@@ -106,9 +135,6 @@ const ListWorkshops: React.FC = () => {
                         </th>
                         <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
                             Title
-                        </th>
-                        <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
-                            Instructor
                         </th>
                         <th className="flex-1 px-4 py-2 text-left text-sm font-medium text-gray-500">
                             Price
@@ -136,9 +162,6 @@ const ListWorkshops: React.FC = () => {
                             </td>
                             <td className="flex-1 px-4 py-2 text-sm font-medium text-gray-900">
                                 {workshop.title}
-                            </td>
-                            <td className="flex-1 px-4 py-2 text-sm text-gray-500">
-                                {workshop.instructor_id?.name || "No Instructor"}
                             </td>
                             <td className="flex-1 px-4 py-2 text-sm text-gray-500">
                                 {workshop.price}

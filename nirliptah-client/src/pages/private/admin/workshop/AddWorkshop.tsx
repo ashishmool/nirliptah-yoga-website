@@ -13,7 +13,6 @@ interface WorkshopFormData {
     address: string;
     map_location: string;
     photo: File | null;
-    instructor_id: string;
     category: string;
     newCategory?: string;
     modules: { name: string; duration: string }[];
@@ -31,37 +30,14 @@ const AddWorkshop: React.FC = () => {
         address: "",
         map_location: "",
         photo: null,
-        instructor_id: "",
         category: "",
         modules: [{ name: "", duration: "" }],
     });
     const [loading, setLoading] = useState(false);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
-    const [instructors, setInstructors] = useState<any[]>([]);
     const [categories, setCategories] = useState<any[]>([]);
 
     useEffect(() => {
-        // const fetchInstructors = async () => {
-        //     try {
-        //         const response = await axios.get("http://localhost:5000/api/instructors");
-        //         setInstructors(response.data);
-        //     } catch (error) {
-        //         console.error("Error fetching instructors:", error);
-        //         toast.error("Failed to fetch instructors.");
-        //     }
-        // };
-
-        const fetchInstructors = async () => {
-            try {
-                const response = await axios.get("http://localhost:5000/api/users");
-                const instructors = response.data.filter(user => user.role === "instructor");
-                setInstructors(instructors);
-                console.log("New Instructor fetching mechanishm::::", instructors);
-            } catch (error) {
-                console.error("Error fetching instructors:", error);
-                toast.error("Failed to fetch instructors.");
-            }
-        };
 
         const fetchCategories = async () => {
             try {
@@ -73,7 +49,6 @@ const AddWorkshop: React.FC = () => {
             }
         };
 
-        fetchInstructors();
         fetchCategories();
     }, []);
 
@@ -327,25 +302,25 @@ const AddWorkshop: React.FC = () => {
                     />
                 </div>
 
-                {/* Instructor */}
-                <div>
-                    <label htmlFor="instructor_id" className="block text-sm font-medium text-gray-700">Instructor</label>
-                    <select
-                        id="instructor_id"
-                        name="instructor_id"
-                        value={formData.instructor_id}
-                        onChange={handleChange}
-                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md"
-                        required
-                    >
-                        <option value="">Select Instructor</option>
-                        {instructors.map((instructor) => (
-                            <option key={instructor._id} value={instructor._id}>
-                                {instructor.name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+                {/*/!* Instructor *!/*/}
+                {/*<div>*/}
+                {/*    <label htmlFor="instructor_id" className="block text-sm font-medium text-gray-700">Instructor</label>*/}
+                {/*    <select*/}
+                {/*        id="instructor_id"*/}
+                {/*        name="instructor_id"*/}
+                {/*        value={formData.instructor_id}*/}
+                {/*        onChange={handleChange}*/}
+                {/*        className="mt-1 block w-full p-3 border border-gray-300 rounded-md"*/}
+                {/*        required*/}
+                {/*    >*/}
+                {/*        <option value="">Select Instructor</option>*/}
+                {/*        {instructors.map((instructor) => (*/}
+                {/*            <option key={instructor._id} value={instructor._id}>*/}
+                {/*                {instructor.name}*/}
+                {/*            </option>*/}
+                {/*        ))}*/}
+                {/*    </select>*/}
+                {/*</div>*/}
 
                 {/* Image Upload */}
                 <div>

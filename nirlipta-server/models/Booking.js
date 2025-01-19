@@ -10,29 +10,30 @@ const bookingSchema = new mongoose.Schema(
         retreat_id: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Retreat",
+            required: true,
         },
         accommodation_id: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Accommodation",
+            required: true,
         },
-        no_persons: {
+        selected_rooms: [
+            {
+                room_id: { type: mongoose.Schema.Types.ObjectId, ref: "Room" },
+                quantity: { type: Number, required: true, min: 1 },
+            },
+        ],
+        retreat_amount: {
             type: Number,
             required: true,
-            min: 1,
         },
         accommodation_amount: {
-            type: Number,
-            required: true,
-            default: 0,
-        },
-        retreat_amount: {
             type: Number,
             required: true,
         },
         total_amount: {
             type: Number,
             required: true,
-            default: 0,
         },
         status: {
             type: String,

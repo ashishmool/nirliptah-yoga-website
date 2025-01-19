@@ -70,92 +70,73 @@ export default function ContactForm() {
                     </p>
                 </div>
 
-                {/* Map and Contact Information */}
+                {/* Map and Contact Form (Updated layout with 2/4 and 2/4 width) */}
                 <div className="grid md:grid-cols-2 gap-12">
-                    {/* Map */}
-                    <div>
+                    {/* Map (2/4 width) */}
+                    <div className="w-full h-[400px] rounded-md border">
                         <iframe
                             title="Google Map"
                             src="https://maps.google.com/maps?q=Australia&t=&z=13&ie=UTF8&iwloc=&output=embed"
-                            className="w-full h-48 rounded-md border"
+                            className="w-full h-full rounded-md"
                             loading="lazy"
                         ></iframe>
                     </div>
 
-                    {/* Contact Information */}
-                    <div className="space-y-4">
-                        <h2 className="text-2xl font-bold">Contact Information</h2>
-                        <div className="space-y-4">
-                            <div className="flex items-center gap-3">
-                                <GoInbox className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-                                <span>hello@nirlipta-yoga.com</span>
+                    {/* Contact Form (2/4 width) */}
+                    <div className="w-full flex flex-col justify-center space-y-4">
+                        <h2 className="text-2xl font-bold text-center mb-6">Send Us a Message</h2>
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="name">Name</Label>
+                                    <Input
+                                        onChange={(e) => setUsername(e.target.value)}
+                                        value={username}
+                                        id="name"
+                                        placeholder="Enter your name"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="email">Email</Label>
+                                    <Input
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        value={email}
+                                        id="email"
+                                        type="email"
+                                        placeholder="Enter your email"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="subject">Subject</Label>
+                                    <Input
+                                        onChange={(e) => setSubject(e.target.value)}
+                                        value={subject}
+                                        id="subject"
+                                        placeholder="Enter a subject"
+                                    />
+                                </div>
                             </div>
-                            <div className="flex items-center gap-3">
-                                <MdOutlinePhoneInTalk className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-                                <span>+977 9813131313</span>
+                            <div className="space-y-2">
+                                <Label htmlFor="message">Message</Label>
+                                <Textarea
+                                    onChange={(e) => setMessage(e.target.value)}
+                                    value={message}
+                                    id="message"
+                                    placeholder="Enter your message"
+                                    className="min-h-[150px]"
+                                />
                             </div>
-                            <div className="flex items-center gap-3">
-                                <FiMapPin className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-                                <span>Harmony Lane, 123 Calm Lane, Australia</span>
-                            </div>
-                        </div>
+                            <Button disabled={loadingSubmit} type="submit" className="w-full md:w-auto">
+                                {loadingSubmit ? (
+                                    "Sending..."
+                                ) : (
+                                    <span className="flex items-center">
+                                        <p className="mr-2">Send</p> <LuSend size={16} />
+                                    </span>
+                                )}
+                            </Button>
+                        </form>
                     </div>
-                </div>
-
-                {/* Full-Width Contact Form */}
-                <div className="w-full max-w-[60%] mx-auto">
-                    <h2 className="text-2xl font-bold text-center mb-6">Send Us a Message</h2>
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="name">Name</Label>
-                                <Input
-                                    onChange={(e) => setUsername(e.target.value)}
-                                    value={username}
-                                    id="name"
-                                    placeholder="Enter your name"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="email">Email</Label>
-                                <Input
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    value={email}
-                                    id="email"
-                                    type="email"
-                                    placeholder="Enter your email"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="subject">Subject</Label>
-                                <Input
-                                    onChange={(e) => setSubject(e.target.value)}
-                                    value={subject}
-                                    id="subject"
-                                    placeholder="Enter a subject"
-                                />
-                            </div>
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="message">Message</Label>
-                            <Textarea
-                                onChange={(e) => setMessage(e.target.value)}
-                                value={message}
-                                id="message"
-                                placeholder="Enter your message"
-                                className="min-h-[150px]"
-                            />
-                        </div>
-                        <Button disabled={loadingSubmit} type="submit" className="w-full md:w-auto">
-                            {loadingSubmit ? (
-                                "Sending..."
-                            ) : (
-                                <span className="flex items-center">
-                                    <p className="mr-2">Send</p> <LuSend size={16} />
-                                </span>
-                            )}
-                        </Button>
-                    </form>
                 </div>
             </div>
         </div>

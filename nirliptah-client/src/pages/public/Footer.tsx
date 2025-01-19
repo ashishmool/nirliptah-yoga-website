@@ -47,26 +47,22 @@ export default function Footer() {
                 backgroundSize: "cover",
             }}
         >
-            {/* Top Section with specific text color */}
-            <div className="flex flex-col lg:flex-row items-start justify-between px-4 md:px-6 py-24 mx-auto max-w-7xl">
-                {/* Left */}
-                <div className="flex-1 lg:pr-10">
-                    {/* Logo */}
+            <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between px-4 md:px-6 py-24 mx-auto max-w-7xl space-y-12 lg:space-y-0">
+                {/* Left Section */}
+                <div className="flex-1 text-center lg:text-left">
                     <Link onClick={scrollTopFunc} to="/">
                         <img
                             src="src/assets/logo-main.svg"
-                            className="h-16 w-24 text-white"
+                            className="h-16 w-24 mx-auto lg:mx-0"
                             alt="Logo"
                         />
                     </Link>
-                    <div className="info text-center text-[#A38F85] lg:text-left w-full text-sm">
+                    <div className="info text-[#A38F85] text-sm mt-4">
                         <ul>
-                            <li >Address</li>
+                            <li>Address</li>
                             <li>Somewhere in, Australia</li>
-
                             <br />
-
-                            <li >Contact</li>
+                            <li>Contact</li>
                             <li>
                                 <Link
                                     onClick={scrollTopFunc}
@@ -76,110 +72,102 @@ export default function Footer() {
                                 </Link>
                             </li>
                             <li>+971 4 347 8089</li>
-
                             <br />
-
-                            <li className="text-[#9B6763]">
-                                <div className="flex space-x-4 my-3 justify-center lg:justify-start ">
-                                    <Link
-                                        onClick={scrollTopFunc}
-                                        className="text-[#A38F85] hover:text-[#9B6763]"
-                                        target="_blank"
-                                        to="https://np.linkedin.com/in/ashish-mool"
-                                    >
-                                        <FaLinkedin className="h-7 w-7" />
-                                    </Link>
-                                    <Link
-                                        onClick={scrollTopFunc}
-                                        className="text-[#A38F85] hover:text-[#9B6763]"
-                                        target="_blank"
-                                        to="https://github.com//ashishmool/emirates-elegance"
-                                    >
-                                        <FaGithub className="h-7 w-7" />
-                                    </Link>
-                                </div>
+                            <li className="flex justify-center lg:justify-start space-x-4 my-3">
+                                <Link
+                                    onClick={scrollTopFunc}
+                                    className="text-[#A38F85] hover:text-[#9B6763]"
+                                    target="_blank"
+                                    to="https://np.linkedin.com/in/ashish-mool"
+                                >
+                                    <FaLinkedin className="h-7 w-7" />
+                                </Link>
+                                <Link
+                                    onClick={scrollTopFunc}
+                                    className="text-[#A38F85] hover:text-[#9B6763]"
+                                    target="_blank"
+                                    to="https://github.com//ashishmool/emirates-elegance"
+                                >
+                                    <FaGithub className="h-7 w-7" />
+                                </Link>
                             </li>
                         </ul>
                     </div>
                 </div>
 
-                {/* Middle Section - Added Mega Menu */}
-                <div className="flex-1 mt-12">
-                    <div className="text-center lg:text-left">
-                        <p className="text-[#9B6763] mb-4 font-semibold">Explore</p>
-                        <ul className="space-y-2 text-sm">
-                            <li>
-                                <Link
-                                    onClick={scrollTopFunc}
-                                    className="text-[#A38F85] hover:text-black"
-                                    to="/about"
-                                >
-                                    About Us
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    onClick={scrollTopFunc}
-                                    className="text-[#A38F85] hover:text-black"
-                                    to="/services"
-                                >
-                                    Our Services
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    onClick={scrollTopFunc}
-                                    className="text-[#A38F85] hover:text-black"
-                                    to="/contact"
-                                >
-                                    Contact Us
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    onClick={scrollTopFunc}
-                                    className="text-[#A38F85] hover:text-black"
-                                    to="/blog"
-                                >
-                                    Blog
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
+                {/* Middle Section */}
+                <div className="flex-1 text-center lg:text-left">
+                    <p className="text-[#9B6763] mb-4 font-semibold">Explore</p>
+                    <ul className="space-y-2 text-sm">
+                        <li>
+                            <Link
+                                onClick={scrollTopFunc}
+                                className="text-[#A38F85] hover:text-black"
+                                to="/about"
+                            >
+                                About Us
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                onClick={scrollTopFunc}
+                                className="text-[#A38F85] hover:text-black"
+                                to="/services"
+                            >
+                                Our Services
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                onClick={scrollTopFunc}
+                                className="text-[#A38F85] hover:text-black"
+                                to="/contact"
+                            >
+                                Contact Us
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                onClick={scrollTopFunc}
+                                className="text-[#A38F85] hover:text-black"
+                                to="/blog"
+                            >
+                                Blog
+                            </Link>
+                        </li>
+                    </ul>
                 </div>
 
                 {/* Right Section */}
-                <div className="text-sm lg:justify-end justify-center mt-5 lg:mt-0 flex-1">
-                    <div className="text-center lg:text-left mt-24">
-                        <p className="text-[#9B6763] mb-4 font-semibold">Stay Updated</p>
-                        <div className="join">
-                            <input
-                                className="input input-bordered join-item subscription-input text-black"
-                                placeholder="Email"
-                            />
-                            <button
-                                onClick={handleSubscription}
-                                className="btn join-item rounded-r-full"
-                            >
-                                Subscribe
-                            </button>
-                        </div>
+                <div className="flex-1 text-center">
+                    <p className="text-[#9B6763] mb-4 font-semibold">Stay Updated</p>
+                    <div className="join">
+                        <input
+                            className="input input-bordered join-item subscription-input text-black"
+                            placeholder="Email"
+                        />
+                        <button
+                            onClick={handleSubscription}
+                            className="btn join-item rounded-r-full"
+                        >
+                            Subscribe
+                        </button>
                     </div>
                 </div>
             </div>
 
-            {/* Bottom Section - Same background as the top, but white text */}
-            <div className="py-6 px-4 md:px-6">
-                <div className="flex flex-col lg:flex-row items-center justify-between max-w-7xl mx-auto text-white">
+            {/* Bottom Section */}
+            <div className="py-6 px-4 md:px-6 bg-opacity-90">
+                <div className="flex flex-col lg:flex-row items-center justify-between max-w-7xl mx-auto text-white space-y-4 lg:space-y-0">
                     {/* Brand and Copyright */}
-                    <div className="flex items-center space-x-4 text-center lg:text-left">
-                        <span className="text-sm">
-                            © {new Date().getFullYear()} All Rights Reserved
-                        </span>
+                    <div className="text-center lg:text-left">
+                <span className="text-sm">
+                    © {new Date().getFullYear()} All Rights Reserved
+                </span>
                     </div>
 
                     {/* Links */}
-                    <div className="flex items-center text-center justify-center space-x-4 text-xs mt-4 lg:mt-0">
+                    <div className="flex items-center justify-center space-x-4 text-xs">
                         <Link
                             onClick={scrollTopFunc}
                             className="text-white hover:text-black"
@@ -205,5 +193,7 @@ export default function Footer() {
                 </div>
             </div>
         </footer>
+
+
     );
 }
