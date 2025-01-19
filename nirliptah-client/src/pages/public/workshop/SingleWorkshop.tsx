@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { Button } from "@/pages/components/ui/button";
 import { Badge } from "@/pages/components/ui/badge";
 import { toast } from "sonner";
 import { FaMapMarkerAlt, FaRegClock } from "react-icons/fa"; // React Icons
-import LoginModal from "../../../pages/private/auth/Login"; // Import your Login Modal component
+import { AuthContext } from "@/context/AuthContext"; // Import AuthContext
 
 interface Module {
     name: string;
@@ -41,7 +41,7 @@ const SingleWorkshop: React.FC = () => {
     const [category, setCategory] = useState<Category | null>(null);
     const [isEnrolling, setIsEnrolling] = useState(false);
     const [isAlreadyEnrolled, setIsAlreadyEnrolled] = useState<boolean | null>(null); // Track enrollment status
-    const [showLoginModal, setShowLoginModal] = useState(false); // State to control LoginModal visibility
+    const { setIsDialogOpen } = useContext(AuthContext); // Access setIsDialogOpen from AuthContext
 
     useEffect(() => {
         const fetchWorkshop = async () => {
@@ -87,7 +87,8 @@ const SingleWorkshop: React.FC = () => {
         const user_id = localStorage.getItem("user_id");
 
         if (!user_id) {
-            setShowLoginModal(true); // Show the login modal if the user is not logged in
+            toast.error("Please log in to enroll.");
+            setIsDialogOpen(true); // Trigger login modal if user is not logged in
             return;
         }
 
@@ -186,8 +187,8 @@ const SingleWorkshop: React.FC = () => {
 
                 {/* Enroll Button */}
                 {isAlreadyEnrolled === null ? (
-                    <div className="mt-6 text-center text-gray-600">
-                        <p>Loading enrollment status...</p>
+                    <div className="mt-6 text-left text-gray-600">
+                        <p>Loading Enrollment Status...</p>
                     </div>
                 ) : isAlreadyEnrolled ? (
                     <div className="mt-6 text-center text-gray-600">
@@ -203,9 +204,6 @@ const SingleWorkshop: React.FC = () => {
                     </Button>
                 )}
             </div>
-
-            {/* Show Login Modal if needed */}
-            {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}
         </div>
     );
 };

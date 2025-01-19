@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { FaLinkedin, FaGithub } from "react-icons/fa";
 
 import { toast } from "sonner"; // Import the toast library
+import logoMain from "../../assets/logo-main.svg";
+
 
 
 export default function Footer() {
@@ -52,7 +54,7 @@ export default function Footer() {
                 <div className="flex-1 text-center lg:text-left">
                     <Link onClick={scrollTopFunc} to="/">
                         <img
-                            src="src/assets/logo-main.svg"
+                            src={logoMain}
                             className="h-16 w-24 mx-auto lg:mx-0"
                             alt="Logo"
                         />

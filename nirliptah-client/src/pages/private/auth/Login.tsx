@@ -69,11 +69,12 @@ export default function Login({ onClose, onLoginSuccess }: LoginRegisterModalPro
             // Redirect based on role
             const roleRedirects: Record<string, string> = {
                 admin: "/admin/home",
-                instructor: "/instructor",
-                student: "/student",
             };
 
-            window.location.href = roleRedirects[role] || "/";
+            // Check if role exists in roleRedirects and redirect, else do nothing
+            if (role === "admin" && roleRedirects[role]) {
+                window.location.href = roleRedirects[role];
+            }
             onClose();
         } catch (error) {
             const errorMessage =
@@ -107,11 +108,11 @@ export default function Login({ onClose, onLoginSuccess }: LoginRegisterModalPro
                 ) : isLogin ? (
                     <div className="mt-4">
                         <div className="space-y-2">
-                            <Label htmlFor="email" className="font-bold text-black text-[15px]">
+                            <Label htmlFor="login-email" className="font-bold text-black text-[15px]">
                                 Email Address
                             </Label>
                             <Input
-                                id="login-email"
+                                id="login-email" // Make sure the ID is unique
                                 type="email"
                                 placeholder="example@email.com"
                                 value={email}
@@ -142,8 +143,8 @@ export default function Login({ onClose, onLoginSuccess }: LoginRegisterModalPro
                                 className="text-blue-900 hover:underline cursor-pointer"
                                 onClick={() => setIsResetPassword(true)}
                             >
-                                Reset it
-                            </span>
+                        Reset it
+                    </span>
                         </p>
 
                         <Button
@@ -160,8 +161,8 @@ export default function Login({ onClose, onLoginSuccess }: LoginRegisterModalPro
                                 className="text-blue-900 hover:underline cursor-pointer"
                                 onClick={() => setIsLogin(false)}
                             >
-                                Register
-                            </span>
+                        Register
+                    </span>
                         </p>
                     </div>
                 ) : (
@@ -173,5 +174,6 @@ export default function Login({ onClose, onLoginSuccess }: LoginRegisterModalPro
                 </DialogClose>
             </DialogContent>
         </Dialog>
+
     );
 }

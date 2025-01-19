@@ -80,11 +80,11 @@ export default function Signup({
             <form onSubmit={handleSubmit(handleDataSubmit)} className="space-y-6">
                 {/* Email Field */}
                 <div className="space-y-2">
-                    <Label htmlFor="email" className="font-bold text-black text-[15px]">
+                    <Label htmlFor="email-signup" className="font-bold text-black text-[15px]">
                         Email Address
                     </Label>
                     <Input
-                        id="email"
+                        id="email-signup" // Unique ID for the email input
                         type="email"
                         placeholder="hello@example.com"
                         {...register("email")}
@@ -139,10 +139,11 @@ export default function Signup({
                         className="text-blue-900 hover:underline cursor-pointer"
                         onClick={onSwitchToLogin}
                     >
-                        Login
-                    </span>
+                    Login
+                </span>
                 </p>
             </form>
         </div>
     );
+
 }

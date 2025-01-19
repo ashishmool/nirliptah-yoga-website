@@ -56,9 +56,6 @@ const Workshops: React.FC = () => {
         setCurrentPage(1);
     };
 
-    const handleEnrollClick = (workshopId: string) => {
-        navigate(`/workshops/${workshopId}`);
-    };
 
     // Pagination handlers
     const goToPage = (page: number) => setCurrentPage(page);
@@ -122,7 +119,6 @@ const Workshops: React.FC = () => {
                             key={workshop._id}
                             workshop={workshop}
                             categories={categories} // Pass categories here
-                            onDetailsClick={() => console.log("View Details of:", workshop.title)}
                         />
                     ))
                 )}

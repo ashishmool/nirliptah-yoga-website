@@ -1,8 +1,9 @@
 import React from "react";
 import { Badge } from "@/pages/components/ui/badge.tsx";
 import { Button } from "@/pages/components/ui/button.tsx";
-// import { format, parseISO, differenceInDays } from "date-fns";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useLoginModal } from '../../../context/LoginModalContext'; // Import useLoginModal
+
 
 interface WorkshopCardProps {
     workshop: any; // Replace `any` with a proper type or interface for the workshop
@@ -11,19 +12,7 @@ interface WorkshopCardProps {
 
 const WorkshopCard: React.FC<WorkshopCardProps> = ({ workshop, categories }) => {
     const navigate = useNavigate(); // Hook to navigate
-    // const startDate = workshop.start_date;
-    // const endDate = workshop.end_date;
-    //
-    // const formattedStartDate = startDate
-    //     ? format(parseISO(startDate), "dd.MM.yyyy")
-    //     : "Unknown";
-    // const formattedEndDate = endDate
-    //     ? format(parseISO(endDate), "dd.MM.yyyy")
-    //     : "Unknown";
-    //
-    // const numberOfDays = startDate && endDate
-    //     ? differenceInDays(parseISO(endDate), parseISO(startDate))
-    //     : 0;
+    const { setIsDialogOpen } = useLoginModal(); // Get the setIsDialogOpen function from LoginModalContext
 
     // Find the category name from categories
     const category = categories.find((cat) => cat._id === workshop.category._id);
@@ -31,7 +20,12 @@ const WorkshopCard: React.FC<WorkshopCardProps> = ({ workshop, categories }) => 
 
     // Function to handle the navigation to the workshop details page
     const handleDetailsClick = () => {
-        navigate(`/workshops/${workshop._id}`); // Navigate to the workshop details page
+        if (localStorage.getItem('token') == null) {
+            console.log("Login Dialog Open Trigger Here!!!");
+            setIsDialogOpen(true); // Open the login modal if not logged in
+        } else {
+            navigate(`/workshops/${workshop._id}`); // Navigate to the workshop details page if logged in
+        }
     };
 
     return (
@@ -64,7 +58,7 @@ const WorkshopCard: React.FC<WorkshopCardProps> = ({ workshop, categories }) => 
                 <div className="mt-4 flex justify-between items-center">
                     <Button
                         className="bg-[#9B6763] text-white py-2 px-6 rounded hover:bg-[#7B4F4C] transition"
-                        onClick={handleDetailsClick} // Handle click to navigate
+                        onClick={handleDetailsClick} // Handle click to navigate or open modal
                     >
                         View Details
                     </Button>
