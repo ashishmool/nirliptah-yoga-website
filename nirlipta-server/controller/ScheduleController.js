@@ -3,7 +3,7 @@ const Schedule = require("../models/Schedule");
 // Get all schedules
 const getAllSchedules = async (req, res) => {
     try {
-        const schedules = await Schedule.find().populate("instructor_id workshop_id");
+        const schedules = await Schedule.find().populate("instructor workshop_id");
         res.json(schedules);
     } catch (error) {
         res.status(500).json({ message: "Error fetching schedules", error });
@@ -14,7 +14,7 @@ const getAllSchedules = async (req, res) => {
 const getScheduleById = async (req, res) => {
     try {
         const { id } = req.params;
-        const schedule = await Schedule.findById(id).populate("instructor_id workshop_id");
+        const schedule = await Schedule.findById(id).populate("instructor workshop_id");
         if (!schedule) {
             return res.status(404).json({ message: "Schedule not found" });
         }
@@ -71,7 +71,7 @@ const deleteSchedule = async (req, res) => {
 const getByInstructor = async (req, res) => {
     try {
         const { instructor_id } = req.params; // Extract instructor_id from request params
-        const schedules = await Schedule.find({ instructor_id }).populate("instructor_id workshop_id");
+        const schedules = await Schedule.find({ instructor_id }).populate("instructor workshop_id");
 
         if (schedules.length === 0) {
             return res.status(404).json({ message: "No schedules found for this instructor" });
@@ -83,6 +83,36 @@ const getByInstructor = async (req, res) => {
     }
 };
 
+// Update schedule status by ID
+const updateScheduleStatus = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+
+        if (!['active', 'paused', 'canceled'].includes(status)) {
+            return res.status(400).json({ message: "Invalid status value. Allowed values are 'active', 'paused', or 'canceled'." });
+        }
+
+        const updatedSchedule = await Schedule.findByIdAndUpdate(
+            id,
+            { status },
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedSchedule) {
+            return res.status(404).json({ message: "Schedule not found" });
+        }
+
+        res.json({
+            message: `Schedule status updated to ${status}`,
+            updatedSchedule
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Error updating schedule status", error });
+    }
+};
+
+
 module.exports = {
     getAllSchedules,
     getScheduleById,
@@ -90,4 +120,5 @@ module.exports = {
     updateSchedule,
     deleteSchedule,
     getByInstructor,
+    updateScheduleStatus,
 };

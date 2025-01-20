@@ -42,6 +42,7 @@ const AdminTopBar: React.FC = () => {
         localStorage.removeItem("email");
         localStorage.removeItem("role");
         localStorage.removeItem("user_id");
+        localStorage.removeItem("photo");
 
         setInfo({email: "", role: "", user_id: "", photo: ""});
         toast.success("Logged Out Successfully!");
@@ -120,7 +121,7 @@ const AdminTopBar: React.FC = () => {
                         <div className="w-10 rounded-full">
                             <img
                                 alt="User Avatar"
-                                src={localStorage.getItem("photo") ? `http://localhost:5000${localStorage.getItem("photo")}` : "/default-avatar.png"}
+                                src={info?.photo ? `http://localhost:5000${info?.photo}` : "/default-avatar.png"}
                             />
                         </div>
                     </button>

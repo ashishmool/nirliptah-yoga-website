@@ -4,16 +4,17 @@ import "react-day-picker/dist/style.css";
 import axios from "axios";
 import Pagination from "../../../components/Pagination";
 import { toast } from "sonner";
+import { FaPauseCircle, FaCheckCircle, FaBan } from "react-icons/fa";
 
 interface Schedule {
     _id: string;
     title: string;
-    instructor_id: { name: string };
-    workshop_id: { name: string };
+    instructor: { name: string };
+    workshop_id: { title: string };
     day_of_week: string;
     start_time: string;
     end_time: string;
-    status: string;
+    status: "active" | "paused" | "canceled";
 }
 
 const ListSchedules: React.FC = () => {
@@ -67,7 +68,7 @@ const ListSchedules: React.FC = () => {
 
         if (selectedInstructor !== "All") {
             updatedSchedules = updatedSchedules.filter(
-                schedule => schedule.instructor_id?.name === selectedInstructor
+                schedule => schedule.instructor?.name === selectedInstructor
             );
         }
 
@@ -88,13 +89,26 @@ const ListSchedules: React.FC = () => {
         }
     };
 
+    // Handle status update
+    const updateStatus = async (id: string, newStatus: "active" | "paused" | "canceled") => {
+        try {
+            await axios.patch(`http://localhost:5000/api/schedules/${id}/status`, { status: newStatus });
+            toast.success(`Status updated to ${newStatus}.`);
+            setSchedules(schedules.map(schedule =>
+                schedule._id === id ? { ...schedule, status: newStatus } : schedule
+            ));
+        } catch (error) {
+            toast.error("Error updating status.");
+        }
+    };
+
     // Placeholder for edit functionality
     const handleEdit = (id: string) => {
         toast("Edit functionality to be implemented.");
     };
 
     // Get unique instructors
-    const instructors = Array.from(new Set(schedules.map(schedule => schedule.instructor_id?.name))).filter(Boolean);
+    const instructors = Array.from(new Set(schedules.map(schedule => schedule.instructor?.name))).filter(Boolean);
 
     const paginatedSchedules = filteredSchedules.slice(
         (currentPage - 1) * ITEMS_PER_PAGE,
@@ -123,8 +137,8 @@ const ListSchedules: React.FC = () => {
                             key={index}
                             className={`btn btn-dash ${
                                 selectedInstructor === instructor
-                                    ? "bg-[#9b6763] text-white border-none" // Selected button style
-                                    : "border border-[#9b6763] text-[#9b6763] bg-transparent" // Unselected button style
+                                    ? "bg-[#9b6763] text-white border-none"
+                                    : "border border-[#9b6763] text-[#9b6763] bg-transparent"
                             }`}
                             onClick={() => setSelectedInstructor(instructor)}
                         >
@@ -134,33 +148,76 @@ const ListSchedules: React.FC = () => {
                 </div>
             </div>
 
-
             {loading ? (
                 <p className="text-center text-gray-500">Loading schedules...</p>
             ) : filteredSchedules.length > 0 ? (
                 <div className="overflow-x-auto">
-                    <table className="table w-full">
+                    <table className="table w-full table-auto">
                         <thead>
                         <tr>
-                            <th>Title</th>
-                            <th>Instructor</th>
-                            <th>Workshop</th>
-                            <th>Day</th>
-                            <th>Time</th>
-                            <th>Actions</th>
+                            <th className="px-4 py-2">Instructor</th>
+                            <th className="px-4 py-2">Workshop</th>
+                            <th className="px-4 py-2">Day</th>
+                            <th className="px-4 py-2">Time</th>
+                            <th className="px-4 py-2">Status</th>
+                            <th className="px-4 py-2">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
                         {paginatedSchedules.map(schedule => (
                             <tr key={schedule._id}>
-                                <td>{schedule.title}</td>
-                                <td>{schedule.instructor_id?.name}</td>
-                                <td>{schedule.workshop_id?.title}</td>
-                                <td>{schedule.day_of_week}</td>
-                                <td>
+                                <td className="px-4 py-2">{schedule.instructor?.name}</td>
+                                <td className="px-4 py-2">{schedule.workshop_id?.title}</td>
+                                <td className="px-4 py-2">{schedule.day_of_week}</td>
+                                <td className="px-4 py-2">
                                     {schedule.start_time} - {schedule.end_time}
                                 </td>
-                                <td>
+                                <td className="px-4 py-2">
+                                    <div className="flex items-center space-x-2">
+                                        {schedule.status === "active" && (
+                                            <>
+                                                <FaCheckCircle
+                                                    className="text-green-500 cursor-pointer"
+                                                    onClick={() => updateStatus(schedule._id, "paused")}
+                                                    title="Click to pause"
+                                                />
+                                                <button
+                                                    className="btn btn-xs btn-error"
+                                                    onClick={() => updateStatus(schedule._id, "canceled")}
+                                                >
+                                                    Cancel Schedule
+                                                </button>
+                                            </>
+                                        )}
+                                        {schedule.status === "paused" && (
+                                            <>
+                                                <FaPauseCircle
+                                                    className="text-yellow-500 cursor-pointer"
+                                                    onClick={() => updateStatus(schedule._id, "active")}
+                                                    title="Click to activate"
+                                                />
+                                                <button
+                                                    className="btn btn-xs btn-error"
+                                                    onClick={() => updateStatus(schedule._id, "canceled")}
+                                                >
+                                                    Cancel Schedule
+                                                </button>
+                                            </>
+                                        )}
+                                        {schedule.status === "canceled" && (
+                                            <>
+                                                <FaBan className="text-red-500" title="Canceled" />
+                                                <button
+                                                    className="btn btn-xs btn-success"
+                                                    onClick={() => updateStatus(schedule._id, "active")}
+                                                >
+                                                    Reactivate Schedule
+                                                </button>
+                                            </>
+                                        )}
+                                    </div>
+                                </td>
+                                <td className="px-4 py-2">
                                     <button
                                         onClick={() => handleEdit(schedule._id)}
                                         className="btn btn-xs btn-ghost mr-2"
@@ -177,17 +234,8 @@ const ListSchedules: React.FC = () => {
                             </tr>
                         ))}
                         </tbody>
-                        <tfoot>
-                        <tr>
-                            <th>Title</th>
-                            <th>Instructor</th>
-                            <th>Workshop</th>
-                            <th>Day</th>
-                            <th>Time</th>
-                            <th>Actions</th>
-                        </tr>
-                        </tfoot>
                     </table>
+
                 </div>
             ) : (
                 <p className="text-center text-gray-500">No schedules found for this week or instructor.</p>

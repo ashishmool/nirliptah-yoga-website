@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
-import Pagination from "../../../components/Pagination"; // Adjust the import path as needed
+import Pagination from "../../../components/Pagination";
+import {FaUserClock} from "react-icons/fa6"; // Adjust the import path as needed
 
 const ListWorkshops: React.FC = () => {
     const [workshops, setWorkshops] = useState<any[]>([]);
@@ -109,6 +110,13 @@ const ListWorkshops: React.FC = () => {
                             />
                         </svg>
                         Add Schedule
+                    </Link>
+                    <Link
+                        to="/admin/schedules"
+                        className="inline-flex py-2 px-4 bg-[#9B6763] text-white rounded-md hover:bg-[#B8998C]"
+                    >
+                        <FaUserClock className="mr-2 mt-0.5"/>
+                         List Schedules
                     </Link>
                 </div>
 

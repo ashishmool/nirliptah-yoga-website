@@ -27,7 +27,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         const email = localStorage.getItem("email") || "";
         const role = localStorage.getItem("role") || "";
         const user_id = localStorage.getItem("user_id") || "";
-        return { email, role, user_id };
+        const photo = localStorage.getItem("photo") || "";
+        return { email, role, user_id, photo };
     });
 
     useEffect(() => {
@@ -35,6 +36,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             localStorage.setItem("email", info.email);
             localStorage.setItem("role", info.role);
             localStorage.setItem("user_id", info.user_id);
+            localStorage.setItem("photo", info.photo);
         } catch (error) {
             console.error("Failed to sync state with localStorage:", error);
         }

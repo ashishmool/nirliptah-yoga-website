@@ -7,6 +7,7 @@ const {
     updateSchedule,
     deleteSchedule,
     getByInstructor,
+    updateScheduleStatus,
 } = require("../controller/ScheduleController");
 
 // Get all schedules
@@ -26,5 +27,8 @@ router.put("/update/:id", updateSchedule);
 
 // Delete schedule by ID (only allowed for instructors or admins)
 router.delete("/delete/:id", deleteSchedule);
+
+// Update schedule status by ID (only allowed for instructors or admins)
+router.patch("/:id/status", updateScheduleStatus);
 
 module.exports = router;

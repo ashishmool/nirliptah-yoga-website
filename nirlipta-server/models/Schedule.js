@@ -2,25 +2,18 @@ const mongoose = require("mongoose");
 
 const scheduleSchema = new mongoose.Schema(
     {
-        title: {
-            type: String,
-            required: true,
-            trim: true,
-        },
-        type: {
-            type: String,
-            enum: ["workshop", "retreat"],
-            required: true,
-        },
-        reference_id: {
+        workshop_id: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
-            refPath: "type", // Dynamically refers to either "Workshop" or "Retreat"
+            ref: "Workshop",
         },
-        date: {
-            type: Date,
-            required: true,
-        },
+        days_of_week: [
+            {
+                type: String,
+                enum: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+                required: true,
+            },
+        ],
         start_time: {
             type: String,
             required: true,
@@ -33,16 +26,10 @@ const scheduleSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
         },
-        notes: {
-            type: String,
-        },
-        location: {
-            type: String,
-        },
         status: {
             type: String,
-            enum: ["upcoming", "completed", "canceled"],
-            default: "upcoming",
+            enum: ["active", "paused", "canceled"],
+            default: "active",
         },
     },
     { timestamps: true }

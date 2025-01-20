@@ -7,20 +7,18 @@ const AddSchedule: React.FC = () => {
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
-        title: "",
         workshop_id: "",
         instructor_id: "",
-        days_of_week: [] as string[],  // Array of selected days (e.g., ["Monday", "Wednesday"])
+        days_of_week: [] as string[], // Array of selected days (e.g., ["Monday", "Wednesday"])
         start_time: "",
         end_time: "",
-        status: "active",  // Default status is active
+        status: "active", // Default status is active
     });
 
     const [loading, setLoading] = useState(false);
     const [workshops, setWorkshops] = useState([]);
     const [instructors, setInstructors] = useState([]);
 
-    // Fetch workshops and instructors on component mount
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -29,10 +27,11 @@ const AddSchedule: React.FC = () => {
                     axios.get("http://localhost:5000/api/users"),
                 ]);
 
-                // Filter instructors from the fetched users
-                const instructors = instructorRes.data.filter((user: any) => user.role === "instructor");
+                const instructors = instructorRes.data.filter(
+                    (user: any) => user.role === "instructor"
+                );
                 setWorkshops(workshopRes.data || []);
-                setInstructors(instructors);  // Set the filtered instructors
+                setInstructors(instructors);
             } catch (error) {
                 console.error("Error fetching data:", error);
                 toast.error("Failed to fetch initial data.");
@@ -65,22 +64,16 @@ const AddSchedule: React.FC = () => {
         setLoading(true);
 
         try {
-            // Iterate over the selected days and send a POST request for each
             for (const day of formData.days_of_week) {
                 const schedule = {
-                    title: formData.title,
                     workshop_id: formData.workshop_id,
-                    instructor_id: formData.instructor_id,
-                    day_of_week: day,
+                    instructor: formData.instructor_id,
+                    days_of_week: [day], // Aligning with the schema
                     start_time: formData.start_time,
                     end_time: formData.end_time,
                     status: formData.status,
                 };
 
-                // Log each schedule to ensure the data is structured correctly
-                console.log("Schedule to be sent:", schedule);
-
-                // Send the schedule data in a POST request for each day
                 await axios.post("http://localhost:5000/api/schedules/save", schedule);
             }
 
@@ -94,8 +87,6 @@ const AddSchedule: React.FC = () => {
         }
     };
 
-
-
     return (
         <div className="max-w-3xl mx-auto p-6">
             <div className="flex justify-between items-center mb-6">
@@ -108,7 +99,6 @@ const AddSchedule: React.FC = () => {
                 <h1 className="text-3xl font-semibold">Add New Schedule</h1>
             </div>
             <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Workshop Selection */}
                 <div>
                     <label htmlFor="workshop_id" className="block text-sm font-medium text-gray-700">Workshop</label>
                     <select
@@ -121,12 +111,13 @@ const AddSchedule: React.FC = () => {
                     >
                         <option value="">Select Workshop</option>
                         {workshops.map((workshop: any) => (
-                            <option key={workshop._id} value={workshop._id}>{workshop.title}</option>
+                            <option key={workshop._id} value={workshop._id}>
+                                {workshop.title}
+                            </option>
                         ))}
                     </select>
                 </div>
 
-                {/* Instructor Selection */}
                 <div>
                     <label htmlFor="instructor_id" className="block text-sm font-medium text-gray-700">Instructor</label>
                     <select
@@ -139,12 +130,13 @@ const AddSchedule: React.FC = () => {
                     >
                         <option value="">Select Instructor</option>
                         {instructors.map((instructor: any) => (
-                            <option key={instructor._id} value={instructor._id}>{instructor.name}</option>
+                            <option key={instructor._id} value={instructor._id}>
+                                {instructor.name}
+                            </option>
                         ))}
                     </select>
                 </div>
 
-                {/* Days of the Week */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Days of the Week</label>
                     {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((day) => (
@@ -162,7 +154,6 @@ const AddSchedule: React.FC = () => {
                     ))}
                 </div>
 
-                {/* Start Time and End Time */}
                 <div className="flex space-x-4">
                     <div className="w-1/2">
                         <label htmlFor="start_time" className="block text-sm font-medium text-gray-700">Start Time</label>
@@ -190,7 +181,6 @@ const AddSchedule: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Status */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Status</label>
                     <div className="flex space-x-4">
@@ -221,7 +211,6 @@ const AddSchedule: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Submit Button */}
                 <div className="flex justify-between mt-6">
                     <button
                         type="button"
@@ -233,7 +222,7 @@ const AddSchedule: React.FC = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="px-6 py-3 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700"
+                        className={`bg-[#9B6763] text-white p-3 rounded-md ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
                     >
                         {loading ? "Saving..." : "Save Schedule"}
                     </button>

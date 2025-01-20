@@ -8,9 +8,6 @@ import { Button } from "@/pages/components/ui/button.tsx";
 import { toast } from "sonner";
 
 // ICONS
-import { GoInbox } from "react-icons/go";
-import { MdOutlinePhoneInTalk } from "react-icons/md";
-import { FiMapPin } from "react-icons/fi";
 import { LuSend } from "react-icons/lu";
 
 export default function ContactForm() {
@@ -59,8 +56,11 @@ export default function ContactForm() {
         }, 1500);
     }
 
+    // Determine dynamic margin-top based on location
+    const dynamicMarginTop = location.pathname === "/contact" ? "mt-32" : "mt-16";
+
     return (
-        <div className="w-full max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-20 lg:py-24">
+        <div className={`w-full max-w-7xl mx-auto px-4 md:px-6  ${dynamicMarginTop}`}>
             <div className="grid gap-12 md:gap-16">
                 {/* Page Title */}
                 <div className="space-y-4">
@@ -72,7 +72,7 @@ export default function ContactForm() {
 
                 {/* Map and Contact Form (Updated layout with 2/4 and 2/4 width) */}
                 <div className="grid md:grid-cols-2 gap-12">
-                    {/* Map (2/4 width) */}
+                    {/* Map */}
                     <div className="w-full h-[400px] rounded-md border">
                         <iframe
                             title="Google Map"
@@ -82,7 +82,7 @@ export default function ContactForm() {
                         ></iframe>
                     </div>
 
-                    {/* Contact Form (2/4 width) */}
+                    {/* Contact Form */}
                     <div className="w-full flex flex-col justify-center space-y-4">
                         <h2 className="text-2xl font-bold text-center mb-6">Send Us a Message</h2>
                         <form onSubmit={handleSubmit} className="space-y-4">

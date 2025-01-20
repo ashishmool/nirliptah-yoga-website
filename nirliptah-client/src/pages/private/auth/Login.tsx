@@ -17,6 +17,7 @@ import Signup from "@/pages/private/auth/Signup.tsx";
 import ResetRequest from "@/pages/private/auth/ResetRequest.tsx";
 import { UserInfoContext } from "@/context/UserInfoContext.tsx";
 import { AuthContext } from "@/context/AuthContext.tsx";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // Importing visibility icons
 
 type LoginRegisterModalProps = {
     onClose: () => void;
@@ -29,6 +30,7 @@ export default function Login({ onClose, onLoginSuccess }: LoginRegisterModalPro
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
+    const [passwordVisible, setPasswordVisible] = useState<boolean>(false); // State to toggle password visibility
 
     const { setIsLoggedIn } = useContext(UserInfoContext);
     const { setInfo } = useContext(AuthContext);
@@ -122,20 +124,31 @@ export default function Login({ onClose, onLoginSuccess }: LoginRegisterModalPro
                             />
                         </div>
 
-                        <div className="mt-4 space-y-2">
+                        <div className="mt-4 space-y-2 relative">
                             <Label htmlFor="password" className="font-bold text-black text-[15px]">
                                 Password
                             </Label>
-                            <Input
-                                id="password"
-                                type="password"
-                                placeholder="••••••••••"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                required
-                                onKeyDown={handleKeyDown}
-                            />
+                            <div className="relative">
+                                <Input
+                                    id="password"
+                                    type={passwordVisible ? "text" : "password"} // Toggle password visibility
+                                    placeholder="••••••••••"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                    onKeyDown={handleKeyDown}
+                                    className="pr-10" // Add right padding to make space for the icon
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setPasswordVisible(!passwordVisible)} // Toggle visibility on click
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                                >
+                                    {passwordVisible ? <FaEyeSlash /> : <FaEye />}
+                                </button>
+                            </div>
                         </div>
+
 
                         <p className="mt-2 text-center text-sm">
                             Having trouble logging in?{" "}
@@ -143,8 +156,8 @@ export default function Login({ onClose, onLoginSuccess }: LoginRegisterModalPro
                                 className="text-blue-900 hover:underline cursor-pointer"
                                 onClick={() => setIsResetPassword(true)}
                             >
-                        Reset it
-                    </span>
+                                Reset it
+                            </span>
                         </p>
 
                         <Button
@@ -161,8 +174,8 @@ export default function Login({ onClose, onLoginSuccess }: LoginRegisterModalPro
                                 className="text-blue-900 hover:underline cursor-pointer"
                                 onClick={() => setIsLogin(false)}
                             >
-                        Register
-                    </span>
+                                Register
+                            </span>
                         </p>
                     </div>
                 ) : (
@@ -174,6 +187,5 @@ export default function Login({ onClose, onLoginSuccess }: LoginRegisterModalPro
                 </DialogClose>
             </DialogContent>
         </Dialog>
-
     );
 }
