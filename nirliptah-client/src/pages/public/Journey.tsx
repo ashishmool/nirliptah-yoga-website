@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect, useMemo } from "react";
 import fotoJourney from "../../assets/journey.jpg";
-import Signup from "@/pages/private/auth/Signup.tsx";
-import Login from "@/pages/private/auth/Login.tsx";
+import Signup from "@/pages/auth/Signup.tsx";
+import Login from "@/pages/auth/Login.tsx";
 import { UserInfoContext } from "@/context/UserInfoContext.tsx";
 import { AuthContext } from "@/context/AuthContext.tsx";
 import axios from "axios";

@@ -9,9 +9,10 @@ const {
     patchUser,
     deleteUser,
 } = require("../controller/UserController");
+const { authenticateToken, authorizeRole} = require("../security/Auth");
 
 // Get all users
-router.get("/", getUsers);
+router.get("/", authorizeRole, getUsers);
 
 // Get user by ID
 router.get("/getById/:id", getUserById);
@@ -26,6 +27,6 @@ router.put("/update/:id", upload, updateUser);
 router.patch("/patch/:id", upload, patchUser);
 
 // Delete user by ID
-router.delete("/delete/:id", deleteUser);
+router.delete("/delete/:id", authenticateToken, deleteUser);
 
 module.exports = router;

@@ -60,11 +60,12 @@ export default function Signup({
                 role: "student",
             });
 
-            if (response.status === 201) {
+            if (response.status >= 200 && response.status < 300) {
                 toast.success("Account created successfully! Please verify email.");
                 reset();
                 onClose();
                 toggleNoneApplicable();
+                // setLoading(false);
                 navigate("/"); // Redirect to homepage
             }
         } catch (error: any) {

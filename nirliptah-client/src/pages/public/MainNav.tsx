@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/pages/components/ui/button.tsx";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { CgLogOut } from "react-icons/cg";
-import Login from "@/pages/private/auth/Login.tsx";
+import Login from "@/pages/auth/Login.tsx";
 import Logo from "../../assets/logo-main.svg";
 import { AuthContext } from "@/context/AuthContext.tsx";
 import { toast } from "sonner";

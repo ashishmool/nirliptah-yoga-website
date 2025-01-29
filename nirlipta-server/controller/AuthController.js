@@ -4,12 +4,14 @@ const bcrypt = require("bcryptjs");
 
 const RegistrationPasswordEmail = require("../config/RegistrationPasswordEmail");
 const ResetPasswordEmail = require("../config/ResetPasswordEmail");
+const WelcomeEmail = require("../config/WelcomeEmail");
 const transporter = require("../config/mailConfig");
+
 
 require("dotenv").config();
 
 const SECRET_KEY = process.env.SECRET_KEY;
-const RESET_TOKEN_EXPIRY = "1h"; // Use string for time-based expiry with JWT
+const RESET_TOKEN_EXPIRY = "24h"; // Use string for time-based expiry with JWT
 
 // User Registration for Web
 const register = async (req, res) => {
@@ -44,6 +46,88 @@ const register = async (req, res) => {
     }
 };
 
+// Mobile Registration
+const registerMobile = async (req, res) => {
+    try {
+        const { name, email, username, phone, password,photo, gender, medical_conditions = [], dob } = req.body;
+
+        // Check for required fields
+        if (!email || !password || !gender) {
+            return res.status(400).send({ message: "Email, password, and gender are required" });
+        }
+
+        // Check if email already exists
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).send({ message: "Email is already registered" });
+        }
+
+        // Check if email already exists
+        const existingUsername = await User.findOne({ username });
+        if (existingUsername) {
+            return res.status(400).send({ message: "Username is already registered" });
+        }
+
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Create a new user
+        const user = new User({
+            name,
+            email,
+            photo,
+            username,
+            phone,
+            password: hashedPassword,
+            gender,
+            medical_conditions,
+            dob,
+            role: "student", // Default role for mobile users
+            status: "active", // Active by default for mobile registration
+        });
+
+        // Save the user
+        await user.save();
+
+        // Generate a token for immediate session
+        const token = jwt.sign(
+            { user_id: user._id, email: user.email, role: user.role },
+            SECRET_KEY,
+            { expiresIn: "24h" }
+        );
+
+        // Send registration email
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: user.email,
+            subject: "Registration Successful. Welcome!",
+            html: WelcomeEmail({ name: user.name }),
+        };
+        await transporter.sendMail(mailOptions);
+
+        res
+            .status(201)
+            .cookie("token", token) // key , value ,options
+            .json({
+                success: true,
+                token,
+            });
+
+        //
+        // res.status(201).send({
+        //     message: "Registration successful",
+        //     token,
+        //     user_id: user._id,
+        //     email: user.email,
+        //     name: user.name,
+        //     role: user.role,
+        // });
+    } catch (error) {
+        console.error("Mobile Registration Error:", error);
+        res.status(500).send({ message: "Registration failed", error });
+    }
+};
+
 
 // Login user
 const login = async (req, res) => {
@@ -52,7 +136,11 @@ const login = async (req, res) => {
 
         const user = await User.findOne({ email });
         if (!user || !(await bcrypt.compare(password, user.password))) {
-            return res.status(403).send({ message: "Invalid email or password" });
+            return res.status(403).send({
+                success: false,
+                message: "Invalid email or password",
+                statusCode: 403,
+            });
         }
 
         // Create JWT with user details
@@ -63,18 +151,27 @@ const login = async (req, res) => {
         );
 
         // Send response with all necessary data
-        res.json({
+        res.status(200)
+            .json({
+            success: true,
             token,
             user_id: user._id,
             photo: user.photo,
             email: user.email,
             role: user.role,
             message: "Login successful",
+            statusCode: 200,
         });
     } catch (error) {
-        res.status(500).send({ message: "Login failed", error });
+        res.status(500).send({
+            success: false,
+            message: "Login failed",
+            error,
+            statusCode: 500,
+        });
     }
 };
+
 
 // Request Password Reset - Generate a Reset Token and send via email
 const resetPasswordRequest = async (req, res) => {
@@ -167,10 +264,30 @@ const validateSession = async (req, res) => {
     }
 };
 
+
+const uploadImage = async (req, res, next) => {
+    // // check for the file size and send an error message
+    // if (req.file.size > process.env.MAX_FILE_UPLOAD) {
+    //   return res.status(400).send({
+    //     message: `Please upload an image less than ${process.env.MAX_FILE_UPLOAD}`,
+    //   });
+    // }
+
+    if (!req.file) {
+        return res.status(400).send({ message: "Please upload a file" });
+    }
+    res.status(200).json({
+        success: true,
+        data: req.file.filename,
+    });
+}
+
 module.exports = {
     register,
     login,
     resetPasswordRequest,
     resetPassword,
     validateSession,
+    registerMobile,
+    uploadImage,
 };

@@ -26,6 +26,7 @@ const WeeklyRoutine: React.FC = () => {
                 const response = await axios.get("http://localhost:5000/api/schedules");
                 setSchedules(response.data);
                 calculateTimeRange(response.data);
+                console.log("Fetched Sch::", schedules);
             } catch (error) {
                 toast.error("Error fetching schedules.");
             } finally {

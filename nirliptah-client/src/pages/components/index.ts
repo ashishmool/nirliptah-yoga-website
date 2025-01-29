@@ -14,7 +14,7 @@ export { default as Explore } from '@/pages/public/explore/Explore.tsx';
 
 // Reset 
 // export { default as Reset } from './reset/Reset.tsx';
-export { default as CompleteReset } from '@/pages/private/auth/ResetPassword.tsx';
+export { default as CompleteReset } from '@/pages/auth/ResetPassword.tsx';
 
 
 

@@ -1,10 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const { login, register, resetPasswordRequest, resetPassword, validateSession} = require("../controller/AuthController");
+const { login, register, registerMobile, resetPasswordRequest, resetPassword, validateSession, uploadImage} = require("../controller/AuthController");
 const { authenticateToken, authorizeRole} = require("../security/Auth");
+const upload = require("../config/uploads");
 
 router.post("/login", login);
 router.post("/register", register);
+router.post("/register-mobile", registerMobile);
+
+router.post("/uploadImage", upload, uploadImage);
 
 
 router.get("/validate-session", authenticateToken, validateSession); // Use authenticateToken middleware

@@ -9,8 +9,13 @@ const userSchema = new mongoose.Schema(
         },
         username: {
             type: String,
-            unique: false,
+            unique: true,
             trim: true,
+            lowercase: true,
+        },
+        phone: {
+            type: String,
+            unique: true,
         },
         email: {
             type: String,
@@ -30,6 +35,7 @@ const userSchema = new mongoose.Schema(
         },
         role: {
             type: String,
+            required: true,
             enum: ["student", "instructor", "admin"],
             default: "student",
         },
@@ -38,10 +44,11 @@ const userSchema = new mongoose.Schema(
         },
         gender: {
             type: String,
-            enum: ["male", "female", "other"],
+            enum: ["Male", "Female", "Other"],
         },
         medical_conditions: {
             type: [String], // List of medical conditions
+            required: true,
             default: [],
         },
         status: {
