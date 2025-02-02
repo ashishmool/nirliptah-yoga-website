@@ -27,6 +27,18 @@ export const fetchUserById = async (id: string, setUser: React.Dispatch<React.Se
     }
 };
 
+// Fetch user by Role
+export const fetchUserByRole = async (role: string, setUser: React.Dispatch<React.SetStateAction<any>>) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/getByRole/${role}`);
+        const data = response.data || {};
+        setUser(data);
+    } catch (error) {
+        toast.error("Error fetching user by role data!");
+        console.error("Error fetching user by role data:", error);
+    }
+};
+
 // Create a new user with an optional profile picture
 export const createUser = async (formData: FormData, setLoading: React.Dispatch<React.SetStateAction<boolean>>) => {
     setLoading(true);

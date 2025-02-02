@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const transporter = require("../config/mailConfig");
 const path = require("path");
+const Workshop = require("../models/Workshop");
 
 
 // Helper function to validate environment variables
@@ -9,6 +10,75 @@ const validateEnv = () => {
         throw new Error("EMAIL_USER environment variable is not set");
     }
 };
+
+
+// Helper function to convert month number to month name
+const getMonthName = (monthNumber) => {
+    const months = [
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+    ];
+    return months[monthNumber - 1]; // Subtract 1 because months are 1-indexed
+};
+
+
+// Get monthly growth data
+const getMonthlyGrowth = async (req, res) => {
+    try {
+        // Fetch all users and workshops grouped by month
+        const usersByMonth = await User.aggregate([
+            {
+                $group: {
+                    _id: { $month: "$createdAt" }, // Group by month of creation
+                    count: { $sum: 1 }, // Count users per month
+                },
+            },
+            {
+                $project: {
+                    month: "$_id", // Rename _id to month
+                    users: "$count", // Rename count to users
+                    _id: 0, // Exclude _id from the output
+                },
+            },
+            { $sort: { month: 1 } }, // Sort by month (1 = January, 2 = February, etc.)
+        ]);
+
+        const workshopsByMonth = await Workshop.aggregate([
+            {
+                $group: {
+                    _id: { $month: "$createdAt" }, // Group by month of creation
+                    count: { $sum: 1 }, // Count workshops per month
+                },
+            },
+            {
+                $project: {
+                    month: "$_id", // Rename _id to month
+                    workshops: "$count", // Rename count to workshops
+                    _id: 0, // Exclude _id from the output
+                },
+            },
+            { $sort: { month: 1 } }, // Sort by month (1 = January, 2 = February, etc.)
+        ]);
+
+        // Combine the data into a single array
+        const monthlyGrowth = usersByMonth.map((userMonth) => {
+            const workshopMonth = workshopsByMonth.find(
+                (workshop) => workshop.month === userMonth.month
+            );
+            return {
+                month: getMonthName(userMonth.month), // Convert month number to name
+                users: userMonth.users,
+                workshops: workshopMonth ? workshopMonth.workshops : 0,
+            };
+        });
+
+        res.status(200).json(monthlyGrowth);
+    } catch (error) {
+        console.error("Error fetching monthly growth data:", error);
+        res.status(500).json({ message: "Error fetching monthly growth data", error });
+    }
+};
+
 
 // Get all users
 const getUsers = async (req, res) => {
@@ -142,6 +212,47 @@ const deleteUser = async (req, res) => {
         res.status(500).json({ message: "Error deleting user", error });
     }
 };
+// Get users by role
+const getUserByRole = async (req, res) => {
+    try {
+        const { role } = req.params;
+
+        console.log(req.body);
+        console.log(res.body);
+
+        // Validate the role parameter
+        if (!role) {
+            return res.status(400).json({ message: "Role parameter is required" });
+        }
+
+        // Find users with the specified role
+        const users = await User.find({ role: role });
+
+        if (users.length === 0) {
+            return res.status(404).json({ message: "No users found with the specified role" });
+        }
+
+        res.status(200).json(users);
+    } catch (error) {
+        console.error("Error fetching users by role:", error);
+        res.status(500).json({ message: "Error fetching users by role", error });
+    }
+};
+
+// // Get count of users by role
+// const getUsersCountByRole = async (req, res) => {
+//     try {
+//         const roleCounts = await User.aggregate([
+//             { $group: { _id: "$role", count: { $sum: 1 } } },
+//             { $project: { role: "$_id", count: 1, _id: 0 } },
+//         ]);
+//
+//         res.status(200).json(roleCounts);
+//     } catch (error) {
+//         console.error("Error fetching users count by role:", error);
+//         res.status(500).json({ message: "Error fetching users count by role", error });
+//     }
+// };
 
 module.exports = {
     getUsers,
@@ -150,4 +261,6 @@ module.exports = {
     updateUser,
     patchUser,
     deleteUser,
+    getUserByRole,
+    getMonthlyGrowth,
 };

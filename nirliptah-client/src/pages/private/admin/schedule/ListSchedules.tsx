@@ -9,9 +9,8 @@ import { FaPauseCircle, FaCheckCircle, FaBan } from "react-icons/fa";
 interface Schedule {
     _id: string;
     title: string;
-    instructor: { name: string };
     workshop_id: { title: string };
-    day_of_week: string;
+    days_of_week: string[];
     start_time: string;
     end_time: string;
     status: "active" | "paused" | "canceled";
@@ -20,10 +19,9 @@ interface Schedule {
 const ListSchedules: React.FC = () => {
     const [schedules, setSchedules] = useState<Schedule[]>([]);
     const [filteredSchedules, setFilteredSchedules] = useState<Schedule[]>([]);
-    const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+    const [selectedDay, setSelectedDay] = useState<string | undefined>();
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(true);
-    const [selectedInstructor, setSelectedInstructor] = useState<string>("All");
     const ITEMS_PER_PAGE = 10;
 
     // Fetch schedules from the backend
@@ -43,38 +41,19 @@ const ListSchedules: React.FC = () => {
         fetchSchedules();
     }, []);
 
-    // Filter schedules by week and instructor
+    // Filter schedules by day
     useEffect(() => {
         let updatedSchedules = schedules;
 
-        if (selectedDate) {
-            const selectedDay = selectedDate.getDay();
-            const startOfWeek = new Date(selectedDate);
-            startOfWeek.setDate(selectedDate.getDate() - selectedDay);
-
-            const endOfWeek = new Date(startOfWeek);
-            endOfWeek.setDate(startOfWeek.getDate() + 6);
-
-            updatedSchedules = updatedSchedules.filter(schedule => {
-                const dayIndex = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].indexOf(
-                    schedule.day_of_week
-                );
-                const scheduleDate = new Date(startOfWeek);
-                scheduleDate.setDate(startOfWeek.getDate() + dayIndex);
-
-                return scheduleDate >= startOfWeek && scheduleDate <= endOfWeek;
-            });
-        }
-
-        if (selectedInstructor !== "All") {
-            updatedSchedules = updatedSchedules.filter(
-                schedule => schedule.instructor?.name === selectedInstructor
+        if (selectedDay) {
+            updatedSchedules = updatedSchedules.filter(schedule =>
+                schedule.days_of_week.includes(selectedDay)
             );
         }
 
         setFilteredSchedules(updatedSchedules);
         setCurrentPage(1); // Reset to page 1 when filters change
-    }, [selectedDate, selectedInstructor, schedules]);
+    }, [selectedDay, schedules]);
 
     // Handle delete schedule
     const handleDelete = async (id: string) => {
@@ -107,44 +86,46 @@ const ListSchedules: React.FC = () => {
         toast("Edit functionality to be implemented.");
     };
 
-    // Get unique instructors
-    const instructors = Array.from(new Set(schedules.map(schedule => schedule.instructor?.name))).filter(Boolean);
+    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
     const paginatedSchedules = filteredSchedules.slice(
         (currentPage - 1) * ITEMS_PER_PAGE,
         currentPage * ITEMS_PER_PAGE
     );
 
+    // Clear day filter
+    const clearFilters = () => {
+        setSelectedDay(undefined);
+    };
+
     return (
         <div className="max-w-7xl mx-auto p-6 flex flex-col">
             <h1 className="text-3xl font-semibold text-center mb-6">Weekly Schedule</h1>
 
-            {/* Instructor Filter */}
+            {/* Day Filter */}
             <div className="flex justify-center mb-4">
                 <div className="btn-group space-x-2">
-                    <button
-                        className={`btn btn-dash ${
-                            selectedInstructor === "All"
-                                ? "bg-[#9b6763] text-white border-none"
-                                : "border border-[#9b6763] text-[#9b6763] bg-transparent"
-                        }`}
-                        onClick={() => setSelectedInstructor("All")}
-                    >
-                        All
-                    </button>
-                    {instructors.map((instructor, index) => (
+                    {daysOfWeek.map((day, index) => (
                         <button
                             key={index}
                             className={`btn btn-dash ${
-                                selectedInstructor === instructor
+                                selectedDay === day
                                     ? "bg-[#9b6763] text-white border-none"
                                     : "border border-[#9b6763] text-[#9b6763] bg-transparent"
                             }`}
-                            onClick={() => setSelectedInstructor(instructor)}
+                            onClick={() => setSelectedDay(day)}
                         >
-                            {instructor}
+                            {day}
                         </button>
                     ))}
+                    {/* Clear Filters Button */}
+                    <button
+                        className="btn btn-dash text-gray-500 hover:text-[#9b6763] hover:bg-transparent focus:outline-none"
+                        onClick={clearFilters}
+                    >
+                        Clear Filters
+                    </button>
+
                 </div>
             </div>
 
@@ -155,9 +136,7 @@ const ListSchedules: React.FC = () => {
                     <table className="table w-full table-auto">
                         <thead>
                         <tr>
-                            <th className="px-4 py-2">Instructor</th>
                             <th className="px-4 py-2">Workshop</th>
-                            <th className="px-4 py-2">Day</th>
                             <th className="px-4 py-2">Time</th>
                             <th className="px-4 py-2">Status</th>
                             <th className="px-4 py-2">Actions</th>
@@ -166,9 +145,7 @@ const ListSchedules: React.FC = () => {
                         <tbody>
                         {paginatedSchedules.map(schedule => (
                             <tr key={schedule._id}>
-                                <td className="px-4 py-2">{schedule.instructor?.name}</td>
                                 <td className="px-4 py-2">{schedule.workshop_id?.title}</td>
-                                <td className="px-4 py-2">{schedule.day_of_week}</td>
                                 <td className="px-4 py-2">
                                     {schedule.start_time} - {schedule.end_time}
                                 </td>
@@ -235,10 +212,9 @@ const ListSchedules: React.FC = () => {
                         ))}
                         </tbody>
                     </table>
-
                 </div>
             ) : (
-                <p className="text-center text-gray-500">No schedules found for this week or instructor.</p>
+                <p className="text-center text-gray-500">No schedules found for this day.</p>
             )}
 
             <div className="mt-4">

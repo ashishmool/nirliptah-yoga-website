@@ -7,7 +7,7 @@ import { AuthContext } from "@/context/AuthContext.tsx";
 import axios from "axios";
 import {toast} from "sonner";
 
-const API_BASE_URL_RETREATS = "http://localhost:5000/api/retreats";  // Your retreats API URL
+const API_BASE_URL_CATEGORIES = "http://localhost:5000/api/workshop-categories";  // Your retreats API URL
 const API_BASE_URL_WORKSHOPS = "http://localhost:5000/api/workshops"; // Your workshops API URL
 
 const Journey: React.FC = () => {
@@ -15,7 +15,7 @@ const Journey: React.FC = () => {
     const [showLoginModal, setShowLoginModal] = useState(false);
     const { info, setInfo } = useContext(AuthContext);
 
-    const [retreats, setRetreats] = useState<any[]>([]);
+    const [workshopCategories, setWorkshopCategories] = useState<any[]>([]);
     const [workshops, setWorkshops] = useState<any[]>([]);
     const [users, setUsers] = useState<any[]>([]);
 
@@ -32,13 +32,13 @@ const Journey: React.FC = () => {
     };
 
     // Fetch retreats
-    const fetchRetreats = async () => {
+    const fetchWorkshopCategories = async () => {
         try {
-            const response = await axios.get(API_BASE_URL_RETREATS);
+            const response = await axios.get(API_BASE_URL_CATEGORIES);
             const data = response.data || [];
-            setRetreats(data);
+            setWorkshopCategories(data);
         } catch (error) {
-            console.error("Error fetching retreats:", error);
+            console.error("Error fetching categoires:", error);
         }
     };
 
@@ -54,7 +54,7 @@ const Journey: React.FC = () => {
 
     // Fetch data on component mount
     useEffect(() => {
-        fetchRetreats();
+        fetchWorkshopCategories();
         fetchWorkshops();
         fetchStudents();
     }, []);
@@ -82,8 +82,8 @@ const Journey: React.FC = () => {
             textColor: "text-white",
         },
         {
-            title: "Retreats",
-            quantity: retreats.length, // Dynamically showing the number of retreats
+            title: "Categories",
+            quantity: workshopCategories.length, // Dynamically showing the number of workshop categories
             bgColor: "bg-[#A38F85]",
             textColor: "text-white",
         },

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {
     BarChart,
     Bar,
@@ -11,22 +11,46 @@ import {
     Line,
 } from "recharts";
 import WeeklyRoutine from "@/pages/components/WeeklyRoutine.tsx";
+import {fetchUserById, fetchUserByRole} from "@/backend/services/userService.ts";
+import {toast} from "sonner";
+import {AuthContext} from "@/context/AuthContext.tsx";
+
 
 const AdminHome = () => {
-    // Example Data
-    const barData = [
-        { name: "Instructors", count: 25 },
-        { name: "Workshops", count: 10 },
-        { name: "Accommodations", count: 8 },
-    ];
+    // // Example Data
+    // const barData = [
+    //     { role: "instructor", count: 25 },
+    //     { role: "student", count: 10 },
+    //     { role: "admin", },//nothing to show
+    // ];
+    //
+    // const lineData = [
+    //     { month: "Jan", users: 100, workshops: 20 },
+    //     { month: "Feb", users: 200, workshops: 25 },
+    //     { month: "Mar", users: 150, workshops: 30 },
+    //     { month: "Apr", users: 250, workshops: 35 },
+    //     { month: "May", users: 300, workshops: 40 },
+    // ];
+    const { info, setInfo } = useContext(AuthContext);
+    const [userData, setUserData] = useState<any>(null);
 
-    const lineData = [
-        { month: "Jan", users: 100, workshops: 20 },
-        { month: "Feb", users: 200, workshops: 25 },
-        { month: "Mar", users: 150, workshops: 30 },
-        { month: "Apr", users: 250, workshops: 35 },
-        { month: "May", users: 300, workshops: 40 },
-    ];
+
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            if (info._id) {
+                try {
+                    const [user] = await Promise.all([fetchUserByRole(info._id)]);
+                    setUserData(user);
+                } catch (error) {
+                    toast.error("Failed to fetch user data.");
+                }
+            }
+        };
+
+        fetchUserData();
+    }, [info._id]);
+
 
     return (
         <div className="max-w-7xl mx-auto p-6">
@@ -90,45 +114,7 @@ const AdminHome = () => {
                 </div>
             </div>
 
-            {/*/!* Charts Section *!/*/}
-            {/*<div className="grid grid-cols-1 md:grid-cols-2 gap-6">*/}
-            {/*    /!* Bar Chart *!/*/}
-            {/*    <div className="bg-white shadow-md rounded-md p-4">*/}
-            {/*        <h3 className="text-lg font-semibold mb-4">Overview</h3>*/}
-            {/*        <BarChart*/}
-            {/*            width={350}*/}
-            {/*            height={300}*/}
-            {/*            data={barData}*/}
-            {/*            margin={{ top: 20, right: 30, left: 20, bottom: 5 }}*/}
-            {/*        >*/}
-            {/*            <CartesianGrid strokeDasharray="3 3" />*/}
-            {/*            <XAxis dataKey="name" />*/}
-            {/*            <YAxis />*/}
-            {/*            <Tooltip />*/}
-            {/*            <Legend />*/}
-            {/*            <Bar dataKey="count" fill="#9b6763" />*/}
-            {/*        </BarChart>*/}
-            {/*    </div>*/}
 
-            {/*    /!* Line Chart *!/*/}
-            {/*    <div className="bg-white shadow-md rounded-md p-4">*/}
-            {/*        <h3 className="text-lg font-semibold mb-4">Monthly Growth</h3>*/}
-            {/*        <LineChart*/}
-            {/*            width={350}*/}
-            {/*            height={300}*/}
-            {/*            data={lineData}*/}
-            {/*            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}*/}
-            {/*        >*/}
-            {/*            <CartesianGrid strokeDasharray="3 3" />*/}
-            {/*            <XAxis dataKey="month" />*/}
-            {/*            <YAxis />*/}
-            {/*            <Tooltip />*/}
-            {/*            <Legend />*/}
-            {/*            <Line type="monotone" dataKey="users" stroke="#8884d8" activeDot={{ r: 8 }} />*/}
-            {/*            <Line type="monotone" dataKey="workshops" stroke="#82ca9d" />*/}
-            {/*        </LineChart>*/}
-            {/*    </div>*/}
-            {/*</div>*/}
             <div>
                 <WeeklyRoutine/>
             </div>

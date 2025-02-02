@@ -76,7 +76,7 @@ export default function ContactForm() {
                     <div className="w-full h-[400px] rounded-md border">
                         <iframe
                             title="Google Map"
-                            src="https://maps.google.com/maps?q=Australia&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                            // src="https://maps.google.com/maps?q=Australia&t=&z=13&ie=UTF8&iwloc=&output=embed"
                             className="w-full h-full rounded-md"
                             loading="lazy"
                         ></iframe>

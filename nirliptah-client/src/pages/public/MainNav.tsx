@@ -2,12 +2,12 @@ import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/pages/components/ui/button.tsx";
 import { FaBars, FaTimes } from "react-icons/fa";
-import { CgLogOut } from "react-icons/cg";
+// import { CgLogOut } from "react-icons/cg";
 import Login from "@/pages/auth/Login.tsx";
 import Logo from "../../assets/logo-main.svg";
 import { AuthContext } from "@/context/AuthContext.tsx";
 import { toast } from "sonner";
-import { useLoginModal } from '@/context/LoginModalContext'; // Import useLoginModal
+import { useLoginModal } from '@/context/LoginModalContext';
 
 export default function MainNav() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -64,14 +64,17 @@ export default function MainNav() {
                             <button onClick={() => handleScrollToSection("workshops")} className="text-gray-800 hover:text-[#9B6763] text-base font-medium">
                                 Workshops
                             </button>
-                            <button onClick={() => handleScrollToSection("retreats")} className="text-gray-800 hover:text-[#9B6763] text-base font-medium">
-                                Retreats
+                            <button onClick={() => handleScrollToSection("schedules")} className="text-gray-800 hover:text-[#9B6763] text-base font-medium">
+                                Schedules
                             </button>
                             <button onClick={() => handleScrollToSection("contact-us")} className="text-gray-800 hover:text-[#9B6763] text-base font-medium">
                                 Contact
                             </button>
+
                         </div>
                     </div>
+
+
 
                     {/* User Info and Avatar Section */}
                     {/* User Info and Avatar Section */}
@@ -90,7 +93,12 @@ export default function MainNav() {
                                     <div className="w-10 rounded-full">
                                         <img
                                             alt="User Avatar"
-                                            src={info?.photo ? `http://localhost:5000${info?.photo}` : "/default-avatar.png"}
+                                            src={info?.photo
+                                                ? info?.photo.includes('/uploads/user_photos/')
+                                                    ? `http://localhost:5000${info?.photo}`
+                                                    : `http://localhost:5000/uploads/${info?.photo}`
+                                                : "/default-avatar.png"
+                                            }
                                         />
                                     </div>
                                 </button>

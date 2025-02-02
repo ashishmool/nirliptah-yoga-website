@@ -2,9 +2,9 @@ const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
-const RegistrationPasswordEmail = require("../config/RegistrationPasswordEmail");
-const ResetPasswordEmail = require("../config/ResetPasswordEmail");
-const WelcomeEmail = require("../config/WelcomeEmail");
+const RegistrationPasswordEmail = require("../templates/RegistrationPasswordEmail");
+const ResetPasswordEmail = require("../templates/ResetPasswordEmail");
+const WelcomeEmail = require("../templates/WelcomeEmail");
 const transporter = require("../config/mailConfig");
 
 
@@ -49,7 +49,7 @@ const register = async (req, res) => {
 // Mobile Registration
 const registerMobile = async (req, res) => {
     try {
-        const { name, email, username, phone, password,photo, gender, medical_conditions = [], dob } = req.body;
+        const { name, email, username, phone, password, photo, gender, medical_conditions = [], dob } = req.body;
 
         // Check for required fields
         if (!email || !password || !gender) {
@@ -59,13 +59,13 @@ const registerMobile = async (req, res) => {
         // Check if email already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            return res.status(400).send({ message: "Email is already registered" });
+            return res.status(400).send({ message: "Email is already registered. Please use a different email." });
         }
 
-        // Check if email already exists
+        // Check if username already exists
         const existingUsername = await User.findOne({ username });
         if (existingUsername) {
-            return res.status(400).send({ message: "Username is already registered" });
+            return res.status(400).send({ message: "Username is already registered. Please choose a different username." });
         }
 
         // Hash the password
@@ -113,20 +113,12 @@ const registerMobile = async (req, res) => {
                 token,
             });
 
-        //
-        // res.status(201).send({
-        //     message: "Registration successful",
-        //     token,
-        //     user_id: user._id,
-        //     email: user.email,
-        //     name: user.name,
-        //     role: user.role,
-        // });
     } catch (error) {
         console.error("Mobile Registration Error:", error);
-        res.status(500).send({ message: "Registration failed", error });
+        res.status(500).send({ message: "Registration failed. Please try again.", error: error.message });
     }
 };
+
 
 
 // Login user
@@ -266,12 +258,7 @@ const validateSession = async (req, res) => {
 
 
 const uploadImage = async (req, res, next) => {
-    // // check for the file size and send an error message
-    // if (req.file.size > process.env.MAX_FILE_UPLOAD) {
-    //   return res.status(400).send({
-    //     message: `Please upload an image less than ${process.env.MAX_FILE_UPLOAD}`,
-    //   });
-    // }
+
 
     if (!req.file) {
         return res.status(400).send({ message: "Please upload a file" });

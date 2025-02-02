@@ -22,10 +22,6 @@ const scheduleSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        instructor: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-        },
         status: {
             type: String,
             enum: ["active", "paused", "canceled"],

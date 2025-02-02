@@ -9,6 +9,8 @@ import { checkSession } from "@/backend/services/auth/checkSession";
 
 // CONTEXT
 import { AuthProvider } from "@/context/AuthContext.tsx";
+import { ThemeProvider } from './pages/components/theme-provider';
+
 
 // UI
 import { Footer } from "@/pages/components";
@@ -60,7 +62,7 @@ export default function App() {
         return (
             <>
                 <Routing />
-                {!isAdminRoute && <MainNav />}
+                {!isAdminRoute && <ThemeProvider><MainNav /></ThemeProvider>}
                 {!isAdminRoute && <Footer />}
             </>
         );
@@ -70,18 +72,18 @@ export default function App() {
 
     return (
         <AuthProvider>
-            <div
-                style={{
-                    backgroundImage: `url(${BackgroundSvg})`,
-                    backgroundRepeat: "no-repeat",
-                    backgroundSize: "cover",
-                    backgroundAttachment: "fixed",
-                    backgroundPosition: "center",
-                    minHeight: "100vh",
-                    display: "flex",
-                    flexDirection: "column",
-                }}
-            >
+            {/*<div*/}
+            {/*    style={{*/}
+            {/*        backgroundImage: `url(${BackgroundSvg})`,*/}
+            {/*        backgroundRepeat: "no-repeat",*/}
+            {/*        backgroundSize: "cover",*/}
+            {/*        backgroundAttachment: "fixed",*/}
+            {/*        backgroundPosition: "center",*/}
+            {/*        minHeight: "100vh",*/}
+            {/*        display: "flex",*/}
+            {/*        flexDirection: "column",*/}
+            {/*    }}*/}
+            {/*>*/}
                 {activeLoadingScreen ? (
                     <LoadingScreen />
                 ) : (
@@ -91,7 +93,7 @@ export default function App() {
                         <FloatingAction />
                     </BrowserRouter>
                 )}
-            </div>
+            {/*</div>*/}
         </AuthProvider>
     );
 }

@@ -1,6 +1,5 @@
 import Workshops from "@/pages/public/workshop/Workshops.tsx";
 import Journey from "@/pages/public/Journey.tsx";
-import Retreats from "@/pages/public/retreat/Retreats.tsx";
 import {Contact} from "@/pages";
 
 export default function Home() {
@@ -12,9 +11,9 @@ export default function Home() {
             <div id="workshops">
                 <Workshops />
             </div>
-            <div id="retreats">
-                <Retreats />
-            </div>
+            {/*<div id="schedules">*/}
+            {/*    <Explore/>*/}
+            {/*</div>*/}
             <div id="contact-us">
                 <Contact />
             </div>

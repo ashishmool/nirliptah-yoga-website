@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FaHammer, FaHome, FaSuitcase, FaUsers } from "react-icons/fa";
-import {FaBookBookmark, FaUserClock} from "react-icons/fa6";
+import {FaBookBookmark, FaCreditCard, FaUserClock} from "react-icons/fa6";
 
 const sidelinks = [
     { title: "Dashboard", href: "/admin/home", icon: <FaHome /> },
@@ -10,10 +10,8 @@ const sidelinks = [
 
     { title: "Users", href: "/admin/users", icon: <FaUsers /> },
 
-
-    { title: "Accommodations", href: "/admin/accommodations", icon: <FaHome /> },
-    { title: "Retreats", href: "/admin/retreats", icon: <FaSuitcase /> },
     { title: "Bookings", href: "/admin/bookings", icon: <FaBookBookmark /> },
+    { title: "Bookings", href: "/admin/payments", icon: <FaCreditCard /> },
 
 ];
 

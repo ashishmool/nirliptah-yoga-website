@@ -5,7 +5,7 @@ import { toast } from "sonner";
 interface Schedule {
     _id: string;
     title: string;
-    instructor: { name: string };
+    // instructor: { name: string };
     start_time: string;
     end_time: string;
     status: "active" | "paused" | "canceled";
@@ -175,7 +175,7 @@ const WeeklyRoutine: React.FC = () => {
                                     >
                                         <div className="text-xs font-semibold">{schedule.workshop_id?.title}</div>
                                         <div className="text-xs">{schedule.start_time} - {schedule.end_time}</div>
-                                        <div className="text-xs italic">{schedule.instructor.name}</div>
+                                        {/*<div className="text-xs italic">{schedule.instructor.name}</div>*/}
                                     </div>
                                 );
                             })}
@@ -189,7 +189,7 @@ const WeeklyRoutine: React.FC = () => {
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
                     <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
                         <h2 className="text-xl font-semibold mb-4">{selectedSchedule.title}</h2>
-                        <p><strong>Instructor:</strong> {selectedSchedule.instructor.name}</p>
+                        {/*<p><strong>Instructor:</strong> {selectedSchedule.instructor.name}</p>*/}
                         <p><strong>Workshop:</strong> {selectedSchedule.workshop_id?.title}</p>
                         <p><strong>Time:</strong> {selectedSchedule.start_time} - {selectedSchedule.end_time}</p>
                         <p><strong>Status:</strong> {selectedSchedule.status}</p>

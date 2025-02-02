@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema(
         role: {
             type: String,
             required: true,
-            enum: ["student", "instructor", "admin"],
+            enum: ["student", "admin"],
             default: "student",
         },
         dob: {
@@ -44,7 +44,7 @@ const userSchema = new mongoose.Schema(
         },
         gender: {
             type: String,
-            enum: ["Male", "Female", "Other"],
+            enum: ["male", "female", "other"],
         },
         medical_conditions: {
             type: [String], // List of medical conditions

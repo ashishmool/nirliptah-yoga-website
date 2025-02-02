@@ -56,21 +56,6 @@ const ListUsers: React.FC = () => {
         }
     };
 
-    const handleRoleChange = async (userId: string, newRole: string) => {
-        try {
-            const payload = { role: newRole }; // Only send the updated role
-            await axios.patch(`http://localhost:5000/api/users/patch/${userId}`, payload);
-            setUsers(
-                users.map((user) =>
-                    user._id === userId ? { ...user, role: newRole } : user
-                )
-            );
-            toast.success(`User role updated to ${newRole}`);
-        } catch (error) {
-            console.error("Error updating role:", error);
-            toast.error("Failed to update user role.");
-        }
-    };
 
 
     const paginatedUsers = filteredUsers.slice(
@@ -136,7 +121,12 @@ const ListUsers: React.FC = () => {
                                     <div className="avatar">
                                         <div className="mask mask-squircle w-12 h-12">
                                             <img
-                                                src={`http://localhost:5000${user.photo}`}
+                                                src={user?.photo
+                                                    ? user?.photo.includes('/uploads/user_photos/')
+                                                        ? `http://localhost:5000${user?.photo}`
+                                                        : `http://localhost:5000/uploads/${user?.photo}`
+                                                    : "/default-avatar.png"
+                                                }
                                                 alt={`${user.name || "User"}'s avatar`}
                                             />
                                         </div>
@@ -195,22 +185,6 @@ const ListUsers: React.FC = () => {
                                     >
                                         Delete
                                     </button>
-                                    {user.role === "student" && (
-                                        <button
-                                            onClick={() => handleRoleChange(user._id, "instructor")}
-                                            className="btn btn-xs btn-info mr-2"
-                                        >
-                                            Make Instructor
-                                        </button>
-                                    )}
-                                    {user.role === "instructor" && (
-                                        <button
-                                            onClick={() => handleRoleChange(user._id, "student")}
-                                            className="btn btn-xs btn-warning mr-2"
-                                        >
-                                            Make Student
-                                        </button>
-                                    )}
                                 </td>
 
                             </tr>

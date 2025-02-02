@@ -3,7 +3,7 @@ const Schedule = require("../models/Schedule");
 // Get all schedules
 const getAllSchedules = async (req, res) => {
     try {
-        const schedules = await Schedule.find().populate("instructor workshop_id");
+        const schedules = await Schedule.find().populate("workshop_id");
         res.json(schedules);
     } catch (error) {
         res.status(500).json({ message: "Error fetching schedules", error });

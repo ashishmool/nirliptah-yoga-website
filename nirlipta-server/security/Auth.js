@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const User = require("../models/User");
 require("dotenv").config();
 
 const SECRET_KEY = process.env.SECRET_KEY;
@@ -30,4 +31,29 @@ function authorizeRole(role) {
     };
 }
 
-module.exports = { authenticateToken, authorizeRole };
+const protect = async (req, res, next) => {
+    let token;
+
+    // Check for token in the Authorization header
+    if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+        token = req.headers.authorization.split(" ")[1];
+    }
+
+    // If no token is found, send unauthorized error
+    if (!token) {
+        return res.status(401).json({ message: "Not authorized to access this route" });
+    }
+
+    try {
+        // Verify the token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        // Find the user by decoded id
+        req.user = await User.findById(decoded.id);
+        next(); // Proceed to the next middleware/route handler
+    } catch (err) {
+        return res.status(401).json({ message: "Not authorized to access this route" });
+    }
+};
+
+module.exports = { authenticateToken, authorizeRole, protect };
