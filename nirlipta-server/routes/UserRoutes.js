@@ -13,7 +13,7 @@ const {
 const { authenticateToken, authorizeRole, protect} = require("../security/Auth");
 
 // Get all users
-router.get("/", getUsers);
+router.get("/", protect,authorizeRole("admin"), getUsers);
 
 // router.get('/role/:role', getUserByRole);
 
@@ -32,7 +32,7 @@ router.put("/update/:id", protect, upload, updateUser);
 router.patch("/patch/:id", protect, upload, patchUser);
 
 // Delete user by ID
-router.delete("/delete/:id", protect, authenticateToken, deleteUser);
+router.delete("/delete/:id", protect, authorizeRole("admin"), deleteUser);
 
 // // New routes for analytics
 // router.get("/analytics/role-count", getUsersCountByRole);

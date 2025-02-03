@@ -21,15 +21,20 @@ function authenticateToken(req, res, next) {
 }
 
 // Middleware to authorize based on role
-function authorizeRole(role) {
-    return (req, res, next) => {
-        if (req.user.role !== role) {
-            return res.status(403).send("Access Denied: Insufficient Permissions");
-        }
+const authorizeRole = (role) => (req, res, next) => {
+    if (!req.user) {
+        return res.status(401).json({ message: "Not authorized, no user found!" });
+    }
 
-        next();
-    };
-}
+    // Check if the user role matches the expected role
+    if (req.user.role !== role) {
+        return res.status(403).json({ message: "Access Denied: Insufficient Permissions" });
+    }
+
+    next(); // Move to the next middleware/route handler
+};
+
+
 
 const protect = async (req, res, next) => {
     let token;
@@ -41,19 +46,34 @@ const protect = async (req, res, next) => {
 
     // If no token is found, send unauthorized error
     if (!token) {
-        return res.status(401).json({ message: "Not authorized to access this route" });
+        return res.status(401).json({ message: "No token found error" });
     }
 
     try {
-        // Verify the token
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        // Verify the token and log decoded data
+        const decoded = jwt.verify(token, process.env.SECRET_KEY);
+        console.log("Decoded Token:", decoded); // Debugging log
 
-        // Find the user by decoded id
-        req.user = await User.findById(decoded.id);
+        if (!decoded.user_id) {
+            return res.status(400).json({ message: "Invalid token payload: No user_id" });
+        }
+
+        // Find the user by decoded user_id (NOT decoded.id)
+        req.user = await User.findById(decoded.user_id);
+
+        if (!req.user) {
+            console.log("User not found in database for ID:", decoded.user_id);
+            return res.status(401).json({ message: "Not authorized, user not found" });
+        }
+
+        console.log("Authenticated User ID:", req.user.id);
         next(); // Proceed to the next middleware/route handler
     } catch (err) {
-        return res.status(401).json({ message: "Not authorized to access this route" });
+        console.error("Error in protect middleware:", err);
+        return res.status(401).json({ message: "Not authorized to access this route!" });
     }
 };
+
+
 
 module.exports = { authenticateToken, authorizeRole, protect };
