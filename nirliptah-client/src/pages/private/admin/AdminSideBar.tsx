@@ -11,7 +11,7 @@ const sidelinks = [
     { title: "Users", href: "/admin/users", icon: <FaUsers /> },
 
     { title: "Bookings", href: "/admin/bookings", icon: <FaBookBookmark /> },
-    { title: "Bookings", href: "/admin/payments", icon: <FaCreditCard /> },
+    { title: "Payments", href: "/admin/payments", icon: <FaCreditCard /> },
 
 ];
 

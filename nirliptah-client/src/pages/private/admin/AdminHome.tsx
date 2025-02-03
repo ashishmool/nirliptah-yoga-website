@@ -11,7 +11,7 @@ import {
     Line,
 } from "recharts";
 import WeeklyRoutine from "@/pages/components/WeeklyRoutine.tsx";
-import {fetchUserById, fetchUserByRole} from "@/backend/services/userService.ts";
+import {fetchUserById, fetchUserByRole} from "@/services/userService.ts";
 import {toast} from "sonner";
 import {AuthContext} from "@/context/AuthContext.tsx";
 
@@ -31,25 +31,25 @@ const AdminHome = () => {
     //     { month: "Apr", users: 250, workshops: 35 },
     //     { month: "May", users: 300, workshops: 40 },
     // ];
-    const { info, setInfo } = useContext(AuthContext);
-    const [userData, setUserData] = useState<any>(null);
-
-
-
-    useEffect(() => {
-        const fetchUserData = async () => {
-            if (info._id) {
-                try {
-                    const [user] = await Promise.all([fetchUserByRole(info._id)]);
-                    setUserData(user);
-                } catch (error) {
-                    toast.error("Failed to fetch user data.");
-                }
-            }
-        };
-
-        fetchUserData();
-    }, [info._id]);
+    // const { info, setInfo } = useContext(AuthContext);
+    // const [userData, setUserData] = useState<any>(null);
+    //
+    //
+    //
+    // useEffect(() => {
+    //     const fetchUserData = async () => {
+    //         if (info._id) {
+    //             try {
+    //                 const [user] = await Promise.all([fetchUserByRole(info._id)]);
+    //                 setUserData(user);
+    //             } catch (error) {
+    //                 toast.error("Failed to fetch user data.");
+    //             }
+    //         }
+    //     };
+    //
+    //     fetchUserData();
+    // }, [info._id]);
 
 
     return (

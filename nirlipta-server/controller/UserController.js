@@ -79,6 +79,19 @@ const getMonthlyGrowth = async (req, res) => {
     }
 };
 
+// Get count of users with the role 'student'
+const studentCount = async (req, res) => {
+    try {
+        // Count users with the role 'student'
+        const count = await User.countDocuments({ role: "student" });
+
+        res.status(200).json({ studentCount: count });
+    } catch (error) {
+        console.error("Error fetching student count:", error);
+        res.status(500).json({ message: "Error fetching student count", error });
+    }
+};
+
 
 // Get all users
 const getUsers = async (req, res) => {
@@ -263,4 +276,5 @@ module.exports = {
     deleteUser,
     getUserByRole,
     getMonthlyGrowth,
+    studentCount,
 };

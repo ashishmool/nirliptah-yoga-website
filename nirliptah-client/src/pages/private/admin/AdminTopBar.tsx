@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { AuthContext } from "@/context/AuthContext.tsx";
-import { fetchUserById } from "../../../backend/services/userService";
+import { fetchUserById } from "../../../services/userService.ts";
 // import ThemeToggle from "../../components/ThemeToggle"; // Import ThemeToggle
 import LightLogo from "../../../assets/logo-main.svg";
 import DarkLogo from "../../../assets/logo-white.svg";

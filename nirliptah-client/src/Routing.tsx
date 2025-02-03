@@ -9,9 +9,6 @@ import {
     Contact,
 } from "@/pages";
 import AdminDashboard from "@/pages/private/admin/AdminDashboard.tsx";
-import AddAccommodation from "@/pages/private/admin/accommodation/AddAccommodation.tsx";
-import ListAccommodation from "@/pages/private/admin/accommodation/ListAccommodation.tsx";
-import UpdateAccommodation from "@/pages/private/admin/accommodation/UpdateAccommodation.tsx";
 import ListUsers from "@/pages/private/admin/user/ListUsers.tsx";
 import AddUser from "@/pages/private/admin/user/AddUser.tsx";
 import UpdateUser from "@/pages/private/admin/user/UpdateUser.tsx";
@@ -44,20 +41,11 @@ export default function Routing() {
             <Route path="workshops/" element={<Workshops />} />
             <Route path="contact" element={<Contact />} />
 
-
-
             {/* Admin Routes */}
             {isAdmin() ? (
                 <Route path="admin" element={<AdminDashboard />}>
 
                     <Route path="home" element={<AdminHome />} />
-
-
-                    {/* Accommodation Routes */}
-                    <Route path="accommodations" element={<ListAccommodation />} />
-                    <Route path="accommodations/add" element={<AddAccommodation />} />
-                    <Route path="accommodations/update/:id" element={<UpdateAccommodation />} />
-
 
                     {/* Workshop Routes */}
                     <Route path="workshops" element={<ListWorkshops />} />

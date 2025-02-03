@@ -4,60 +4,31 @@ import Signup from "@/pages/auth/Signup.tsx";
 import Login from "@/pages/auth/Login.tsx";
 import { UserInfoContext } from "@/context/UserInfoContext.tsx";
 import { AuthContext } from "@/context/AuthContext.tsx";
-import axios from "axios";
 import {toast} from "sonner";
+import {fetchUserCount} from "@/services/userService.ts";
+import {fetchWorkshopCategories, fetchWorkshops} from "@/services/workshopService.ts";
 
-const API_BASE_URL_CATEGORIES = "http://localhost:5000/api/workshop-categories";  // Your retreats API URL
-const API_BASE_URL_WORKSHOPS = "http://localhost:5000/api/workshops"; // Your workshops API URL
 
 const Journey: React.FC = () => {
     const { isLoggedIn } = useContext(UserInfoContext);
     const [showLoginModal, setShowLoginModal] = useState(false);
     const { info, setInfo } = useContext(AuthContext);
 
-    const [workshopCategories, setWorkshopCategories] = useState<any[]>([]);
+    const [categories, setCategories] = useState<any[]>([]);
     const [workshops, setWorkshops] = useState<any[]>([]);
     const [users, setUsers] = useState<any[]>([]);
 
-    // Fetch Users
-    const fetchStudents = async () => {
-        try {
-            const response = await axios.get("http://localhost:5000/api/users");
-            const studentList = response.data.filter(user => user.role === "student");
-            setUsers(studentList);
-        } catch (error) {
-            console.error("Error fetching students", error);
-            toast.error("Failed to fetch students.");
-        }
-    };
 
-    // Fetch retreats
-    const fetchWorkshopCategories = async () => {
-        try {
-            const response = await axios.get(API_BASE_URL_CATEGORIES);
-            const data = response.data || [];
-            setWorkshopCategories(data);
-        } catch (error) {
-            console.error("Error fetching categoires:", error);
-        }
-    };
 
-    // Fetch workshops
-    const fetchWorkshops = async () => {
-        try {
-            const response = await axios.get(API_BASE_URL_WORKSHOPS);
-            setWorkshops(response.data);
-        } catch (error) {
-            console.error("Error fetching workshops:", error);
-        }
-    };
-
-    // Fetch data on component mount
     useEffect(() => {
-        fetchWorkshopCategories();
-        fetchWorkshops();
-        fetchStudents();
+        fetchUserCount(setUsers);
+        fetchWorkshopCategories(setCategories);
+        fetchWorkshops(setWorkshops);
+        console.log("Student Count API::::",users );
+        console.log("Workshop API::::",workshops );
+        console.log("Workshop Categories API::::",categories);
     }, []);
+
 
     // Conditional button to show Signup if info.email and info.role are valid
     const authButton = useMemo(() => {
@@ -71,7 +42,7 @@ const Journey: React.FC = () => {
     const cards = [
         {
             title: "Community Members",
-            quantity: users.length, // Remove admin
+            quantity: users.studentCount, // Remove admin
             bgColor: "bg-[#B8978C]",
             textColor: "text-white",
         },
@@ -83,7 +54,7 @@ const Journey: React.FC = () => {
         },
         {
             title: "Categories",
-            quantity: workshopCategories.length, // Dynamically showing the number of workshop categories
+            quantity: categories.length, // Dynamically showing the number of workshop categories
             bgColor: "bg-[#A38F85]",
             textColor: "text-white",
         },

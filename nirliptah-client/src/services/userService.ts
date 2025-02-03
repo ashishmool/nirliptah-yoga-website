@@ -13,6 +13,17 @@ export const fetchUsers = async (setUsers: React.Dispatch<React.SetStateAction<a
         toast.error("Error fetching users!");
         console.error("Error fetching users:", error);
     }
+}
+
+export const fetchUserCount = async (setUsers: React.Dispatch<React.SetStateAction<any[]>>) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/user-count`);
+        const data = response.data || [];
+        setUsers(data);
+    } catch (error) {
+        toast.error("Error fetching users!");
+        console.error("Error fetching users:", error);
+    }
 };
 
 // Fetch user by ID

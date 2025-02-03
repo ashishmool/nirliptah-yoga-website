@@ -9,11 +9,14 @@ const {
     patchUser,
     deleteUser,
     getUserByRole,
+    studentCount
 } = require("../controller/UserController");
 const { authenticateToken, authorizeRole, protect} = require("../security/Auth");
 
 // Get all users
 router.get("/", protect,authorizeRole("admin"), getUsers);
+
+router.get("/user-count", studentCount);
 
 // router.get('/role/:role', getUserByRole);
 
