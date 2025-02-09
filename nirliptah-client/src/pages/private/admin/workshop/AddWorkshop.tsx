@@ -123,6 +123,7 @@ const AddWorkshop: React.FC = () => {
         setLoading(true);
 
         const formDataObj = new FormData();
+
         Object.entries(formData).forEach(([key, value]) => {
             if (key === "modules") {
                 value.forEach((module: any, index: number) => {

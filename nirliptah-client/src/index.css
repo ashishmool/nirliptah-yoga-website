@@ -85,3 +85,25 @@
     background-color: #111;
   }
 }
+
+@layer components {
+  .badge-primary {
+    --tw-border-opacity: 1;
+    border-color: rgba(155, 103, 99, var(--tw-border-opacity)); /* #9B6763 */
+    --tw-bg-opacity: 1;
+    background-color: rgba(155, 103, 99, var(--tw-bg-opacity)); /* #9B6763 */
+    --tw-text-opacity: 1;
+    color: #fff; /* Change if needed */
+  }
+
+  .badge-secondary {
+    --tw-border-opacity: 1;
+    border-color: rgba(163, 143, 133, var(--tw-border-opacity)); /* #A38F85 */
+    --tw-bg-opacity: 1;
+    background-color: rgba(163, 143, 133, var(--tw-bg-opacity)); /* #A38F85 */
+    --tw-text-opacity: 1;
+    color: #fff; /* Change if needed */
+  }
+}
+
+

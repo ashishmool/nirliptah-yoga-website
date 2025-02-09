@@ -15,6 +15,7 @@ const { authenticateToken, authorizeRole, protect} = require("../security/Auth")
 
 // Get all users
 router.get("/", protect,authorizeRole("admin"), getUsers);
+// router.get("/", getUsers);
 
 router.get("/user-count", studentCount);
 

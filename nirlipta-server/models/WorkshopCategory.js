@@ -12,6 +12,9 @@ const workshopCategorySchema = new mongoose.Schema(
             type: String,
             trim: true,
         },
+        photo: {
+            type: String,
+        },
     },
     { timestamps: true }
 );

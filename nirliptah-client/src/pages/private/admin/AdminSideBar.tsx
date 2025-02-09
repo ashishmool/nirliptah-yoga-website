@@ -6,11 +6,12 @@ import {FaBookBookmark, FaCreditCard, FaUserClock} from "react-icons/fa6";
 const sidelinks = [
     { title: "Dashboard", href: "/admin/home", icon: <FaHome /> },
     { title: "Workshops", href: "/admin/workshops", icon: <FaHammer /> },
-    { title: "Schedules", href: "/admin/schedules", icon: <FaUserClock /> },
+    { title: "Categories", href: "/admin/categories", icon: <FaSuitcase /> },
+    // { title: "Schedules", href: "/admin/schedules", icon: <FaUserClock /> },
 
     { title: "Users", href: "/admin/users", icon: <FaUsers /> },
 
-    { title: "Bookings", href: "/admin/bookings", icon: <FaBookBookmark /> },
+    { title: "Enrollments", href: "/admin/enrollments", icon: <FaBookBookmark /> },
     { title: "Payments", href: "/admin/payments", icon: <FaCreditCard /> },
 
 ];

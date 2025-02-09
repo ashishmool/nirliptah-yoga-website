@@ -1,16 +1,25 @@
 const Enrollment = require("../models/Enrollment");
 const User = require("../models/User");
 
+
+
 // Get all enrollments
 const getAllEnrollments = async (req, res) => {
     try {
+        console.log("GET /api/enrollments");
         const enrollments = await Enrollment.find()
-            .populate("user_id course_id schedule_id retreat_id"); // Populate related collections
-        res.json(enrollments);
+            .populate("user_id workshop_id"); // Populate related collections
+
+        res.json({
+            enrollments,
+            count: enrollments.length
+        });
     } catch (error) {
         res.status(500).json({ message: "Error fetching enrollments", error });
     }
 };
+
+
 
 // Get enrollment by ID
 const getEnrollmentById = async (req, res) => {
@@ -143,6 +152,58 @@ const deleteEnrollment = async (req, res) => {
     }
 };
 
+// Get enrollments by user ID
+const getEnrollmentByUserId = async (req, res) => {
+    try {
+        const { user_id } = req.params;
+        console.log(user_id);
+
+        // Validate user_id
+        if (!user_id) {
+            return res.status(400).json({ message: "User ID is required." });
+        }
+
+        // Find enrollments for the given user ID
+        const enrollments = await Enrollment.find({ user_id })
+            .populate("workshop_id"); // Populate related collections
+
+        if (!enrollments.length) {
+            return res.status(404).json({ message: "No enrollments found for this user." });
+        }
+
+        res.json(enrollments);
+    } catch (error) {
+        console.error("Error fetching enrollments by user ID:", error);
+        res.status(500).json({ message: "Error fetching enrollments", error });
+    }
+};
+
+// Update enrollment by ID (PATCH) - Partial Update
+const updateEnrollmentPatch = async (req, res) => {
+    try {
+        console.log("Reached Here");
+        const { id } = req.params;
+        const updateFields = req.body; // Only update fields provided in the request
+
+        // Find and update the enrollment with the provided fields
+        const updatedEnrollment = await Enrollment.findByIdAndUpdate(id, { $set: updateFields }, {
+            new: true, // Return the updated document
+            runValidators: true // Ensure validation rules are applied
+        });
+
+        if (!updatedEnrollment) {
+            return res.status(404).json({ message: "Enrollment not found" });
+        }
+
+        res.json({ message: "Enrollment updated successfully", updatedEnrollment });
+    } catch (error) {
+        console.error("Error updating enrollment (PATCH):", error);
+        res.status(500).json({ message: "Error updating enrollment", error });
+    }
+};
+
+
+
 module.exports = {
     getAllEnrollments,
     getEnrollmentById,
@@ -150,4 +211,6 @@ module.exports = {
     updateEnrollment,
     deleteEnrollment,
     checkEnrollmentStatus, // Added the new method here
+    getEnrollmentByUserId,
+    updateEnrollmentPatch,
 };

@@ -74,12 +74,16 @@ export default function ContactForm() {
                 <div className="grid md:grid-cols-2 gap-12">
                     {/* Map */}
                     <div className="w-full h-[400px] rounded-md border">
-                        <iframe
-                            title="Google Map"
-                            // src="https://maps.google.com/maps?q=Australia&t=&z=13&ie=UTF8&iwloc=&output=embed"
-                            className="w-full h-full rounded-md"
-                            loading="lazy"
-                        ></iframe>
+                        {/*// Future API Integration*/}
+                        {/*<iframe*/}
+                        {/*    title="Google Map"*/}
+                        {/*    // src="https://maps.google.com/maps?q=Australia&t=&z=13&ie=UTF8&iwloc=&output=embed"*/}
+                        {/*    className="w-full h-full rounded-md"*/}
+                        {/*    loading="lazy"*/}
+                        {/*></iframe>*/}
+
+                        <img src={"src/assets/map-dummy-image.png"} alt={"google-map"}/>
+
                     </div>
 
                     {/* Contact Form */}

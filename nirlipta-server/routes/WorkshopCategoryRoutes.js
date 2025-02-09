@@ -7,6 +7,8 @@ const {
     updateWorkshopCategory,
     deleteWorkshopCategory
 } = require("../controller/WorkshopCategoryController");
+const {protect} = require("../security/Auth");
+const {upload} = require("../config/multerConfig");
 
 // Get all workshop categories
 router.get("/", getWorkshopCategories);
@@ -15,12 +17,12 @@ router.get("/", getWorkshopCategories);
 router.get("/:id", getWorkshopCategoryById);
 
 // Create a new workshop category
-router.post("/save", createWorkshopCategory);
+router.post("/save",upload, createWorkshopCategory);
 
 // Update workshop category by ID
-router.put("/update/:id", updateWorkshopCategory);
+router.put("/update/:id", protect, updateWorkshopCategory);
 
 // Delete workshop category by ID
-router.delete("/delete/:id", deleteWorkshopCategory);
+router.delete("/delete/:id", protect, deleteWorkshopCategory);
 
 module.exports = router;

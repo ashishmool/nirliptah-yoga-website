@@ -22,6 +22,10 @@ import AdminHome from "@/pages/private/admin/AdminHome.tsx";
 import Workshops from "@/pages/public/workshop/Workshops.tsx";
 import ListSchedule from "@/pages/private/admin/schedule/ListSchedules.tsx";
 import AddSchedule from "@/pages/private/admin/schedule/AddSchedule.tsx";
+import ListCategories from "@/pages/private/admin/category/ListCategories.tsx";
+import AddCategory from "@/pages/private/admin/category/AddCategory.tsx";
+import ListEnrollments from "@/pages/private/admin/enrollment/ListEnrollments.tsx";
+import MyEnrollments from "@/pages/private/student/MyEnrollments.tsx";
 
 // Helper functions for role-based access
 const isAdmin = () => localStorage.getItem("role") === "admin";
@@ -40,12 +44,20 @@ export default function Routing() {
             <Route path="workshops/:id" element={<SingleWorkshop />} />
             <Route path="workshops/" element={<Workshops />} />
             <Route path="contact" element={<Contact />} />
+            <Route path="my-enrollments" element={<MyEnrollments />} />
 
             {/* Admin Routes */}
             {isAdmin() ? (
                 <Route path="admin" element={<AdminDashboard />}>
 
                     <Route path="home" element={<AdminHome />} />
+
+                    {/* Enrollments Routes */}
+                    <Route path="enrollments" element={<ListEnrollments />} />
+
+                    {/* Categories Routes */}
+                    <Route path="categories" element={<ListCategories />} />
+                    <Route path="categories/add" element={<AddCategory />} />
 
                     {/* Workshop Routes */}
                     <Route path="workshops" element={<ListWorkshops />} />

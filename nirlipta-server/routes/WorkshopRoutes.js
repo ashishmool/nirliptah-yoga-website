@@ -8,11 +8,12 @@ const {
     updateWorkshop,
     deleteWorkshop,
 } = require("../controller/WorkshopController");
+const {protect} = require("../security/Auth");
 
 router.get("/", getAllWorkshops);
 router.get("/:id", getWorkshopById);
 router.post("/save", upload, createWorkshop);
-router.put("/update/:id", upload, updateWorkshop);
-router.delete("/delete/:id", deleteWorkshop);
+router.put("/update/:id",protect, upload, updateWorkshop);
+router.delete("/delete/:id", protect, deleteWorkshop);
 
 module.exports = router;

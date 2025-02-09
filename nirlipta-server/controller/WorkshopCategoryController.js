@@ -3,6 +3,7 @@ const WorkshopCategory = require("../models/WorkshopCategory");
 // Get all workshop categories
 const getWorkshopCategories = async (req, res) => {
     try {
+        console.log("GET /api/categories");
         const categories = await WorkshopCategory.find();
         res.json(categories);
     } catch (error) {
@@ -26,6 +27,9 @@ const getWorkshopCategoryById = async (req, res) => {
 
 // Create a new workshop category
 const createWorkshopCategory = async (req, res) => {
+    if (!req.files || !req.files.category_photo) {
+        return res.status(400).json({ message: "Category photo is required" });
+    }
     try {
         const { name, description } = req.body;
 
@@ -34,10 +38,13 @@ const createWorkshopCategory = async (req, res) => {
             return res.status(400).json({ message: "Category name is required" });
         }
 
+
+
         // Create a new category document
         const newCategory = new WorkshopCategory({
             name,
             description,
+            photo: `/uploads/category_photos/${req.files.category_photo[0].filename}`,
         });
 
         // Save to the database

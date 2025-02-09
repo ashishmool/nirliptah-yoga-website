@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import { FaMale, FaFemale, FaTransgenderAlt } from "react-icons/fa";
 import axios from "axios";
 import Pagination from "../../../components/Pagination"; // Adjust the import path as needed
-import { toast } from "sonner"; // For toast notifications
+import { toast } from "sonner";
+import {deleteUser, fetchUsers} from "@/services/userService.ts"; // For toast notifications
 
 const ListUsers: React.FC = () => {
     const [users, setUsers] = useState<any[]>([]);
@@ -14,22 +15,19 @@ const ListUsers: React.FC = () => {
     const ITEMS_PER_PAGE = 10;
 
     useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const response = await axios.get("http://localhost:5000/api/users");
-                setUsers(response.data);
-                setFilteredUsers(response.data);
-                console.log("Fetched Users Data::: ", response.data);
-            } catch (error) {
-                console.error("Error fetching users:", error);
-                alert("Error loading users.");
-            } finally {
+        setLoading(true);
+        fetchUsers()
+            .then((data) => {
+                setUsers(data);
                 setLoading(false);
-            }
-        };
-
-        fetchUsers();
+            })
+            .catch((error) => {
+                console.error("Error fetching users:", error);
+                setLoading(false);
+            });
     }, []);
+
+
 
     useEffect(() => {
         const filtered = users.filter((user) =>
@@ -47,14 +45,20 @@ const ListUsers: React.FC = () => {
         if (!window.confirm("Are you sure you want to delete this user?")) return;
 
         try {
-            await axios.delete(`http://localhost:5000/api/users/delete/${userId}`);
-            setUsers(users.filter((user) => user._id !== userId));
+            await deleteUser(userId); // Ensure this function properly resolves
             toast.success("User deleted successfully.");
+
+            // Re-fetch users to update the list
+            const updatedUsers = await fetchUsers();
+            setUsers(updatedUsers);
         } catch (error) {
             console.error("Error deleting user:", error);
             toast.error("Failed to delete user.");
         }
     };
+
+
+
 
 
 

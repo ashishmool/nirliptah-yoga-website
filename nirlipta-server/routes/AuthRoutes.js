@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { login, register, registerMobile, resetPasswordRequest, resetPassword, validateSession, uploadImage} = require("../controller/AuthController");
 const { authenticateToken, authorizeRole} = require("../security/Auth");
-const upload = require("../config/mobileUploads");
+const upload = require("../config/fileUploads");
 
 router.post("/login", login);
 router.post("/register", register);

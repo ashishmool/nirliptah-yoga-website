@@ -2,18 +2,24 @@ import axios from "axios";
 import { toast } from "sonner";
 
 const API_BASE_URL = "http://localhost:5000/api/users"; // Backend base URL
+const TOKEN = localStorage.getItem('token'); // Token
 
-// Fetch all users
-export const fetchUsers = async (setUsers: React.Dispatch<React.SetStateAction<any[]>>) => {
+// Fetch all users with Authorization header
+export const fetchUsers = async (): Promise<any[]> => {
     try {
-        const response = await axios.get(API_BASE_URL);
-        const data = response.data || [];
-        setUsers(data);
+        const response = await axios.get(API_BASE_URL, {
+            headers: {
+                Authorization: `Bearer ${TOKEN}`,
+            },
+        });
+        return response.data || []; // Ensure an array is always returned
     } catch (error) {
         toast.error("Error fetching users!");
         console.error("Error fetching users:", error);
+        return []; // Return an empty array in case of error
     }
-}
+};
+
 
 export const fetchUserCount = async (setUsers: React.Dispatch<React.SetStateAction<any[]>>) => {
     try {
@@ -115,7 +121,12 @@ export const deleteUser = async (
     setUsers: React.Dispatch<React.SetStateAction<any[]>>
 ) => {
     try {
-        await axios.delete(`${API_BASE_URL}/delete/${id}`);
+        const token = localStorage.getItem('token'); // Get token dynamically
+        await axios.delete(`${API_BASE_URL}/delete/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
         toast.success("User deleted successfully!");
         setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
     } catch (error) {
@@ -123,3 +134,4 @@ export const deleteUser = async (
         console.error("Error deleting user:", error);
     }
 };
+
