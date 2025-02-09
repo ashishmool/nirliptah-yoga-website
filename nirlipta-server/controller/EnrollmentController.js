@@ -2,6 +2,11 @@ const Enrollment = require("../models/Enrollment");
 const User = require("../models/User");
 const Workshop = require("../models/Workshop");
 const Schedule = require("../models/Schedule");
+const nodemailer = require("nodemailer");
+const generateCertificate = require("../config/generateCertificate");
+const path = require("path");
+
+
 
 // Get all enrollments
 const getAllEnrollments = async (req, res) => {
@@ -17,6 +22,75 @@ const getAllEnrollments = async (req, res) => {
         res.status(500).json({ message: "Error fetching enrollments", error });
     }
 };
+
+
+// Generate Certificate
+const getCertificationByStatus = async (req, res) => {
+    try {
+        // Fetch all completed enrollments
+        const completedEnrollments = await Enrollment.find({ completion_status: "completed" })
+            .populate("user_id workshop_id");
+
+        if (!completedEnrollments.length) {
+            return res.status(404).json({ message: "No completed enrollments found." });
+        }
+
+        // Email transporter setup
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS,
+            },
+        });
+
+        // Process each completed enrollment
+        for (const enrollment of completedEnrollments) {
+            const { user_id, workshop_id } = enrollment;
+
+            // Generate PDF certificate using the new template
+            const pdfPath = await generateCertificate(user_id, workshop_id, enrollment._id);
+
+            const emailTemplate = `
+            <html>
+            <body style="font-family: Arial, sans-serif; text-align: center;">
+                <h2>Congratulations ${user_id.name}!</h2>
+                <p>You have successfully completed the workshop: <strong>${workshop_id.title}</strong></p>
+                <p>Your certificate is attached to this email.</p>
+            </body>
+            </html>`;
+
+            // Email options with attachment
+            const mailOptions = {
+                from: process.env.EMAIL_USER,
+                to: user_id.email,
+                subject: "Workshop Certification",
+                html: emailTemplate,
+                attachments: [
+                    {
+                        filename: `Certificate-${user_id.name}.pdf`,
+                        path: pdfPath,
+                        contentType: "application/pdf",
+                    },
+                ],
+            };
+
+            // Send email
+            await transporter.sendMail(mailOptions);
+        }
+
+        res.json({
+            message: "Certification emails with PDFs sent successfully",
+            count: completedEnrollments.length,
+        });
+    } catch (error) {
+        console.error("Error sending certification emails:", error);
+        res.status(500).json({ message: "Error sending certification emails", error });
+    }
+};
+
+
+
 
 // Get enrollment by ID
 const getEnrollmentById = async (req, res) => {
@@ -219,4 +293,5 @@ module.exports = {
     checkEnrollmentStatus,
     getEnrollmentByUserId,
     updateEnrollmentPatch,
+    getCertificationByStatus,
 };

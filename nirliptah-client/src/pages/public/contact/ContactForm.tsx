@@ -11,8 +11,7 @@ import { toast } from "sonner";
 import { LuSend } from "react-icons/lu";
 
 export default function ContactForm() {
-    // Update the page title
-    document.title = `Nirlipta Yoga | Contact Us`;
+
 
     const [username, setUsername] = useState<string>("");
     const [email, setEmail] = useState<string>("");

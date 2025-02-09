@@ -6,12 +6,15 @@ const {
     createEnrollment,
     updateEnrollment,
     deleteEnrollment,
-    checkEnrollmentStatus, getEnrollmentByUserId, updateEnrollmentPatch, // Add the check enrollment status controller here
+    checkEnrollmentStatus, getEnrollmentByUserId, updateEnrollmentPatch, getCertificationByStatus, // Add the check enrollment status controller here
 } = require("../controller/EnrollmentController");
 const {authorizeRole, protect} = require("../security/Auth");
 
 // Get all enrollments
 router.get("/", getAllEnrollments);
+
+// Get certification by Status
+router.get("/certification", getCertificationByStatus);
 
 // Get enrollment by ID
 router.get("/:id", getEnrollmentById);

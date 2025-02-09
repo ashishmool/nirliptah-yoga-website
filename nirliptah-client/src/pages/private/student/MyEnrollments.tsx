@@ -67,7 +67,28 @@ export default function MyEnrollments() {
                                 })}
                             </td>
                             <td className="px-4 py-2 text-sm font-medium text-gray-900">{enrollment.workshop_id?.title}</td>
-                            <td className="px-4 py-2 text-center text-sm text-gray-700">{enrollment.completion_status}</td>
+                            <td className="px-4 py-2 text-center text-sm text-gray-700">
+                                {enrollment.completion_status === "completed" ? (
+                                    <button
+                                        className="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600"
+                                        onClick={async () => {
+                                            try {
+                                                const response = await axios.get("http://localhost:5000/api/enrollments/certification", {
+                                                    headers: { Authorization: `Bearer ${token}` },
+                                                });
+                                                alert(response.data.message);
+                                            } catch (error) {
+                                                console.error("Error generating certificate:", error);
+                                                alert("Failed to generate certificate.");
+                                            }
+                                        }}
+                                    >
+                                        Generate Certificate
+                                    </button>
+                                ) : (
+                                    enrollment.completion_status
+                                )}
+                            </td>
                             <td className="px-4 py-2 text-center text-sm text-gray-700">{enrollment.payment_status}</td>
                         </tr>
                     ))}

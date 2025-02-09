@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/pages/components/ui/button.tsx";
 import { FaBars, FaTimes } from "react-icons/fa";
 // import { CgLogOut } from "react-icons/cg";
@@ -10,6 +10,9 @@ import { toast } from "sonner";
 import { useLoginModal } from '@/context/LoginModalContext';
 
 export default function MainNav() {
+
+    const location = useLocation();
+    const isHomePage = location.pathname === "/";
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const { info, setInfo } = useContext(AuthContext);
@@ -29,6 +32,8 @@ export default function MainNav() {
             window.scrollTo({ top: yPosition, behavior: "smooth" });
         }
     };
+
+    const navigate = useNavigate();
 
     return (
         <div className="fixed min-w-full z-50">
@@ -55,18 +60,45 @@ export default function MainNav() {
 
                     {/* Main Menu (centered) */}
                     <div className={`lg:flex lg:items-center ${isMobileMenuOpen ? "block" : "hidden"} lg:mx-auto`}>
+
                         <div className="flex-6 flex-col lg:flex-row lg:items-center space-y-4 lg:space-y-0 lg:space-x-6">
+
                             {info?.role === "admin" && (
                                 <Link to="/admin/home" className="text-gray-800 hover:text-[#9B6763] text-base font-medium">
                                     Dashboard
                                 </Link>
                             )}
-                            <button onClick={() => handleScrollToSection("workshops")} className="text-gray-800 hover:text-[#9B6763] text-base font-medium">
-                                Workshops
-                            </button>
-                            <button onClick={() => handleScrollToSection("contact-us")} className="text-gray-800 hover:text-[#9B6763] text-base font-medium">
-                                Contact
-                            </button>
+
+
+                            {info?.role === "student" && (
+                                <>
+                                    <Link to="/update-profile" onClick={() => document.activeElement?.blur()}>
+                                        Update Profile
+                                    </Link>
+
+                                    <Link to="/my-enrollments" onClick={() => document.activeElement?.blur()}>
+                                        My Enrollments
+                                    </Link>
+                                </>
+                            )}
+
+
+
+
+
+
+                            {/* Show only if on Home Page ("/") */}
+                            {isHomePage && (
+                                <>
+                                    <button onClick={() => handleScrollToSection("workshops")} className="text-gray-800 hover:text-[#9B6763] text-base font-medium">
+                                        Workshops
+                                    </button>
+                                    <button onClick={() => handleScrollToSection("contact-us")} className="text-gray-800 hover:text-[#9B6763] text-base font-medium">
+                                        Contact
+                                    </button>
+                                </>
+                            )}
+
 
                         </div>
                     </div>
@@ -102,16 +134,7 @@ export default function MainNav() {
                                     tabIndex={0}
                                     className="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 w-52 p-2 shadow"
                                 >
-                                    <li>
-                                        <Link to="/my-profile" onClick={() => document.activeElement?.blur()}>
-                                            Update Profile
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link to="/my-enrollments" onClick={() => document.activeElement?.blur()}>
-                                            My Enrollments
-                                        </Link>
-                                    </li>
+
                                     {info?.email && (
                                         <li>
                                             <button
@@ -119,6 +142,7 @@ export default function MainNav() {
                                                     localStorage.clear();
                                                     setInfo({ email: "", role: "" });
                                                     toast.success("Logged Out Successfully!");
+                                                    navigate('/');
                                                     document.activeElement?.blur(); // Close dropdown
                                                 }}
                                                 className="text-red-500"

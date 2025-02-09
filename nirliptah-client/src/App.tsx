@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter, useLocation } from "react-router-dom";
 
-// SVG Background
-import BackgroundSvg from "@/assets/bg.svg";
 
 // SERVICES
 import { checkSession } from "@/backend/services/auth/checkSession";

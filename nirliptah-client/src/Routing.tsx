@@ -1,4 +1,6 @@
+
 import { Routes, Route, Navigate } from "react-router-dom";
+
 
 // PAGES
 import {
@@ -27,12 +29,20 @@ import AddCategory from "@/pages/private/admin/category/AddCategory.tsx";
 import ListEnrollments from "@/pages/private/admin/enrollment/ListEnrollments.tsx";
 import MyEnrollments from "@/pages/private/student/MyEnrollments.tsx";
 import UpdateCategory from "@/pages/private/admin/category/UpdateCategory.tsx";
+import UpdateProfile from "@/pages/private/UpdateProfile.tsx";
 
 // Helper functions for role-based access
 const isAdmin = () => localStorage.getItem("role") === "admin";
 const isStudent = () => localStorage.getItem("role") === "student";
 
 export default function Routing() {
+
+    const token = localStorage.getItem('token');
+
+    // Check if user is logged in
+    const isLoggedIn = !!token;
+
+
     return (
         <Routes>
             {/* Public Routes */}
@@ -45,7 +55,16 @@ export default function Routing() {
             <Route path="workshops/:id" element={<SingleWorkshop />} />
             <Route path="workshops/" element={<Workshops />} />
             <Route path="contact" element={<Contact />} />
-            <Route path="my-enrollments" element={<MyEnrollments />} />
+            {/* Protected Routes */}
+            <Route
+                path="my-enrollments"
+                element={isLoggedIn ? <MyEnrollments /> : <Navigate to="/error" />}
+            />
+            <Route
+                path="update-profile"
+                element={isLoggedIn ? <UpdateProfile userId={localStorage.getItem("user_id") || ""} /> : <Navigate to="/error" />}
+            />
+
 
 
             {/* Admin Routes */}
