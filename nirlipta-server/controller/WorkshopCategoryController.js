@@ -55,24 +55,39 @@ const createWorkshopCategory = async (req, res) => {
         res.status(500).json({ message: "Error creating category", error });
     }
 };
-
-// Update workshop category by ID (PUT)
 const updateWorkshopCategory = async (req, res) => {
     try {
         const { id } = req.params;
 
-        // Update category document
-        const updatedCategory = await WorkshopCategory.findByIdAndUpdate(id, req.body, { new: true });
 
-        if (!updatedCategory) {
+        // Find the existing category
+        const category = await WorkshopCategory.findById(id);
+        if (!category) {
             return res.status(404).json({ message: "Workshop category not found" });
         }
 
+        console.log("Categories Update Debugging::: ",category);
+
+        // Update category fields
+        category.name = req.body.name || category.name;
+        category.description = req.body.description || category.description;
+
+
+
+        // If a new photo is uploaded, update the photo field
+        if (req.files && req.files.category_photo) {
+            category.photo = `/uploads/category_photos/${req.files.category_photo[0].filename}`;
+        }
+
+        // Save the updated category
+        const updatedCategory = await category.save();
         res.json(updatedCategory);
     } catch (error) {
+        console.error("Error updating category:", error);
         res.status(500).json({ message: "Error updating category", error });
     }
 };
+
 
 // Partially update workshop category by ID (PATCH)
 const patchWorkshopCategory = async (req, res) => {

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Pagination from "@/pages/components/Pagination.tsx";
+import {useEffect, useState} from "react";
 
-const MyEnrollments: React.FC = () => {
+export default function MyEnrollments() {
     const [enrollments, setEnrollments] = useState<any[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const ITEMS_PER_PAGE = 4;
@@ -18,10 +18,10 @@ const MyEnrollments: React.FC = () => {
 
             try {
                 const response = await axios.get(`http://localhost:5000/api/enrollments/user/${userId}`, {
-                    headers: { Authorization: `Bearer ${token}` }
+                    headers: {Authorization: `Bearer ${token}`}
                 });
                 setEnrollments(response.data || []);
-                console.log("Fetched Enrollments for user::",userId,"and enrollments:::",response.data);
+                console.log("Fetched Enrollments for user::", userId, "and enrollments:::", response.data);
             } catch (error) {
                 console.error("Error fetching user enrollments:", error);
             }
@@ -36,7 +36,7 @@ const MyEnrollments: React.FC = () => {
     );
 
     return (
-        <div className="max-w-5xl mx-auto p-6">
+        <div className="max-w-5xl mx-auto p-6 mt-24">
             <h1 className="text-2xl font-semibold text-center mb-6">My Enrollments</h1>
 
             {enrollments.length > 0 ? (
@@ -81,6 +81,4 @@ const MyEnrollments: React.FC = () => {
             )}
         </div>
     );
-};
-
-export default MyEnrollments;
+}

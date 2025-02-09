@@ -43,11 +43,7 @@ export default function Footer() {
 
     return (
         <footer
-            className="w-full text-white"
-            style={{
-                background: "url('src/assets/footer.svg') no-repeat center center",
-                backgroundSize: "cover",
-            }}
+            className="w-full text-white bg-cover bg-center bg-no-repeat bg-[url('/src/assets/footer.svg')]"
         >
             <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between px-4 md:px-6 py-24 mx-auto max-w-7xl space-y-12 lg:space-y-0">
                 {/* Left Section */}
@@ -88,7 +84,7 @@ export default function Footer() {
                                     onClick={scrollTopFunc}
                                     className="text-[#A38F85] hover:text-[#9B6763]"
                                     target="_blank"
-                                    to="https://github.com//ashishmool/emirates-elegance"
+                                    to="https://github.com/ashishmool/nirliptah-yoga-website.git"
                                 >
                                     <FaGithub className="h-7 w-7" />
                                 </Link>

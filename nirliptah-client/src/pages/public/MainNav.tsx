@@ -75,8 +75,6 @@ export default function MainNav() {
                     </div>
 
 
-
-                    {/* User Info and Avatar Section */}
                     {/* User Info and Avatar Section */}
                     <div className="flex items-center space-x-4">
                         {info?.email && (
@@ -102,13 +100,21 @@ export default function MainNav() {
                                         />
                                     </div>
                                 </button>
+                                {/* Dropdown Menu */}
                                 <ul
                                     tabIndex={0}
                                     className="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 w-52 p-2 shadow"
                                 >
-                                    <li><Link to="/my-profile">Profile</Link></li>
-                                    <li><Link to="/my-enrollments">My Enrollments</Link></li>
-                                    <li><Link to="/bookings">Bookings</Link></li>
+                                    <li>
+                                        <Link to="/my-profile" onClick={() => document.activeElement?.blur()}>
+                                            Update Profile
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link to="/my-enrollments" onClick={() => document.activeElement?.blur()}>
+                                            My Enrollments
+                                        </Link>
+                                    </li>
                                     {info?.email && (
                                         <li>
                                             <button
@@ -116,6 +122,7 @@ export default function MainNav() {
                                                     localStorage.clear();
                                                     setInfo({ email: "", role: "" });
                                                     toast.success("Logged Out Successfully!");
+                                                    document.activeElement?.blur(); // Close dropdown
                                                 }}
                                                 className="text-red-500"
                                             >
@@ -124,6 +131,7 @@ export default function MainNav() {
                                         </li>
                                     )}
                                 </ul>
+
                             </div>
                         )}
 

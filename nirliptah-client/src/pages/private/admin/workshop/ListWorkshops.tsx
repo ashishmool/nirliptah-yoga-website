@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import Pagination from "../../../components/Pagination";
-import {FaUserClock} from "react-icons/fa6"; // Adjust the import path as needed
+import {FaUserClock, FaUsersGear} from "react-icons/fa6"; // Adjust the import path as needed
 
 const ListWorkshops: React.FC = () => {
     const [workshops, setWorkshops] = useState<any[]>([]);
@@ -117,6 +117,13 @@ const ListWorkshops: React.FC = () => {
                     >
                         <FaUserClock className="mr-2 mt-0.5"/>
                          List Schedules
+                    </Link>
+                    <Link
+                        to="/admin/categories"
+                        className="inline-flex py-2 px-4 bg-[#9B6763] text-white rounded-md hover:bg-[#B8998C]"
+                    >
+                        <FaUsersGear className="mr-2 mt-0.5"/>
+                        List Categories
                     </Link>
                 </div>
 

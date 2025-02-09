@@ -26,6 +26,7 @@ import ListCategories from "@/pages/private/admin/category/ListCategories.tsx";
 import AddCategory from "@/pages/private/admin/category/AddCategory.tsx";
 import ListEnrollments from "@/pages/private/admin/enrollment/ListEnrollments.tsx";
 import MyEnrollments from "@/pages/private/student/MyEnrollments.tsx";
+import UpdateCategory from "@/pages/private/admin/category/UpdateCategory.tsx";
 
 // Helper functions for role-based access
 const isAdmin = () => localStorage.getItem("role") === "admin";
@@ -46,6 +47,7 @@ export default function Routing() {
             <Route path="contact" element={<Contact />} />
             <Route path="my-enrollments" element={<MyEnrollments />} />
 
+
             {/* Admin Routes */}
             {isAdmin() ? (
                 <Route path="admin" element={<AdminDashboard />}>
@@ -58,6 +60,7 @@ export default function Routing() {
                     {/* Categories Routes */}
                     <Route path="categories" element={<ListCategories />} />
                     <Route path="categories/add" element={<AddCategory />} />
+                    <Route path="categories/update/:id" element={<UpdateCategory />} />
 
                     {/* Workshop Routes */}
                     <Route path="workshops" element={<ListWorkshops />} />
@@ -82,7 +85,7 @@ export default function Routing() {
             {/* Student Routes */}
             {isStudent() ? (
                 <Route path="student" element={<Home />}>
-                    {/* Add more student-specific routes here if needed */}
+
                 </Route>
             ) : (
                 <Route path="student/*" element={<Navigate to="/error" />} />
