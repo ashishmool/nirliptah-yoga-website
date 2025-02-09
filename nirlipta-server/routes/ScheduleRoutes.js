@@ -6,8 +6,7 @@ const {
     createSchedule,
     updateSchedule,
     deleteSchedule,
-    getByInstructor,
-    updateScheduleStatus,
+    updateScheduleStatus, getScheduleByUserId,
 } = require("../controller/ScheduleController");
 
 // Get all schedules
@@ -17,7 +16,7 @@ router.get("/", getAllSchedules);
 router.get("/:id", getScheduleById);
 
 // Get schedule by User
-router.get("/user/:id", getByInstructor);
+router.get("/user/:id", getScheduleByUserId);
 
 // Create a new schedule (only allowed for instructors or admins)
 router.post("/save", createSchedule);

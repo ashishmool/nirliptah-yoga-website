@@ -1,12 +1,11 @@
 const Enrollment = require("../models/Enrollment");
 const User = require("../models/User");
-
-
+const Workshop = require("../models/Workshop");
+const Schedule = require("../models/Schedule");
 
 // Get all enrollments
 const getAllEnrollments = async (req, res) => {
     try {
-        console.log("GET /api/enrollments");
         const enrollments = await Enrollment.find()
             .populate("user_id workshop_id"); // Populate related collections
 
@@ -19,14 +18,12 @@ const getAllEnrollments = async (req, res) => {
     }
 };
 
-
-
 // Get enrollment by ID
 const getEnrollmentById = async (req, res) => {
     try {
         const { id } = req.params;
         const enrollment = await Enrollment.findById(id)
-            .populate("user_id course_id schedule_id retreat_id");
+            .populate("user_id workshop_id");
         if (!enrollment) {
             return res.status(404).json({ message: "Enrollment not found" });
         }
@@ -39,48 +36,54 @@ const getEnrollmentById = async (req, res) => {
 // Create a new enrollment
 const createEnrollment = async (req, res) => {
     try {
-        const { user_id, workshop_id } = req.body; // Extract user_id and workshop_id from request body
+        const { user_id, workshop_id } = req.body;
 
         if (!user_id || !workshop_id) {
             return res.status(400).json({ message: "User ID and Workshop ID are required." });
         }
 
-        // Check if the user is already enrolled in the workshop
+        // Check if user exists
         const user = await User.findById(user_id);
-
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }
 
-        // Check if the user has already enrolled in this workshop
-        if (user.enrolled_workshops.includes(workshop_id)) {
-            return res.status(400).json({ message: "You have already enrolled in this workshop." });
+        // Check if workshop exists
+        const workshop = await Workshop.findById(workshop_id);
+        if (!workshop) {
+            return res.status(404).json({ message: "Workshop not found." });
         }
 
-        // Create a new enrollment record
+        // Check if a schedule exists for this workshop
+        const schedule = await Schedule.findOne({ workshop_id });
+        if (!schedule) {
+            return res.status(400).json({ message: "No schedule available for this workshop." });
+        }
+
+        // Check if user is already enrolled in this workshop
+        const existingEnrollment = await Enrollment.findOne({ user_id, workshop_id });
+        if (existingEnrollment) {
+            return res.status(400).json({ message: "User is already enrolled in this workshop." });
+        }
+
+        // Create the enrollment
         const enrollment = new Enrollment({
             user_id,
             workshop_id,
-            payment_status: "pending", // Set payment status to "pending"
+            payment_status: "pending",
         });
 
-        // Save the enrollment to the database
+        // Save enrollment
         await enrollment.save();
 
-        // Add the workshop to the user's enrolled workshops array
-        user.enrolled_workshops.push(workshop_id);
-
-        // Save the user document after adding the workshop to the enrolled_workshops array
-        await user.save();
-
-        // Respond with success message and enrollment data
         res.status(201).json({ message: "Enrollment created successfully", enrollment });
-
     } catch (error) {
         console.error("Error creating enrollment:", error);
         res.status(500).json({ message: "Error creating enrollment", error });
     }
 };
+
+
 
 // Check if a user is already enrolled in a specific workshop
 const checkEnrollmentStatus = async (req, res) => {
@@ -92,16 +95,9 @@ const checkEnrollmentStatus = async (req, res) => {
         }
 
         // Check if the user is enrolled in this specific workshop
-        const user = await User.findById(user_id);
+        const enrollment = await Enrollment.findOne({ user_id, workshop_id });
 
-        if (!user) {
-            return res.status(404).json({ message: "User not found." });
-        }
-
-        // Check if the user is already enrolled in the workshop
-        const isEnrolled = user.enrolled_workshops.includes(workshop_id);
-
-        res.json({ enrolled: isEnrolled });
+        res.json({ enrolled: !!enrollment });
     } catch (error) {
         console.error("Error checking enrollment status:", error);
         res.status(500).json({ message: "Error checking enrollment status", error });
@@ -114,14 +110,21 @@ const updateEnrollment = async (req, res) => {
         const { id } = req.params;
         const { user_id, workshop_id } = req.body;
 
-        // You can add checks for user and workshop before updating enrollment
+        // Check if the user exists
         const user = await User.findById(user_id);
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }
 
-        // Check if user is enrolled in the workshop already
-        if (user.enrolled_workshops.includes(workshop_id)) {
+        // Check if the workshop exists
+        const workshop = await Workshop.findById(workshop_id);
+        if (!workshop) {
+            return res.status(404).json({ message: "Workshop not found." });
+        }
+
+        // Check if the user is already enrolled in the workshop
+        const existingEnrollment = await Enrollment.findOne({ user_id, workshop_id });
+        if (existingEnrollment && existingEnrollment._id.toString() !== id) {
             return res.status(400).json({ message: "User is already enrolled in this workshop." });
         }
 
@@ -146,6 +149,14 @@ const deleteEnrollment = async (req, res) => {
         if (!deletedEnrollment) {
             return res.status(404).json({ message: "Enrollment not found" });
         }
+
+        // Remove the workshop from the user's enrolled workshops array
+        const user = await User.findById(deletedEnrollment.user_id);
+        if (user) {
+            user.enrolled_workshops = user.enrolled_workshops.filter(workshopId => workshopId.toString() !== deletedEnrollment.workshop_id.toString());
+            await user.save();
+        }
+
         res.json({ message: "Enrollment deleted successfully", deletedEnrollment });
     } catch (error) {
         res.status(500).json({ message: "Error deleting enrollment", error });
@@ -156,16 +167,13 @@ const deleteEnrollment = async (req, res) => {
 const getEnrollmentByUserId = async (req, res) => {
     try {
         const { user_id } = req.params;
-        console.log(user_id);
 
-        // Validate user_id
         if (!user_id) {
             return res.status(400).json({ message: "User ID is required." });
         }
 
-        // Find enrollments for the given user ID
         const enrollments = await Enrollment.find({ user_id })
-            .populate("workshop_id"); // Populate related collections
+            .populate("workshop_id", "title description date");
 
         if (!enrollments.length) {
             return res.status(404).json({ message: "No enrollments found for this user." });
@@ -178,10 +186,10 @@ const getEnrollmentByUserId = async (req, res) => {
     }
 };
 
+
 // Update enrollment by ID (PATCH) - Partial Update
 const updateEnrollmentPatch = async (req, res) => {
     try {
-        console.log("Reached Here");
         const { id } = req.params;
         const updateFields = req.body; // Only update fields provided in the request
 
@@ -202,15 +210,13 @@ const updateEnrollmentPatch = async (req, res) => {
     }
 };
 
-
-
 module.exports = {
     getAllEnrollments,
     getEnrollmentById,
     createEnrollment,
     updateEnrollment,
     deleteEnrollment,
-    checkEnrollmentStatus, // Added the new method here
+    checkEnrollmentStatus,
     getEnrollmentByUserId,
     updateEnrollmentPatch,
 };

@@ -17,21 +17,15 @@ const AddSchedule: React.FC = () => {
 
     const [loading, setLoading] = useState(false);
     const [workshops, setWorkshops] = useState([]);
-    const [instructors, setInstructors] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [workshopRes, instructorRes] = await Promise.all([
+                const [workshopRes] = await Promise.all([
                     axios.get("http://localhost:5000/api/workshops"),
-                    axios.get("http://localhost:5000/api/users"),
                 ]);
 
-                const instructors = instructorRes.data.filter(
-                    (user: any) => user.role === "instructor"
-                );
                 setWorkshops(workshopRes.data || []);
-                setInstructors(instructors);
             } catch (error) {
                 console.error("Error fetching data:", error);
                 toast.error("Failed to fetch initial data.");
@@ -67,7 +61,6 @@ const AddSchedule: React.FC = () => {
             for (const day of formData.days_of_week) {
                 const schedule = {
                     workshop_id: formData.workshop_id,
-                    instructor: formData.instructor_id,
                     days_of_week: [day], // Aligning with the schema
                     start_time: formData.start_time,
                     end_time: formData.end_time,
@@ -118,24 +111,6 @@ const AddSchedule: React.FC = () => {
                     </select>
                 </div>
 
-                <div>
-                    <label htmlFor="instructor_id" className="block text-sm font-medium text-gray-700">Instructor</label>
-                    <select
-                        id="instructor_id"
-                        name="instructor_id"
-                        value={formData.instructor_id}
-                        onChange={handleChange}
-                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm"
-                        required
-                    >
-                        <option value="">Select Instructor</option>
-                        {instructors.map((instructor: any) => (
-                            <option key={instructor._id} value={instructor._id}>
-                                {instructor.name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
 
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Days of the Week</label>

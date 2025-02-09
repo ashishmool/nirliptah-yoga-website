@@ -87,13 +87,13 @@ const ListEnrollments: React.FC = () => {
     const completionStatusOptions = ["not started", "in progress", "completed"];
 
     const completionStatusMap: Record<string, string> = {
-        "not started": "NS",
-        "in progress": "IP",
+        "not started": "Pending",
+        "in progress": "Progressing",
         "completed": "Completed"
     };
 
     const paymentStatusMap: Record<string, string> = {
-        "pending": "...",
+        "pending": "Pending",
         "paid": "Paid",
         "failed": "Failed"
     };

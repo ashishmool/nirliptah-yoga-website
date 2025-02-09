@@ -22,63 +22,6 @@ const getMonthName = (monthNumber) => {
 };
 
 
-// Get monthly growth data
-const getMonthlyGrowth = async (req, res) => {
-    try {
-        // Fetch all users and workshops grouped by month
-        const usersByMonth = await User.aggregate([
-            {
-                $group: {
-                    _id: { $month: "$createdAt" }, // Group by month of creation
-                    count: { $sum: 1 }, // Count users per month
-                },
-            },
-            {
-                $project: {
-                    month: "$_id", // Rename _id to month
-                    users: "$count", // Rename count to users
-                    _id: 0, // Exclude _id from the output
-                },
-            },
-            { $sort: { month: 1 } }, // Sort by month (1 = January, 2 = February, etc.)
-        ]);
-
-        const workshopsByMonth = await Workshop.aggregate([
-            {
-                $group: {
-                    _id: { $month: "$createdAt" }, // Group by month of creation
-                    count: { $sum: 1 }, // Count workshops per month
-                },
-            },
-            {
-                $project: {
-                    month: "$_id", // Rename _id to month
-                    workshops: "$count", // Rename count to workshops
-                    _id: 0, // Exclude _id from the output
-                },
-            },
-            { $sort: { month: 1 } }, // Sort by month (1 = January, 2 = February, etc.)
-        ]);
-
-        // Combine the data into a single array
-        const monthlyGrowth = usersByMonth.map((userMonth) => {
-            const workshopMonth = workshopsByMonth.find(
-                (workshop) => workshop.month === userMonth.month
-            );
-            return {
-                month: getMonthName(userMonth.month), // Convert month number to name
-                users: userMonth.users,
-                workshops: workshopMonth ? workshopMonth.workshops : 0,
-            };
-        });
-
-        res.status(200).json(monthlyGrowth);
-    } catch (error) {
-        console.error("Error fetching monthly growth data:", error);
-        res.status(500).json({ message: "Error fetching monthly growth data", error });
-    }
-};
-
 // Get count of users with the role 'student'
 const studentCount = async (req, res) => {
     try {
@@ -252,20 +195,35 @@ const getUserByRole = async (req, res) => {
     }
 };
 
-// // Get count of users by role
-// const getUsersCountByRole = async (req, res) => {
-//     try {
-//         const roleCounts = await User.aggregate([
-//             { $group: { _id: "$role", count: { $sum: 1 } } },
-//             { $project: { role: "$_id", count: 1, _id: 0 } },
-//         ]);
-//
-//         res.status(200).json(roleCounts);
-//     } catch (error) {
-//         console.error("Error fetching users count by role:", error);
-//         res.status(500).json({ message: "Error fetching users count by role", error });
-//     }
-// };
+const getUserWithEnrollments = async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        const user = await User.findById(userId).lean(); // Fetch user data
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Fetch enrollments and populate the workshop details
+        const enrollments = await Enrollment.find({ user_id: userId })
+            .populate("workshop_id", "name description date") // Select required fields
+            .lean();
+
+        // Extract workshop details from enrollments
+        const enrolledWorkshops = enrollments.map((enrollment) => enrollment.workshop_id);
+
+        res.json({
+            ...user,
+            enrolled_workshops: enrolledWorkshops, // Replace direct IDs with full workshop details
+        });
+    } catch (error) {
+        console.error("Error fetching user enrollments:", error);
+        res.status(500).json({ message: "Error fetching user enrollments", error });
+    }
+};
+
+
 
 module.exports = {
     getUsers,
@@ -275,6 +233,6 @@ module.exports = {
     patchUser,
     deleteUser,
     getUserByRole,
-    getMonthlyGrowth,
     studentCount,
+    getUserWithEnrollments,
 };

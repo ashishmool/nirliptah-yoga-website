@@ -62,12 +62,6 @@ const userSchema = new mongoose.Schema(
                 ref: "Workshop",
             },
         ],
-        booked_retreats: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "Retreat",
-            },
-        ],
         payments: [
             {
                 type: mongoose.Schema.Types.ObjectId,

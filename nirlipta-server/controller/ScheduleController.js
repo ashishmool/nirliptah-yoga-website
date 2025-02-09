@@ -1,4 +1,5 @@
 const Schedule = require("../models/Schedule");
+const Enrollment = require("../models/Enrollment");
 
 // Get all schedules
 const getAllSchedules = async (req, res) => {
@@ -67,21 +68,55 @@ const deleteSchedule = async (req, res) => {
     }
 };
 
-// Get schedules by instructor_id
-const getByInstructor = async (req, res) => {
+// Get schedules by user_id
+// const getByUser = async (req, res) => {
+//     try {
+//         const { user_id } = req.params; // Extract instructor_id from request params
+//         const schedules = await Schedule.find({ user_id }).populate("user_id workshop_id");
+//
+//         if (schedules.length === 0) {
+//             return res.status(404).json({ message: "No schedules found for this user" });
+//         }
+//
+//         res.json(schedules);
+//     } catch (error) {
+//         res.status(500).json({ message: "Error fetching schedules by user ID", error });
+//     }
+// };
+const getScheduleByUserId = async (req, res) => {
     try {
-        const { instructor_id } = req.params; // Extract instructor_id from request params
-        const schedules = await Schedule.find({ instructor_id }).populate("instructor workshop_id");
+        const { id } = req.params; // User ID
+        console.log("Received user ID:", id);
 
-        if (schedules.length === 0) {
-            return res.status(404).json({ message: "No schedules found for this instructor" });
+        if (!id) {
+            return res.status(400).json({ message: "User ID is required." });
+        }
+
+        // Step 1: Find enrollments for this user
+        const enrollments = await Enrollment.find({ user_id: id }).populate("workshop_id");
+        if (!enrollments.length) {
+            return res.status(404).json({ message: "No enrollments found for this user." });
+        }
+
+        // Step 2: Extract all workshop IDs from enrollments
+        const workshopIds = enrollments.map(enrollment => enrollment.workshop_id._id);
+
+        // Step 3: Find schedules for these workshops
+        const schedules = await Schedule.find({ workshop_id: { $in: workshopIds } })
+            .populate("workshop_id", "title description start_time end_time days_of_week");
+
+        if (!schedules.length) {
+            return res.status(404).json({ message: "No schedules found for this user's workshops." });
         }
 
         res.json(schedules);
     } catch (error) {
-        res.status(500).json({ message: "Error fetching schedules by instructor ID", error });
+        console.error("Error fetching schedules by user ID:", error);
+        res.status(500).json({ message: "Error fetching schedules", error });
     }
 };
+
+
 
 // Update schedule status by ID
 const updateScheduleStatus = async (req, res) => {
@@ -119,6 +154,6 @@ module.exports = {
     createSchedule,
     updateSchedule,
     deleteSchedule,
-    getByInstructor,
+    getScheduleByUserId,
     updateScheduleStatus,
 };

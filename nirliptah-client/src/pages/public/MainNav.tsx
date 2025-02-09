@@ -64,9 +64,6 @@ export default function MainNav() {
                             <button onClick={() => handleScrollToSection("workshops")} className="text-gray-800 hover:text-[#9B6763] text-base font-medium">
                                 Workshops
                             </button>
-                            <button onClick={() => handleScrollToSection("schedules")} className="text-gray-800 hover:text-[#9B6763] text-base font-medium">
-                                Schedules
-                            </button>
                             <button onClick={() => handleScrollToSection("contact-us")} className="text-gray-800 hover:text-[#9B6763] text-base font-medium">
                                 Contact
                             </button>

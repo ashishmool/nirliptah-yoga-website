@@ -1,14 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaHammer, FaHome, FaSuitcase, FaUsers } from "react-icons/fa";
-import {FaBookBookmark, FaCreditCard, FaUserClock} from "react-icons/fa6";
+import { FaHammer, FaHome, FaUsers } from "react-icons/fa";
+import {FaBookBookmark, FaCreditCard} from "react-icons/fa6";
 
 const sidelinks = [
     { title: "Dashboard", href: "/admin/home", icon: <FaHome /> },
     { title: "Workshops", href: "/admin/workshops", icon: <FaHammer /> },
-    { title: "Categories", href: "/admin/categories", icon: <FaSuitcase /> },
-    // { title: "Schedules", href: "/admin/schedules", icon: <FaUserClock /> },
-
     { title: "Users", href: "/admin/users", icon: <FaUsers /> },
 
     { title: "Enrollments", href: "/admin/enrollments", icon: <FaBookBookmark /> },
@@ -27,7 +24,7 @@ const AdminSidebar: React.FC = () => {
     return (
         <aside
             className={`bg-[#9B6763] text-white h-screen flex flex-col transition-all duration-300 ${
-                isCollapsed ? "w-16" : "w-64"
+                isCollapsed ? "w-16" : "w-48"
             }`}
             onClick={toggleSidebar} // Toggle sidebar on click
         >
