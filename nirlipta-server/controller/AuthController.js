@@ -16,7 +16,7 @@ const RESET_TOKEN_EXPIRY = "24h"; // Use string for time-based expiry with JWT
 // User Registration for Web
 const register = async (req, res) => {
     try {
-        const { name, email, role = "student" } = req.body;
+        const { username, email, phone, role = "student" } = req.body;
 
         // Check if email already exists
         const existingUser = await User.findOne({ email });
@@ -24,7 +24,7 @@ const register = async (req, res) => {
             return res.status(400).send({ message: "Email is already registered" });
         }
 
-        const user = new User({ name, email, role, status: "pending" });
+        const user = new User({ username, email, phone, role, status: "pending" });
         await user.save();
 
         const resetToken = jwt.sign({ user_id: user._id }, SECRET_KEY, { expiresIn: RESET_TOKEN_EXPIRY });

@@ -9,44 +9,49 @@ const generateCertificate = async (user, workshop, enrollmentId) => {
         const stream = fs.createWriteStream(pdfPath);
         doc.pipe(stream);
 
-        // Background and border
-        doc.rect(20, 20, doc.page.width - 40, doc.page.height - 40).stroke("#2c3e50"); // Border
+        // Background Image (Fixed & Centered)
+        const backgroundPath = path.join(__dirname, "../templates/certificate.png");
+        doc.image(backgroundPath, 0, 0, { width: doc.page.width, height: doc.page.height });
 
-        // Title
+        // Centering Helper
+        const pageWidth = doc.page.width;
+        const contentWidth = 500; // Keep all text inside this width
+        const startY = 160; // Start content lower to avoid logo overlap
+
+        // Title (Smaller & Centered)
         doc
             .font("Helvetica-Bold")
-            .fontSize(36)
+            .fontSize(28) // Smaller to fit in one line
             .fillColor("#2c3e50")
-            .text("Certificate of Completion", { align: "center" })
-            .moveDown(1);
+            .text("Certificate of Completion", (pageWidth - contentWidth) / 2, startY, { align: "center", width: contentWidth });
 
         // Recipient Name
         doc
             .font("Helvetica")
-            .fontSize(24)
-            .fillColor("#333")
-            .text(`This is to certify that`, { align: "center" })
-            .moveDown(0.5)
-            .font("Helvetica-Bold")
-            .fontSize(28)
-            .fillColor("#2980b9")
-            .text(user.name, { align: "center" })
-            .moveDown(0.5);
-
-        // Workshop details
-        doc
-            .font("Helvetica")
             .fontSize(20)
             .fillColor("#333")
-            .text(`has successfully completed the workshop:`, { align: "center" })
+            .text("This is to certify that", (pageWidth - contentWidth) / 2, doc.y + 20, { align: "center", width: contentWidth })
             .moveDown(0.5)
             .font("Helvetica-Bold")
-            .fontSize(24)
-            .fillColor("#16a085")
-            .text(workshop.title, { align: "center" })
+            .fontSize(26)
+            .fillColor("#A38F85")
+            .text(user.name, (pageWidth - contentWidth) / 2, doc.y, { align: "center", width: contentWidth })
+            .moveDown(0.5);
+
+        // Workshop details (Fixed Alignment)
+        doc
+            .font("Helvetica")
+            .fontSize(18)
+            .fillColor("#333")
+            .text("has successfully completed the workshop:", (pageWidth - contentWidth) / 2, doc.y, { align: "center", width: contentWidth })
+            .moveDown(0.5)
+            .font("Helvetica-Bold")
+            .fontSize(22)
+            .fillColor("#9B6763")
+            .text(workshop.title, (pageWidth - contentWidth) / 2, doc.y, { align: "center", width: contentWidth })
             .moveDown(1);
 
-        // Date
+        // Date (Fixed Position)
         const formattedDate = new Date().toLocaleDateString("en-GB", {
             day: "2-digit",
             month: "long",
@@ -57,30 +62,17 @@ const generateCertificate = async (user, workshop, enrollmentId) => {
             .font("Helvetica")
             .fontSize(16)
             .fillColor("#333")
-            .text(`Awarded on: ${formattedDate}`, { align: "center" })
+            .text(`Awarded on: ${formattedDate}`, (pageWidth - contentWidth) / 2, doc.y, { align: "center", width: contentWidth })
             .moveDown(1);
 
-        // "Awarded By" Text
+        // Signature (Fixed Alignment)
         doc
             .font("Helvetica-Bold")
             .fontSize(16)
-            .fillColor("#2c3e50")
-            .text("Awarded By", { align: "center" })
-            .moveDown(0.5);
-
-        // Logo Placement (AFTER "Awarded By")
-        const logoPath = path.join(__dirname, "../templates/logo.png");
-        doc.image(logoPath, doc.page.width / 2 - 50, doc.y, { width: 100 });
-        doc.moveDown(1);
-
-        // Signature
-        doc
-            .font("Helvetica-Bold")
-            .fontSize(16)
-            .fillColor("#2c3e50")
-            .text("_____________________", { align: "center" })
+            .fillColor("#B8978C")
+            .text("_____________________", (pageWidth - contentWidth) / 2, doc.y, { align: "center", width: contentWidth })
             .moveDown(0.2)
-            .text("Nirlipta Yoga", { align: "center" })
+            .text("Nirlipta Yoga", (pageWidth - contentWidth) / 2, doc.y, { align: "center", width: contentWidth });
 
         doc.end();
 

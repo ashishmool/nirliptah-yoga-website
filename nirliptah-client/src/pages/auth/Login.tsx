@@ -71,10 +71,14 @@ export default function Login({ onClose, onLoginSuccess }: LoginRegisterModalPro
             // Redirect based on role
             const roleRedirects: Record<string, string> = {
                 admin: "/admin/home",
+                student: "/",
             };
 
             // Check if role exists in roleRedirects and redirect, else do nothing
             if (role === "admin" && roleRedirects[role]) {
+                window.location.href = roleRedirects[role];
+            }
+            if (role === "student" && roleRedirects[role]) {
                 window.location.href = roleRedirects[role];
             }
             onClose();

@@ -16,6 +16,8 @@ import Loading from "@/pages/components/ui/loading.tsx";
 type FormDataTypes = {
     email: string;
     medical_conditions: string;
+    username: string;
+    phone: string;
 };
 
 export default function Signup({
@@ -28,6 +30,8 @@ export default function Signup({
     const schema = yup.object().shape({
         email: yup.string().email("Invalid email address").required("Email is required"),
         medical_conditions: yup.string(),
+        username: yup.string().required("Username is required"),
+        phone: yup.string().required("Phone is required"),
     });
 
     const {
@@ -56,6 +60,8 @@ export default function Signup({
         try {
             const response = await axios.post("http://localhost:5000/api/auth/register", {
                 email: data.email.toLowerCase(),
+                username: data.username.toLowerCase().trim(),
+                phone: data.phone,
                 medical_conditions: data.medical_conditions || "None",
                 role: "student",
             });
@@ -96,6 +102,45 @@ export default function Signup({
                         <p id="emailError" className="text-red-500 text-sm">{errors.email.message}</p>
                     )}
                 </div>
+                {/* Username and Phone Field */}
+                <div className="flex flex-col md:flex-row gap-4">
+                    {/* Username Field */}
+                    <div className="w-full md:w-1/2 space-y-2">
+                        <Label htmlFor="username-signup" className="font-bold text-black text-[15px]">
+                            Username
+                        </Label>
+                        <Input
+                            id="username-signup"
+                            type="text"
+                            placeholder="Username"
+                            {...register("username")}
+                            aria-describedby={errors.username ? "usernameError" : undefined}
+                            disabled={loading}
+                        />
+                        {errors.username && (
+                            <p id="usernameError" className="text-red-500 text-sm">{errors.username.message}</p>
+                        )}
+                    </div>
+
+                    {/* Phone Number Field */}
+                    <div className="w-full md:w-1/2 space-y-2">
+                        <Label htmlFor="phone-signup" className="font-bold text-black text-[15px]">
+                            Phone Number
+                        </Label>
+                        <Input
+                            id="phone-signup"
+                            type="tel"
+                            placeholder="Phone Number"
+                            {...register("phone")}
+                            aria-describedby={errors.phone ? "phoneError" : undefined}
+                            disabled={loading}
+                        />
+                        {errors.phone && (
+                            <p id="phoneError" className="text-red-500 text-sm">{errors.phone.message}</p>
+                        )}
+                    </div>
+                </div>
+
 
                 {/* Medical Conditions Field */}
                 <div className="space-y-2 mt-4">

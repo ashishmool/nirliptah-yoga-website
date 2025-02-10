@@ -71,6 +71,8 @@ const UpdateUser: React.FC = () => {
                 formDataPayload.append("user_photo", selectedImage);
             }
 
+
+
             await axios.put(`http://localhost:5000/api/users/update/${id}`, formDataPayload);
 
             toast.success("User updated successfully!");

@@ -70,22 +70,6 @@ export default function MainNav() {
                             )}
 
 
-                            {info?.role === "student" && (
-                                <>
-                                    <Link to="/update-profile" onClick={() => document.activeElement?.blur()}>
-                                        Update Profile
-                                    </Link>
-
-                                    <Link to="/my-enrollments" onClick={() => document.activeElement?.blur()}>
-                                        My Enrollments
-                                    </Link>
-                                </>
-                            )}
-
-
-
-
-
 
                             {/* Show only if on Home Page ("/") */}
                             {isHomePage && (
@@ -134,24 +118,38 @@ export default function MainNav() {
                                     tabIndex={0}
                                     className="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 w-52 p-2 shadow"
                                 >
-
                                     {info?.email && (
-                                        <li>
-                                            <button
-                                                onClick={() => {
-                                                    localStorage.clear();
-                                                    setInfo({ email: "", role: "" });
-                                                    toast.success("Logged Out Successfully!");
-                                                    navigate('/');
-                                                    document.activeElement?.blur(); // Close dropdown
-                                                }}
-                                                className="text-red-500"
-                                            >
-                                                Logout
-                                            </button>
-                                        </li>
+                                        <>
+                                            <li>
+                                                <Link to="/update-profile" onClick={() => document.activeElement?.blur()}>
+                                                    Update Profile
+                                                </Link>
+                                            </li>
+
+                                            <li>
+                                                <Link to="/my-enrollments" onClick={() => document.activeElement?.blur()}>
+                                                    My Enrollments
+                                                </Link>
+                                            </li>
+
+                                            <li>
+                                                <button
+                                                    onClick={() => {
+                                                        localStorage.clear();
+                                                        setInfo({ email: "", role: "" });
+                                                        toast.success("Logged Out Successfully!");
+                                                        window.location.href = "/";
+                                                        document.activeElement?.blur(); // Close dropdown
+                                                    }}
+                                                    className="text-red-500"
+                                                >
+                                                    Logout
+                                                </button>
+                                            </li>
+                                        </>
                                     )}
                                 </ul>
+
 
                             </div>
                         )}

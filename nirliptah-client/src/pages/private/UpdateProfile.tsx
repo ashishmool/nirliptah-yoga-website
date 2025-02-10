@@ -10,13 +10,19 @@ const UpdateProfile: React.FC = () => {
 
     const [formData, setFormData] = useState<{
         name: string;
+        email: string,
+        username: string,
         dob: string;
+        phone:" ",
         gender: string;
         medical_conditions: string;
         photo: string | null;
     }>({
         name: "",
+        username: "",
+        email: "",
         dob: "",
+        phone:" ",
         gender: "",
         medical_conditions: "",
         photo: null, // Ensure it's explicitly defined as null initially
@@ -40,6 +46,9 @@ const UpdateProfile: React.FC = () => {
 
                 setFormData({
                     name: response.data.name || "",
+                    email: response.data.email || "",
+                    username: response.data.username || "",
+                    phone: response.data.phone || "",
                     dob: formattedDob,
                     gender: response.data.gender || "",
                     medical_conditions: response.data.medical_conditions?.join(", ") || "",
@@ -69,10 +78,13 @@ const UpdateProfile: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-
+        console.log("Payload to Update::: ",formData);
         try {
             const formDataPayload = new FormData();
             formDataPayload.append("name", formData.name);
+            formDataPayload.append("username", formData.username);
+            formDataPayload.append("email", formData.email);
+            formDataPayload.append("phone", formData.phone);
             formDataPayload.append("dob", formData.dob);
             formDataPayload.append("gender", formData.gender);
             formDataPayload.append("medical_conditions", formData.medical_conditions);
@@ -81,12 +93,11 @@ const UpdateProfile: React.FC = () => {
                 formDataPayload.append("user_photo", selectedImage);
             }
 
-            await axios.put(
-                `http://localhost:5000/api/users/update/${id}`,
+            await axios.patch(
+                `http://localhost:5000/api/users/patch/${id}`,
                 formDataPayload,
                 {
                     headers: {
-                        'Content-Type': 'application/json',
                         Authorization: `Bearer ${token}`,
                     },
                 }
@@ -122,45 +133,98 @@ const UpdateProfile: React.FC = () => {
                         />
                     )}
 
-                    <div>
-                        <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
-                        <input
-                            id="name"
-                            name="name"
-                            type="text"
-                            value={formData.name}
-                            onChange={handleChange}
-                            className="mt-1 block w-full p-3 border border-gray-300 rounded-md"
-                        />
+                    <div className="space-y-4">
+                        {/* Row 1: Name, Email, Username */}
+                        <div className="flex gap-4">
+                            {/* Name */}
+                            <div className="w-1/3">
+                                <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
+                                <input
+                                    id="name"
+                                    name="name"
+                                    type="text"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    className="mt-1 block w-full p-3 border border-gray-300 rounded-md"
+                                />
+                            </div>
+
+                            {/* Email */}
+                            <div className="w-1/3">
+                                <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+                                <input
+                                    id="email"
+                                    name="email"
+                                    type="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    className="mt-1 block w-full p-3 border border-gray-300 text-sm text-gray-400 rounded-md"
+                                    disabled={true}
+                                />
+                            </div>
+
+                            {/* Username */}
+                            <div className="w-1/3">
+                                <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
+                                <input
+                                    id="username"
+                                    name="username"
+                                    type="text"
+                                    value={formData.username}
+                                    onChange={handleChange}
+                                    className="mt-1 block w-full p-3 border border-gray-300 text-sm text-gray-400 rounded-md"
+                                    disabled={true}
+                                />
+                            </div>
+                        </div>
+
+                        {/* Row 2: Date of Birth, Gender, Phone */}
+                        <div className="flex gap-4">
+                            {/* Date of Birth */}
+                            <div className="w-1/3">
+                                <label htmlFor="dob" className="block text-sm font-medium text-gray-700">Date of Birth</label>
+                                <input
+                                    id="dob"
+                                    name="dob"
+                                    type="date"
+                                    value={formData.dob}
+                                    onChange={handleChange}
+                                    className="mt-1 block w-full p-3 border border-gray-300 rounded-md"
+                                />
+                            </div>
+
+                            {/* Gender */}
+                            <div className="w-1/3">
+                                <label htmlFor="gender" className="block text-sm font-medium text-gray-700">Gender</label>
+                                <select
+                                    id="gender"
+                                    name="gender"
+                                    value={formData.gender}
+                                    onChange={handleChange}
+                                    className="mt-1 block w-full p-3 border border-gray-300 rounded-md"
+                                >
+                                    <option value="">Select Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+
+                            {/* Phone */}
+                            <div className="w-1/3">
+                                <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone</label>
+                                <input
+                                    id="phone"
+                                    name="phone"
+                                    type="tel"
+                                    value={formData.phone}
+                                    onChange={handleChange}
+                                    className="mt-1 block w-full p-3 border border-gray-300 rounded-md"
+                                />
+                            </div>
+                        </div>
                     </div>
 
-                    <div>
-                        <label htmlFor="dob" className="block text-sm font-medium text-gray-700">Date of Birth</label>
-                        <input
-                            id="dob"
-                            name="dob"
-                            type="date"
-                            value={formData.dob}
-                            onChange={handleChange}
-                            className="mt-1 block w-full p-3 border border-gray-300 rounded-md"
-                        />
-                    </div>
-
-                    <div>
-                        <label htmlFor="gender" className="block text-sm font-medium text-gray-700">Gender</label>
-                        <select
-                            id="gender"
-                            name="gender"
-                            value={formData.gender}
-                            onChange={handleChange}
-                            className="mt-1 block w-full p-3 border border-gray-300 rounded-md"
-                        >
-                            <option value="">Select Gender</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
 
                     <div>
                         <label htmlFor="medical_conditions" className="block text-sm font-medium text-gray-700">Medical Conditions</label>
@@ -177,7 +241,7 @@ const UpdateProfile: React.FC = () => {
                     <div>
                         <label htmlFor="profile_picture" className="block text-sm font-medium text-gray-700">Profile Picture</label>
                         <input
-                            id="profile_picture"
+                            id="user_photo"
                             type="file"
                             accept="image/*"
                             onChange={handleImageChange}

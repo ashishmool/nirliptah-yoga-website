@@ -8,9 +8,11 @@ import { useLoginModal } from '../../../context/LoginModalContext'; // Import us
 interface WorkshopCardProps {
     workshop: any; // Replace `any` with a proper type or interface for the workshop
     categories: any[]; // The list of categories
+    isEnrolled: boolean;
+
 }
 
-const WorkshopCard: React.FC<WorkshopCardProps> = ({ workshop, categories }) => {
+const WorkshopCard: React.FC<WorkshopCardProps> = ({ workshop, categories, isEnrolled }) => {
     const navigate = useNavigate(); // Hook to navigate
     const { setIsDialogOpen } = useLoginModal(); // Get the setIsDialogOpen function from LoginModalContext
 
@@ -57,14 +59,25 @@ const WorkshopCard: React.FC<WorkshopCardProps> = ({ workshop, categories }) => 
                 <p className="text-sm text-gray-600 mt-2">{workshop.description.slice(0, 90)}...</p>
                 <div className="mt-4 flex justify-between items-center">
                     <Button
-                        className="bg-[#9B6763] text-white py-2 px-6 rounded hover:bg-[#7B4F4C] transition"
-                        onClick={handleDetailsClick} // Handle click to navigate or open modal
+                        className={`px-6 py-2 rounded ${
+                            isEnrolled ? "bg-gray-400 cursor-not-allowed" : "bg-[#9B6763] hover:bg-[#7B4F4C] text-white"
+                        }`}
+                        onClick={handleDetailsClick}
+                        disabled={isEnrolled}
                     >
-                        View Details
+                        {isEnrolled ? "Enrolled" : "View Details"}
                     </Button>
                     <span className="text-sm font-semibold text-gray-800">
-                        {workshop.price === 0 ? "Free" : `AU$ ${workshop.price || "TBD"}`}
-                    </span>
+    {workshop.discount_price && workshop.discount_price < workshop.price ? (
+        <>
+            <span className="line-through text-gray-500">AU$ {workshop.price}</span> {" "}
+            <span className="text-red-600">AU$ {workshop.discount_price}</span>
+        </>
+    ) : (
+        workshop.price === 0 ? "Free" : `AU$ ${workshop.price || "TBD"}`
+    )}
+</span>
+
                 </div>
             </div>
         </div>

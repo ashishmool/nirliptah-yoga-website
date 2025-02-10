@@ -11,10 +11,24 @@ const Workshops: React.FC = () => {
     const [workshops, setWorkshops] = useState<any[]>([]);
     const [categories, setCategories] = useState<any[]>([]);
     const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
+    const [enrolledWorkshops, setEnrolledWorkshops] = useState<string[]>([]); // Store enrolled workshop IDs
+
     const [currentPage, setCurrentPage] = useState(1);
     const workshopsPerPage = 3;
 
     const navigate = useNavigate();
+    const [userId, setUserId] = useState(localStorage.getItem("user_id") || ""); // Store userId in state
+
+    useEffect(() => {
+        const storedUserId = localStorage.getItem("user_id");
+        console.log("Stored user_id:", storedUserId); // Debugging step
+        if (storedUserId) {
+            setUserId(storedUserId);
+        }
+    }, []);
+
+
+
 
     useEffect(() => {
         const fetchWorkshops = async () => {
@@ -35,9 +49,38 @@ const Workshops: React.FC = () => {
             }
         };
 
+
         fetchWorkshops();
         fetchCategories();
+
     }, []);
+    // Fetch enrollments only when userId is properly set
+    useEffect(() => {
+        const storedUserId = localStorage.getItem("user_id");
+        if (storedUserId) {
+            setUserId(storedUserId);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!userId || userId.trim() === "undefined") return;
+
+        const fetchEnrollments = async () => {
+            try {
+                console.log("Fetching enrollments for user:", userId);
+                const response = await axios.get(`http://localhost:5000/api/enrollments/user/${userId}`);
+                const enrolledIds = response.data.map((enrollment: any) => enrollment.workshop_id._id);
+                setEnrolledWorkshops(enrolledIds);
+            } catch (error) {
+                console.error("Error fetching enrollments:", error);
+            }
+        };
+
+        fetchEnrollments();
+    }, [userId]);
+
+
+
 
     const filteredWorkshops = selectedCategoryIds.length
         ? workshops.filter((workshop) => selectedCategoryIds.includes(workshop.category._id))
@@ -110,7 +153,6 @@ const Workshops: React.FC = () => {
 
             {/* Workshop Cards */}
             <div className="flex flex-wrap justify-center gap-6">
-
                 {currentWorkshops.length === 0 ? (
                     <p className="text-center text-lg text-gray-500">No workshops available</p>
                 ) : (
@@ -118,7 +160,8 @@ const Workshops: React.FC = () => {
                         <WorkshopCard
                             key={workshop._id}
                             workshop={workshop}
-                            categories={categories} // Pass categories here
+                            categories={categories}
+                            isEnrolled={enrolledWorkshops.includes(workshop._id)}
                         />
                     ))
                 )}
