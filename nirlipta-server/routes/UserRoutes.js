@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { upload } = require("../config/multerConfig"); // Import multer middleware
+const { upload } = require("../middleware/multerConfig"); // Import multer middleware
 const {
     getUsers,
     getUserById,
@@ -40,8 +40,5 @@ router.patch("/patch/:id", protect, upload, patchUser);
 // Delete user by ID
 router.delete("/delete/:id", protect, authorizeRole("admin"), deleteUser);
 
-// // New routes for analytics
-// router.get("/analytics/role-count", getUsersCountByRole);
-// router.get("/analytics/monthly-growth", getMonthlyGrowth);
 
 module.exports = router;

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import axios from "axios";
 import Pagination from "../../../components/Pagination";
 import { toast } from "sonner";
 import { FaPauseCircle, FaCheckCircle, FaBan } from "react-icons/fa";
+import {useNavigate} from "react-router-dom";
 
 interface Schedule {
     _id: string;
@@ -23,6 +23,8 @@ const ListSchedules: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(true);
     const ITEMS_PER_PAGE = 10;
+
+    const navigate = useNavigate();
 
     // Fetch schedules from the backend
     useEffect(() => {
@@ -100,7 +102,15 @@ const ListSchedules: React.FC = () => {
 
     return (
         <div className="max-w-7xl mx-auto p-6 flex flex-col">
-            <h1 className="text-3xl font-semibold text-center mb-6">Weekly Schedule</h1>
+            <div className="flex justify-between items-center mb-6">
+                <button
+                    onClick={() => navigate(-1)}
+                    className="text-[#9B6763] hover:text-[#B8998C]"
+                >
+                    &#8592; Back
+                </button>
+                <h1 className="text-3xl font-semibold">Weekly Schedule</h1>
+            </div>
 
             {/* Day Filter */}
             <div className="flex justify-center mb-4">

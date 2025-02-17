@@ -1,5 +1,5 @@
 const User = require("../models/User");
-const transporter = require("../config/mailConfig");
+const transporter = require("../middleware/mailConfig");
 const path = require("path");
 const Workshop = require("../models/Workshop");
 

@@ -6,7 +6,7 @@ const Category = require("../models/WorkshopCategory");
 // Get all workshops
 const getAllWorkshops = async (req, res) => {
     try {
-        console.log("GET /api/workshops");
+        // console.log("GET /api/workshops");
         const workshops = await Workshop.find()
             .populate("category");
         res.json(workshops);

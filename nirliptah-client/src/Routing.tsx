@@ -30,6 +30,7 @@ import ListEnrollments from "@/pages/private/admin/enrollment/ListEnrollments.ts
 import MyEnrollments from "@/pages/private/student/MyEnrollments.tsx";
 import UpdateCategory from "@/pages/private/admin/category/UpdateCategory.tsx";
 import UpdateProfile from "@/pages/private/UpdateProfile.tsx";
+import MySchedule from "@/pages/private/student/MySchedule.tsx";
 
 // Helper functions for role-based access
 const isAdmin = () => localStorage.getItem("role") === "admin";
@@ -38,6 +39,7 @@ const isStudent = () => localStorage.getItem("role") === "student";
 export default function Routing() {
 
     const token = localStorage.getItem('token');
+    const userId = localStorage.getItem("user_id");
 
     // Check if user is logged in
     const isLoggedIn = !!token;
@@ -59,10 +61,15 @@ export default function Routing() {
             <Route
                 path="my-enrollments"
                 element={isLoggedIn ? <MyEnrollments /> : <Navigate to="/error" />}
+            /><Route
+                path="my-schedule"
+                element={isLoggedIn ? <MySchedule userId={userId} /> : <Navigate to="/error" />}
             />
+
+
             <Route
                 path="update-profile"
-                element={isLoggedIn ? <UpdateProfile userId={localStorage.getItem("user_id") || ""} /> : <Navigate to="/error" />}
+                element={isLoggedIn ? <UpdateProfile userId={userId} /> : <Navigate to="/error" />}
             />
 
 

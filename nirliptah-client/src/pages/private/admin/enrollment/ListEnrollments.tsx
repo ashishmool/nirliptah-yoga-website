@@ -10,7 +10,7 @@ const ListEnrollments: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
 
-    const ITEMS_PER_PAGE = 4;
+    const ITEMS_PER_PAGE = 10;
     const token = localStorage.getItem('token');
 
     useEffect(() => {

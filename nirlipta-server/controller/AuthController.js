@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 const RegistrationPasswordEmail = require("../templates/RegistrationPasswordEmail");
 const ResetPasswordEmail = require("../templates/ResetPasswordEmail");
 const WelcomeEmail = require("../templates/WelcomeEmail");
-const transporter = require("../config/mailConfig");
+const transporter = require("../middleware/mailConfig");
 
 
 require("dotenv").config();

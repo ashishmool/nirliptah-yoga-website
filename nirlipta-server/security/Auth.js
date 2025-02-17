@@ -52,7 +52,7 @@ const protect = async (req, res, next) => {
     try {
         // Verify the token and log decoded data
         const decoded = jwt.verify(token, process.env.SECRET_KEY);
-        console.log("Decoded Token:", decoded); // Debugging log
+        // console.log("Decoded Token:", decoded); // Debugging log
 
         if (!decoded.user_id) {
             return res.status(400).json({ message: "Invalid token payload: No user_id" });
@@ -66,7 +66,7 @@ const protect = async (req, res, next) => {
             return res.status(401).json({ message: "Not authorized, user not found" });
         }
 
-        console.log("Authenticated User ID:", req.user.id);
+        // console.log("Authenticated User ID:", req.user.id);
         next(); // Proceed to the next middleware/route handler
     } catch (err) {
         console.error("Error in protect middleware:", err);

@@ -192,10 +192,15 @@ const UpdateWorkshop: React.FC = () => {
             formDataObj.append("newCategory", formData.newCategory); // Add new category if applicable
         }
 
+        // Retrieve token from localStorage
+        const token = localStorage.getItem("token");
+
         try {
             console.log("Prepare Data Payload::::", formData);
             await axios.put(`http://localhost:5000/api/workshops/update/${id}`, formDataObj, {
-                headers: { "Content-Type": "multipart/form-data" },
+                headers: { "Content-Type": "multipart/form-data" ,
+                Authorization: `Bearer ${token}`,
+                },
             });
             toast.success("Workshop updated successfully!");
             navigate("/admin/workshops");

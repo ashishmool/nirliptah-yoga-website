@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { upload } = require("../config/multerConfig");
+const { upload } = require("../middleware/multerConfig");
 const {
     getAllWorkshops,
     getWorkshopById,

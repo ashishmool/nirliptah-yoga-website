@@ -125,8 +125,8 @@ const MySchedule: React.FC<MyScheduleProps> = ({ userId }) => {
     };
 
     return (
-        <div className="max-w-7xl mx-auto p-6">
-            <h1 className="text-3xl font-semibold text-center mb-6">My Weekly Schedule</h1>
+        <div className="max-w-7xl mx-auto p-6 mt-24">
+            <h1 className="text-3xl font-semibold text-center mb-6">Weekly Schedule</h1>
             {loading ? (
                 <p className="text-center text-gray-500">Loading your schedules...</p>
             ) : (

@@ -114,7 +114,7 @@
 
 import axios from "axios";
 import Pagination from "@/pages/components/Pagination.tsx";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import MySchedule from "@/pages/private/student/MySchedule.tsx";
 
 export default function MyEnrollments() {
@@ -160,10 +160,7 @@ export default function MyEnrollments() {
                 </div>
             )}
 
-            <div>
-                <MySchedule userId={userId} />
-            </div>
-            <h1 className="text-2xl font-semibold text-center mb-6">My Enrollments</h1>
+            <h1 className="text-3xl font-semibold text-center mb-6">My Enrollments</h1>
 
             {enrollments.length > 0 ? (
                 <table className="w-full bg-white border border-gray-300">

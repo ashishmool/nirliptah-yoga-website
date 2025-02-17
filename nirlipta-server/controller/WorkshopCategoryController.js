@@ -3,7 +3,7 @@ const WorkshopCategory = require("../models/WorkshopCategory");
 // Get all workshop categories
 const getWorkshopCategories = async (req, res) => {
     try {
-        console.log("GET /api/categories");
+        // console.log("GET /api/categories");
         const categories = await WorkshopCategory.find();
         res.json(categories);
     } catch (error) {
@@ -66,7 +66,7 @@ const updateWorkshopCategory = async (req, res) => {
             return res.status(404).json({ message: "Workshop category not found" });
         }
 
-        console.log("Categories Update Debugging::: ",category);
+        // console.log("Categories Update Debugging::: ",category);
 
         // Update category fields
         category.name = req.body.name || category.name;

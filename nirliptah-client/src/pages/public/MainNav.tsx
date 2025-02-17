@@ -60,19 +60,15 @@ export default function MainNav() {
 
                     {/* Main Menu (centered) */}
                     <div className={`lg:flex lg:items-center ${isMobileMenuOpen ? "block" : "hidden"} lg:mx-auto`}>
-
                         <div className="flex-6 flex-col lg:flex-row lg:items-center space-y-4 lg:space-y-0 lg:space-x-6">
-
                             {info?.role === "admin" && (
                                 <Link to="/admin/home" className="text-gray-800 hover:text-[#9B6763] text-base font-medium">
                                     Dashboard
                                 </Link>
                             )}
 
-
-
                             {/* Show only if on Home Page ("/") */}
-                            {isHomePage && (
+                            {isHomePage ? (
                                 <>
                                     <button onClick={() => handleScrollToSection("workshops")} className="text-gray-800 hover:text-[#9B6763] text-base font-medium">
                                         Workshops
@@ -81,9 +77,22 @@ export default function MainNav() {
                                         Contact
                                     </button>
                                 </>
+                            ) : (
+                                <>
+                                    <Link to="/" className="text-gray-800 hover:text-[#9B6763] text-base font-medium">
+                                        Home
+                                    </Link>
+                                    <Link to="/update-profile" className="text-gray-800 hover:text-[#9B6763] text-base font-medium">
+                                        Update Profile
+                                    </Link>
+                                    <Link to="/my-enrollments" className="text-gray-800 hover:text-[#9B6763] text-base font-medium">
+                                        My Enrollments
+                                    </Link>
+                                    <Link to="/my-schedule" className="text-gray-800 hover:text-[#9B6763] text-base font-medium">
+                                        My Schedule
+                                    </Link>
+                                </>
                             )}
-
-
                         </div>
                     </div>
 
@@ -129,6 +138,12 @@ export default function MainNav() {
                                             <li>
                                                 <Link to="/my-enrollments" onClick={() => document.activeElement?.blur()}>
                                                     My Enrollments
+                                                </Link>
+                                            </li>
+
+                                            <li>
+                                                <Link to="/my-schedule" onClick={() => document.activeElement?.blur()}>
+                                                    My Schedule
                                                 </Link>
                                             </li>
 

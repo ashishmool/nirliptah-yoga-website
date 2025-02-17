@@ -8,7 +8,7 @@ const {
     deleteWorkshopCategory
 } = require("../controller/WorkshopCategoryController");
 const {protect, authorizeRole} = require("../security/Auth");
-const {upload} = require("../config/multerConfig");
+const {upload} = require("../middleware/multerConfig");
 
 // Get all workshop categories
 router.get("/", getWorkshopCategories);

@@ -3,7 +3,7 @@ const User = require("../models/User");
 const Workshop = require("../models/Workshop");
 const Schedule = require("../models/Schedule");
 const nodemailer = require("nodemailer");
-const generateCertificate = require("../config/generateCertificate");
+const generateCertificate = require("../middleware/generateCertificate");
 const path = require("path");
 
 
@@ -247,12 +247,11 @@ const getEnrollmentByUserId = async (req, res) => {
         }
 
         const enrollments = await Enrollment.find({ user_id })
-            .populate("workshop_id", "title description date");
+            .populate("workshop_id", "title description category photo difficulty_level");
 
         if (!enrollments.length) {
             return res.status(404).json({ message: "No enrollments found for this user." });
         }
-
         res.json(enrollments);
     } catch (error) {
         console.error("Error fetching enrollments by user ID:", error);
