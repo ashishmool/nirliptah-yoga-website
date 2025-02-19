@@ -101,11 +101,19 @@ export default function Login({ onClose, onLoginSuccess }: LoginRegisterModalPro
         <Dialog open onOpenChange={onClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>{isResetPassword ? "Reset Password" : "Login"}</DialogTitle>
+                    <DialogTitle>
+                        {isResetPassword
+                            ? "Reset Password"
+                            : isLogin
+                                ? "Login"
+                                : "Register"} {/* Toggle between Login and Register */}
+                    </DialogTitle>
                     <DialogDescription>
                         {isResetPassword
                             ? "Enter your email to reset your password."
-                            : "Enter your credentials to access your account."}
+                            : isLogin
+                                ? "Enter your credentials to access your account."
+                                : "Create a new account by entering your details."} {/* Update the description accordingly */}
                     </DialogDescription>
                 </DialogHeader>
 
@@ -118,7 +126,7 @@ export default function Login({ onClose, onLoginSuccess }: LoginRegisterModalPro
                                 Email Address
                             </Label>
                             <Input
-                                id="login-email" // Make sure the ID is unique
+                                id="login-email"
                                 type="email"
                                 placeholder="example@email.com"
                                 value={email}
@@ -135,17 +143,17 @@ export default function Login({ onClose, onLoginSuccess }: LoginRegisterModalPro
                             <div className="relative">
                                 <Input
                                     id="password"
-                                    type={passwordVisible ? "text" : "password"} // Toggle password visibility
+                                    type={passwordVisible ? "text" : "password"}
                                     placeholder="••••••••••"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
                                     onKeyDown={handleKeyDown}
-                                    className="pr-10" // Add right padding to make space for the icon
+                                    className="pr-10"
                                 />
                                 <button
                                     type="button"
-                                    onClick={() => setPasswordVisible(!passwordVisible)} // Toggle visibility on click
+                                    onClick={() => setPasswordVisible(!passwordVisible)}
                                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
                                 >
                                     {passwordVisible ? <FaEyeSlash /> : <FaEye />}
@@ -153,15 +161,14 @@ export default function Login({ onClose, onLoginSuccess }: LoginRegisterModalPro
                             </div>
                         </div>
 
-
                         <p className="mt-2 text-center text-sm">
                             Having trouble logging in?{" "}
                             <span
                                 className="text-blue-900 hover:underline cursor-pointer"
                                 onClick={() => setIsResetPassword(true)}
                             >
-                                Reset it
-                            </span>
+                        Reset it
+                    </span>
                         </p>
 
                         <Button
@@ -178,8 +185,8 @@ export default function Login({ onClose, onLoginSuccess }: LoginRegisterModalPro
                                 className="text-blue-900 hover:underline cursor-pointer"
                                 onClick={() => setIsLogin(false)}
                             >
-                                Register
-                            </span>
+                        Register
+                    </span>
                         </p>
                     </div>
                 ) : (
@@ -191,5 +198,6 @@ export default function Login({ onClose, onLoginSuccess }: LoginRegisterModalPro
                 </DialogClose>
             </DialogContent>
         </Dialog>
+
     );
 }
