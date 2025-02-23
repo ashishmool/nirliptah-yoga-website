@@ -64,7 +64,7 @@ const RegistrationPasswordEmail = ({ email, resetLink }) => `
 <body>
   <div class="email-container">
     <div class="email-header">
-      <img src="http://localhost:5000/uploads/logo-main.png" alt="Nirliptah Yoga">
+      <img src="https://gemflooring.com.np/wp-content/uploads/2025/02/nirlipta-logo-white.png" alt="Nirliptah Yoga">
       <h1>Welcome to Nirliptah Yoga!</h1>
     </div>
     <div class="email-body">
