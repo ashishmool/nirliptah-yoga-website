@@ -206,7 +206,7 @@ const resetPassword = async (req, res) => {
     try {
         const { token, newPassword } = req.body;
 
-        console.log("Request Body::: ", req.body);
+        // console.log("Request Body::: ", req.body);
 
         // Verify the reset token
         let decoded;

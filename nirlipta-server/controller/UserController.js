@@ -2,6 +2,8 @@ const User = require("../models/User");
 const transporter = require("../middleware/mailConfig");
 const path = require("path");
 const Workshop = require("../models/Workshop");
+const bcrypt = require("bcryptjs");
+
 
 
 // Helper function to validate environment variables
@@ -98,14 +100,46 @@ const createUser = async (req, res) => {
 };
 
 // Update user by ID (PUT for full update)
+// const updateUser = async (req, res) => {
+//     try {
+//         const { id } = req.params;
+//
+//         if (req.files && req.files.user_photo) {
+//             req.body.photo = `/uploads/user_photos/${req.files.user_photo[0].filename}`;
+//         }
+//
+//         const updatedUser = await User.findByIdAndUpdate(id, req.body, {
+//             new: true,
+//             runValidators: true,
+//         });
+//
+//         if (!updatedUser) {
+//             return res.status(404).json({ message: "User not found" });
+//         }
+//
+//         res.status(200).json({ message: "User updated successfully", updatedUser });
+//     } catch (error) {
+//         console.error("Error updating user:", error);
+//         res.status(500).json({ message: "Error updating user", error });
+//     }
+// };
+
+// Update user by ID (PUT for full update)
 const updateUser = async (req, res) => {
     try {
         const { id } = req.params;
 
+        // If user uploads a new photo, update the photo field
         if (req.files && req.files.user_photo) {
             req.body.photo = `/uploads/user_photos/${req.files.user_photo[0].filename}`;
         }
 
+        // Check if password is provided and hash it
+        if (req.body.password) {
+            req.body.password = await bcrypt.hash(req.body.password, 10);
+        }
+
+        // Update user in the database
         const updatedUser = await User.findByIdAndUpdate(id, req.body, {
             new: true,
             runValidators: true,
@@ -129,6 +163,11 @@ const patchUser = async (req, res) => {
 
         if (req.files && req.files.user_photo) {
             req.body.photo = `/uploads/user_photos/${req.files.user_photo[0].filename}`;
+        }
+
+        // Check if password is provided and hash it
+        if (req.body.password) {
+            req.body.password = await bcrypt.hash(req.body.password, 10);
         }
 
         const patchedUser = await User.findByIdAndUpdate(
