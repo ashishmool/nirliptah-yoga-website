@@ -10,6 +10,7 @@ const ListWorkshops: React.FC = () => {
     const [filteredWorkshops, setFilteredWorkshops] = useState<any[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
+    const token = localStorage.getItem('token');
 
     const ITEMS_PER_PAGE = 4;
 
@@ -47,7 +48,11 @@ const ListWorkshops: React.FC = () => {
     const handleDelete = async (id: string) => {
         if (window.confirm("Are you sure you want to delete this workshop?")) {
             try {
-                await axios.delete(`http://localhost:5000/api/workshops/delete/${id}`);
+                await axios.delete(`http://localhost:5000/api/workshops/delete/${id}`,{
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
                 setWorkshops((prev) => prev.filter((workshop) => workshop._id !== id));
                 setFilteredWorkshops((prev) =>
                     prev.filter((workshop) => workshop._id !== id)
