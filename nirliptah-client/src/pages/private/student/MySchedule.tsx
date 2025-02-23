@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { toast } from "sonner";
 
 interface Schedule {
     _id: string;
@@ -28,10 +27,15 @@ const MySchedule: React.FC<MyScheduleProps> = ({ userId }) => {
         const fetchUserSchedules = async () => {
             try {
                 const response = await axios.get(`http://localhost:5000/api/schedules/user/${userId}`);
-                setSchedules(response.data);
-                calculateTimeRange(response.data);
+                if (response.data.length === 0) {
+                    setSchedules([]);
+                } else {
+                    setSchedules(response.data);
+                    calculateTimeRange(response.data);
+                }
             } catch (error) {
-                toast.error("Error fetching your schedules.");
+                console.log("Error fetching schedules");
+                setSchedules([]); // Ensure schedules are empty if an error occurs
             } finally {
                 setLoading(false);
             }
@@ -39,6 +43,7 @@ const MySchedule: React.FC<MyScheduleProps> = ({ userId }) => {
 
         if (userId) fetchUserSchedules();
     }, [userId]);
+
 
     const calculateTimeRange = (schedules: Schedule[]) => {
         let earliestStartTime = Number.MAX_VALUE;
@@ -70,6 +75,7 @@ const MySchedule: React.FC<MyScheduleProps> = ({ userId }) => {
     const convertToMinutes = (time: string) => {
         const isAM = time.toUpperCase().includes("AM");
         const isPM = time.toUpperCase().includes("PM");
+        // eslint-disable-next-line prefer-const
         let [hours, minutes] = time.replace(/(AM|PM)/i, "").split(":").map(Number);
 
         if (isPM && hours < 12) hours += 12;
@@ -129,6 +135,8 @@ const MySchedule: React.FC<MyScheduleProps> = ({ userId }) => {
             <h1 className="text-3xl font-semibold text-center mb-6">Weekly Schedule</h1>
             {loading ? (
                 <p className="text-center text-gray-500">Loading your schedules...</p>
+            ) : schedules.length === 0 ? (
+                <p className="text-center text-red-800">User is Not Enrolled in Any Workshop for Schedules!</p>
             ) : (
                 <div className="grid grid-cols-8 gap-4">
                     {/* Days Header */}
