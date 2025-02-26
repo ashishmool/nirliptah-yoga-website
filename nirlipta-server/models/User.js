@@ -67,6 +67,9 @@ const userSchema = new mongoose.Schema(
                 ref: "Payment",
             },
         ],
+        otp:{
+            type: String,
+        }
     },
     { timestamps: true } // Automatically adds `createdAt` and `updatedAt`
 );

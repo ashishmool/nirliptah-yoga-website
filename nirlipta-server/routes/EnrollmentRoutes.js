@@ -6,7 +6,7 @@ const {
     createEnrollment,
     updateEnrollment,
     deleteEnrollment,
-    checkEnrollmentStatus, getEnrollmentByUserId, updateEnrollmentPatch, getCertificationByStatus, // Add the check enrollment status controller here
+    checkEnrollmentStatus, getEnrollmentByUserId, updateEnrollmentPatch, getCertificationByStatus, generateCertificateByUserWorkshop,
 } = require("../controller/EnrollmentController");
 const {authorizeRole, protect} = require("../security/Auth");
 
@@ -15,6 +15,7 @@ router.get("/", getAllEnrollments);
 
 // Get certification by Status
 router.get("/certification", getCertificationByStatus);
+router.get("/certification/:user_id/:workshop_id", generateCertificateByUserWorkshop);
 
 // Get enrollment by ID
 router.get("/:id", getEnrollmentById);
@@ -26,9 +27,9 @@ router.get("/user/:user_id", getEnrollmentByUserId);
 router.post("/save", createEnrollment);
 
 // Update enrollment by ID (PUT)
-router.put("/update/:id",protect,authorizeRole("admin"), updateEnrollment);
+router.put("/update/:id",protect, updateEnrollment);
 
-router.patch("/status/:id",protect,authorizeRole("admin"), updateEnrollmentPatch);
+router.patch("/status/:id",protect, updateEnrollmentPatch);
 
 // Delete enrollment by ID
 router.delete("/delete/:id", deleteEnrollment);

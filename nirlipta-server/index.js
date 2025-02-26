@@ -14,10 +14,10 @@ const workshopRoutes = require("./routes/WorkshopRoutes");
 const workshopCategoryRoutes = require("./routes/WorkshopCategoryRoutes");
 const scheduleRoutes = require("./routes/ScheduleRoutes");
 
-const corsOptions = {
-    credentials: true,
-    origin: "http://localhost:5173"
-}
+// const corsOptions = {
+//     credentials: true,
+//     origin: "http://localhost:5173"
+// }
 
 // Connect to the database
 connectDB();
