@@ -89,6 +89,72 @@ const getCertificationByStatus = async (req, res) => {
     }
 };
 
+const generateCertificateByUserWorkshop = async (req, res) => {
+    try {
+        const { user_id, workshop_id } = req.params;
+
+        // Validate input parameters
+        if (!user_id || !workshop_id) {
+            return res.status(400).json({ message: "User ID and Workshop ID are required." });
+        }
+
+        // Find the specific enrollment with completion status 'completed'
+        const enrollment = await Enrollment.findOne({ user_id, workshop_id, completion_status: "completed" })
+            .populate("user_id workshop_id");
+
+        if (!enrollment) {
+            return res.status(404).json({ message: "No completed enrollment found for this user and workshop." });
+        }
+
+        // Generate the PDF certificate
+        const pdfPath = await generateCertificate(user_id, workshop_id, enrollment._id);
+
+        // Email setup
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS,
+            },
+        });
+
+        const emailTemplate = `
+        <html>
+        <body style="font-family: Arial, sans-serif; text-align: center;">
+            <h2>Congratulations ${enrollment.user_id.name}!</h2>
+            <p>You have successfully completed the workshop: <strong>${enrollment.workshop_id.title}</strong></p>
+            <p>Your certificate is attached to this email.</p>
+        </body>
+        </html>`;
+
+        // Send email with certificate
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: enrollment.user_id.email,
+            subject: "Workshop Certification",
+            html: emailTemplate,
+            attachments: [
+                {
+                    filename: `Certificate-${enrollment.user_id.name}.pdf`,
+                    path: pdfPath,
+                    contentType: "application/pdf",
+                },
+            ],
+        };
+
+        await transporter.sendMail(mailOptions);
+
+        res.json({
+            message: "Certification email sent successfully",
+            pdfPath,
+        });
+    } catch (error) {
+        console.error("Error generating certificate:", error);
+        res.status(500).json({ message: "Error generating certificate", error });
+    }
+};
+
+
 
 
 
@@ -293,4 +359,5 @@ module.exports = {
     getEnrollmentByUserId,
     updateEnrollmentPatch,
     getCertificationByStatus,
+    generateCertificateByUserWorkshop,
 };
