@@ -4,6 +4,7 @@ const Workshop = require("../models/Workshop");
 const Schedule = require("../models/Schedule");
 const nodemailer = require("nodemailer");
 const generateCertificate = require("../middleware/generateCertificate");
+const generateMobileCertificate = require("../middleware/generateCertificate");
 const path = require("path");
 
 
@@ -107,7 +108,7 @@ const generateCertificateByUserWorkshop = async (req, res) => {
         }
 
         // Generate the PDF certificate
-        const pdfPath = await generateCertificate(user_id, workshop_id, enrollment._id);
+        const pdfPath = await generateMobileCertificate(enrollment.user_id, enrollment.workshop_id, enrollment._id);
 
         // Email setup
         const transporter = nodemailer.createTransport({
@@ -313,7 +314,7 @@ const getEnrollmentByUserId = async (req, res) => {
         }
 
         const enrollments = await Enrollment.find({ user_id })
-            .populate("workshop_id", "title description category photo difficulty_level");
+            .populate("workshop_id", "title description category photo difficulty_level price discount_price");
 
         if (!enrollments.length) {
             return res.status(404).json({ message: "No enrollments found for this user." });

@@ -1,5 +1,5 @@
 const multer = require("multer");
-const maxSize = 2 * 1024 * 1024; // 2MB
+const maxSize = 4 * 2048 * 2048; // 8MB
 const path = require("path");
 
 const storage = multer.diskStorage({

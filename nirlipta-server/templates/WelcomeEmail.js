@@ -65,7 +65,6 @@ const WelcomeEmail = ({ name }) => `
     </div>
     <div class="email-footer">
       <p>&copy; ${new Date().getFullYear()} Nirliptah Yoga by Nivedita Pradhan. All rights reserved.</p>
-      <p>[Your Address or Contact Information]</p>
     </div>
   </div>
 </body>

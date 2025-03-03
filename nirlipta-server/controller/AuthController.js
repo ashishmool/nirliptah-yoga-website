@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const crypto = require("crypto"); // To generate OTP
 const transporter = require("../middleware/mailConfig");
 const OTPEmail = require("../templates/OTPEmail");
+const WelcomeEmail = require("../templates/WelcomeEmail");
 
 require("dotenv").config();
 
