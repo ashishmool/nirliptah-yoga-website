@@ -37,9 +37,9 @@ Leveraging the power of modern technology, the platform seamlessly combines trad
 
 ## Technology Stack 🛠️
 
-- **Frontend**: React
+- **Frontend**: Flutter (Dart) using Clean Architecture
 - **Backend**: Node.js
-- **Database**: MongoDB
+- **Database**: MongoDB (Remote) and Hive Service (Local)
 - **Design Tools**:
   - Adobe Illustrator
   - Figma
