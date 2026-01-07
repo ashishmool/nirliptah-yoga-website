@@ -4,6 +4,13 @@ require("dotenv").config();
 
 const SECRET_KEY = process.env.SECRET_KEY;
 
+// Validate SECRET_KEY is set
+if (!SECRET_KEY) {
+    console.error("ERROR: SECRET_KEY is not set in environment variables!");
+    console.error("Please set SECRET_KEY in your .env file");
+    process.exit(1);
+}
+
 // Middleware to authenticate JWT token
 function authenticateToken(req, res, next) {
     const token = req.header("Authorization")?.split(" ")[1];
