@@ -5,11 +5,13 @@ const crypto = require("crypto"); // To generate OTP
 const transporter = require("../middleware/mailConfig");
 const OTPEmail = require("../templates/OTPEmail");
 const WelcomeEmail = require("../templates/WelcomeEmail");
+const RegistrationPasswordEmail = require("../templates/RegistrationPasswordEmail");
 
 require("dotenv").config();
 
 const SECRET_KEY = process.env.SECRET_KEY;
 const OTP_EXPIRY = 3600 * 1000; // 1 hour in milliseconds
+const RESET_TOKEN_EXPIRY = 3600 * 1000; // 1 hour in milliseconds
 
 // Store OTPs in memory (for simplicity). You can use a database instead.
 const otpStorage = new Map();
