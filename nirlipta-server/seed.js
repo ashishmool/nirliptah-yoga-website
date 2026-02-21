@@ -245,32 +245,41 @@ const seedDatabase = async () => {
             createdWorkshops.push(workshop);
         }
 
-        // 4. Create Sample Schedules (optional)
-        if (createdWorkshops.length > 0) {
-            const scheduleDays = ["Monday", "Wednesday", "Friday"];
-            const timeSlots = [
-                { start: "09:00", end: "10:30" },
-                { start: "18:00", end: "19:30" },
-            ];
+        // 4. Create Sample Schedules (ensure each workshop has one)
+if (createdWorkshops.length > 0) {
+    const scheduleDays = ["Monday", "Wednesday", "Friday", "Saturday"];
+    const timeSlots = [
+        { start: "06:00", end: "07:30" },
+        { start: "09:00", end: "10:30" },
+        { start: "18:00", end: "19:30" },
+    ];
 
-            for (let i = 0; i < Math.min(3, createdWorkshops.length); i++) {
-                const scheduleExists = await Schedule.findOne({ 
-                    workshop_id: createdWorkshops[i]._id 
-                });
-                
-                if (!scheduleExists) {
-                    const schedule = new Schedule({
-                        workshop_id: createdWorkshops[i]._id,
-                        days_of_week: [scheduleDays[i % scheduleDays.length]],
-                        start_time: timeSlots[i % timeSlots.length].start,
-                        end_time: timeSlots[i % timeSlots.length].end,
-                        status: "active",
-                    });
-                    await schedule.save();
-                    console.log(`✓ Schedule created for: ${createdWorkshops[i].title}`);
-                }
-            }
+    for (let i = 0; i < createdWorkshops.length; i++) {
+        const workshop = createdWorkshops[i];
+
+        const scheduleExists = await Schedule.findOne({
+            workshop_id: workshop._id,
+        });
+
+        if (!scheduleExists) {
+            const schedule = new Schedule({
+                workshop_id: workshop._id,
+                days_of_week: [
+                    scheduleDays[i % scheduleDays.length],
+                ],
+                start_time: timeSlots[i % timeSlots.length].start,
+                end_time: timeSlots[i % timeSlots.length].end,
+                status: "active",
+            });
+
+            await schedule.save();
+            console.log(`✓ Schedule created for: ${workshop.title}`);
+        } else {
+            console.log(`✓ Schedule already exists for: ${workshop.title}`);
         }
+    }
+}
+
 
         console.log("\n✅ Database seeding completed successfully!");
         console.log(`\nCreated/Verified:`);
